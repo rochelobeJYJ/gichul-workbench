@@ -34,6 +34,28 @@ reports/<step>.json             단계별 리포트
 output/                         최종 산출물 (HTML 문항집 등)
 ```
 
+### `sources/<exam_id>/manifest.json`
+
+`detect` 가 쓰고 `crop`·`extract` 가 읽는다. **스키마가 없어서 세 모듈이 각자 추측해 읽던 자리다.**
+
+```json
+{
+  "schema_version": 2,
+  "exam_id": "2024_수능",
+  "slug": "earth-science-ii",
+  "label": "지구과학Ⅱ",
+  "files": {"problem": "problem.pdf", "answer": "answer.pdf", "solution": "solution.pdf"},
+  "detected": {"year": 2024, "exam": "수능", "grade": 3, "by": "cover-text"},
+  "pages": {"problem": 12, "solution": 24},
+  "provider": "ebsi",
+  "verified": true
+}
+```
+
+- `files` 의 값은 **파일명만** 담는다(경로 아님). 같은 폴더에 있다.
+- 없는 종류는 키 자체를 뺀다. `null` 을 넣지 않는다.
+- 읽고 쓰는 것은 `scripts/manifest.py` 한 곳에서만 한다. 각 모듈이 직접 파싱하지 않는다.
+
 ## 2. 식별자
 
 - `slug` : 과목 슬러그. 소문자 하이픈. 예 `earth-science-ii`, `life-science-i`, `korean-geography`.
@@ -58,7 +80,7 @@ output/                         최종 산출물 (HTML 문항집 등)
     "ebsi": {"subject_id": "155", "form_field": "sFormPartSci", "area_order": "6"},
     "kice": {"area": "과학탐구", "aliases": ["지구과학II", "지구과학Ⅱ", "지구 과학 II", "지구과학2"]}
   },
-  "standard_prefixes": {"2015": ["12지구"], "2022": ["12지시", "12행우"]},
+  "standard_prefixes": {"2015": ["12지과Ⅱ"], "2022": ["12지시", "12행우"]},
   "notes": ""
 }
 ```
@@ -67,6 +89,10 @@ output/                         최종 산출물 (HTML 문항집 등)
   `passage-group` (국어·영어, 실험적), `math-mixed` (수학, 실험적).
 - `question_count` / `points_total` 은 **검증 불변식**이다. 탐구는 20문항 50점.
 - `providers` 가 비어 있으면 다운로드 단계에서 사용자에게 물어야 한다.
+- `standard_prefixes` 는 **교육과정 원본에서 실측한 값**이어야 한다. 추측해서 적으면 조용히 틀린다.
+  실제 사고: 2015개정 지구과학Ⅱ 코드를 `12지구` 로 적었는데 진짜 값은 `12지과Ⅱ` 였다.
+  게다가 `12지구` 는 2022개정 '지구과학'(다른 과목)의 실재하는 코드라 대조를 통과해버릴 뻔했다.
+  `curriculum/standards/<개정>.json` 의 `code_prefix` 를 보고 채운다.
 
 ## 4. `items/<qid>.json`
 
@@ -98,6 +124,10 @@ output/                         최종 산출물 (HTML 문항집 등)
 - `status` : `scaffold` (자동 생성만) | `verified` (검수 통과).
 - `classification.*.by` : `keyword` | `llm` | `manual`.
 - `text` 가 비어 있어도(`vision`) 파이프라인은 끝까지 돌아야 한다. 크롭 이미지가 본체다.
+- **계약에 없는 필드는 `ext` 아래에 넣는다.** 최상위에 마음대로 키를 늘리면 검증기가 무엇을
+  검사해야 하는지 알 수 없게 된다. 예: `ext.answer_check`(정답 3중 대조의 축별 원본값),
+  `ext.text_raw`, `ext.mapping`(매핑 근거). `ext` 안의 것을 소비하는 모듈이 생기면
+  그때 이 문서로 승격한다.
 
 ## 5. 리포트 계약 — `reports/<step>.json`
 
@@ -144,7 +174,12 @@ python scripts/gw.py <command> --subject <slug> [옵션]
 | `build`    | 문항집 제작기 HTML 생성 | `output/` |
 | `validate` | 구조·정답·불변식 검증 | `reports/validate.json` |
 
-공통 옵션: `--dry-run`, `--force`, `--only <qid,qid>`, `--quiet`.
+공통 옵션: `--dry-run`, `--force`, `--only <qid|exam_id, ...>`, `--quiet`, `--workspace <경로>`.
+
+- `--only` 는 **qid 와 exam_id 를 모두** 받는다. 모듈마다 문법이 다르면 안 된다.
+- `--workspace` 는 기본값이 `workspace/<slug>` 다. 격리 실행에 쓴다.
+  이게 없으면 병렬 작업이 서로의 산출물을 밟는다 — 실제로 겪었다.
+- `--quiet` 는 요약을 삼키고 리포트 경로 한 줄만 남긴다.
 
 ## 7. 하이브리드 분류 계약
 

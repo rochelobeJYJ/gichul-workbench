@@ -17,6 +17,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+try:  # 한국어 윈도우 콘솔은 cp949 라 이게 없으면 gw.py 자신의 출력이 깨진다.
+    from common import console as _console
+    _console.setup()
+except Exception:
+    pass
+
 COMMANDS = {
     "subjects": ("subjects_cmd", "등록된 과목 목록과 준비 상태"),
     "download": ("download", "문제지·정답·해설 내려받기"),
