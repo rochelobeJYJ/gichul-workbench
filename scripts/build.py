@@ -263,7 +263,7 @@ def _git_meta() -> dict:
         except Exception:
             return ""
     return {
-        "repo": "기출 문항 작업대 (gichul-workbench)",
+        "repo": "기출 문항집 작업기 (gichul-workbench)",
         "version": _run("rev-parse", "--short", "HEAD") or "dev",
         "remote": _run("remote", "get-url", "origin"),  # 없으면 빈 문자열 — 템플릿이 링크 없이 표시
         "builtAt": datetime.now().strftime("%Y-%m-%d %H:%M"),

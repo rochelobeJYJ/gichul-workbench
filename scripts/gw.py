@@ -40,7 +40,7 @@ COMMANDS = {
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
-        prog="gw", description="기출 문항 작업대 (gichul-workbench)")
+        prog="gw", description="기출 문항집 작업기 (gichul-workbench)")
     sub = parser.add_subparsers(dest="command", metavar="command")
     for name, (module, help_text) in COMMANDS.items():
         sub.add_parser(name, help=help_text, add_help=False)
