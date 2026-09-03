@@ -84,8 +84,16 @@ argmax **정확도가 40%** 였고, 자동확정 구간에서도 최고 67% 였�
 - 가중치: w = sigmoid(lor) × a/(a+k). 뒤의 축소항이 없으면 a=2 짜리 우연을 0.99 로
   믿어버린다 — 위에서 고발한 "틀린 답에 0.96" 을 학습 쪽에서 반복하는 꼴이 된다.
 - 병합: 교육과정 유래 키워드는 `curriculum`, 배운 것은 `learned` 로 **구분해서** 남긴다.
-  평면 형태 `{"코드": [키워드...]}` 는 다른 과목 파일이 아직 그 모양이라 읽기에서 계속
-  지원한다(그 경우 전부 curriculum 취급).
+  파일의 형태(평면형·구조형·개정형)를 읽고 쓰는 일은 전부 `scripts/keywordsio.py` 가 한다.
+  이 모듈은 개정 한 겹을 이미 고른 `{코드: 칸}` 만 다룬다.
+
+## ★ 사전은 개정별로 나뉘어 있다 — 접두사로는 못 가르는 과목이 있다
+사회탐구 5개 과목(경제 `12경제`, 윤리와 사상 `12윤사`, 사회·문화 `12사문`,
+세계지리 `12세지`, 세계사 `12세사`)은 2015 개정과 2022 개정의 성취기준 접두사가 **같다.**
+예전 사전은 코드만으로 키를 잡았고 이 모듈은 접두사로 개정을 갈랐으므로, 이 과목들에서는
+두 교육과정이 한 칸에 겹쳐 앉았다 — 2015 문항을 2022 키워드로 채점하는 결과가 나온다.
+지금은 `keywords.json` 이 개정 층을 따로 들고 있고 `Subject.keywords(rev)` 가 개정을
+**반드시** 인자로 받는다. 접두사 필터는 그 위에서 검산으로만 쓴다.
 
 **이 도구는 쓸수록 정확해진다.** 새 과목도 큐 판정 30~50문항을 `--apply` 한 뒤
 `--learn` 을 돌리면 사전이 그 과목의 실제 어휘로 갈아탄다. 교육과정 초안은 출발점일 뿐이다.
@@ -108,9 +116,9 @@ argmax **정확도가 40%** 였고, 자동확정 구간에서도 최고 67% 였�
 ## 엑셀 왕복
 현장 교사는 keywords.json 을 직접 편집하기보다 엑셀이 편하다. `--export-xlsx` /
 `--import-xlsx` 로 왕복한다(원본 utils/excel_template.py 의 "단원=열, 키워드=행"
-발상을 유지하되, 열 헤더가 자유 텍스트 단원명이 아니라 성취기준 코드다 —
-그래야 subjects/<slug>/keywords.json 스키마 `{코드: [키워드...]}` 와 코드
-변경 없이 맞물린다).
+발상을 유지하되, 열 헤더가 자유 텍스트 단원명이 아니라 **개정 + 성취기준 코드**다 —
+개정이 없으면 같은 코드를 쓰는 두 교육과정을 되돌릴 때 구분할 수 없다).
+옛 판형(1행이 코드)으로 만든 파일도 계속 읽는다.
 """
 from __future__ import annotations
 
@@ -122,6 +130,7 @@ import time
 import unicodedata
 from pathlib import Path
 
+import keywordsio  # keywords.json 읽기·쓰기는 전부 이 모듈을 통한다
 from common import Space, Report, load_subject
 from common.ids import split_qid
 from common.paths import CURRICULUM_STANDARDS
@@ -172,6 +181,11 @@ CALIB_MIN_AUTO = 10
 CALIB_MIN_HOLDOUT = 20         # 학습에 쓰지 않은 채점 표본의 하한.
 CALIB_Z = 1.96                 # 95% 신뢰구간
 CALIBRATION_FILE = "calibration.json"
+
+# ── 엑셀 왕복 판형 ──────────────────────────────────────────────────────
+# 1행 개정 / 2행 성취기준 코드 / 3행 단원 라벨 / 4행부터 키워드.
+# 1행이 늘어난 이유는 `_export_xlsx` 주석 참조(같은 코드를 두 개정이 쓴다).
+XLSX_FIRST_TERM_ROW = 4
 
 _WS_RE = re.compile(r"\s+")
 
@@ -249,55 +263,41 @@ def _build_excerpt(item: dict, limit: int = EXCERPT_LIMIT) -> str:
 
 
 # ------------------------------------------------------- keywords.json 스키마
-# 두 가지 모양을 읽는다. 쓸 때는 항상 아래쪽(구조형)으로 쓴다.
-#   평면형 : {"12지구03-02": ["해양판", "섭입대"]}                  ← 다른 과목 파일이 아직 이 모양
-#   구조형 : {"12지구03-02": {"curriculum": [...],
-#                             "learned": [{"term": "..", "weight": .., "df": .., "lor": ..}]}}
-# 평면형을 그대로 지원하는 이유는 하위호환 하나뿐이 아니다 —
-# `gw standards --draft-keywords` 가 평면형으로 덮어쓰기 때문에(그 모듈은 우리 소관이 아니다)
-# 언제든 평면형이 다시 나타날 수 있다. 읽는 쪽이 두 모양을 다 견뎌야 파이프라인이 안 끊긴다.
-_META_KEY = "_meta"   # keywords.json 안의 학습 이력. 성취기준 코드가 아니므로 앞에 밑줄.
+# 파일의 세 형태(평면형·구조형·개정형)를 읽고 쓰는 일은 전부 scripts/keywordsio.py 가
+# 한다. 이 모듈은 **개정 한 겹을 이미 고른 상태**의 {코드: 칸} 만 받는다.
+#
+# 예전에는 여기서 직접 json.load 하고 접두사로 개정을 갈랐다. 그런데 사회탐구
+# 5개 과목(경제·윤리와 사상·사회·문화·세계지리·세계사)은 2015 와 2022 의 성취기준
+# 접두사가 **같다**(둘 다 12윤사 등). 접두사로는 개정을 가를 수 없고, 파일도 코드만으로
+# 키를 잡았으므로 한쪽이 다른 쪽을 조용히 덮어썼다 — 그래서 2015 문항을 2022 키워드로
+# 채점하게 된다. 개정을 파일 구조로 올려 그 가능성 자체를 없앴다.
 
 
-def _kw_entry(value) -> tuple[list[str], list[dict]]:
-    """keywords.json 의 한 코드 값 → (curriculum 용어, learned 레코드)."""
-    if isinstance(value, list):
-        return [str(v) for v in value if str(v).strip()], []
-    if isinstance(value, dict):
-        cur = [str(v) for v in (value.get("curriculum") or []) if str(v).strip()]
-        learned = []
-        for row in (value.get("learned") or []):
-            if isinstance(row, dict) and row.get("term"):
-                learned.append(row)
-            elif isinstance(row, str) and row.strip():
-                # 가중치 없이 손으로 적어 넣은 경우. 학습분과 같은 취급을 하되
-                # 가중치는 IDF 폴백에 맡긴다(weight 를 지어내지 않는다).
-                learned.append({"term": row})
-        return cur, learned
-    return [], []
+def _keyword_view(entries: dict[str, dict],
+                  prefixes: list[str]) -> tuple[dict[str, list[str]], dict, dict]:
+    """한 개정의 {코드: 칸} → (코드별 용어 목록, (코드,용어)별 학습 가중치, 통계).
 
-
-def _keyword_view(raw: dict, prefixes: list[str]) -> tuple[dict[str, list[str]], dict, dict]:
-    """사전 → (코드별 용어 목록, (코드,용어)별 학습 가중치, 통계).
-
-    점수 계산기는 "코드마다 용어 목록"만 알면 되므로 스키마 차이를 여기서 흡수한다.
+    점수 계산기는 "코드마다 용어 목록"만 알면 되므로 여기서 평평하게 만든다.
     학습 가중치는 별도 dict 로 넘긴다 — 학습된 용어는 코퍼스 역빈도(IDF)가 아니라
     라벨에서 직접 잰 변별력을 써야 하기 때문이다(IDF 는 드묾만 재고, 형제 성취기준이
     공유하는 희귀어를 구분하지 못한다. 그게 이 사전이 40% 로 틀린 이유였다).
+
+    prefixes 로 한 번 더 거르는 이유: 개정 층을 믿되 검산은 한다. 옛 형태 파일을
+    역추정해 읽은 경우 그 개정 층에 남의 코드가 섞여 들어올 수 있다.
     """
     candidates: dict[str, list[str]] = {}
     weights: dict[tuple[str, str], float] = {}
     n_cur = n_learn = 0
-    for code, value in raw.items():
-        if code == _META_KEY:
-            continue
+    for code, entry in entries.items():
         if prefixes and not any(code.startswith(p) for p in prefixes):
             continue
-        cur, learned = _kw_entry(value)
+        cur = list(entry.get("curriculum") or [])
         terms = list(cur)
         n_cur += len(cur)
-        for row in learned:
-            term = str(row["term"])
+        for row in entry.get("learned") or []:
+            term = str(row.get("term") or "")
+            if not term:
+                continue
             if term not in terms:
                 terms.append(term)
             n_learn += 1
@@ -742,8 +742,10 @@ def _classify(args) -> int:
 
     only = _selection(getattr(args, "only", None))
 
-    all_kw = subject.keywords()
-    if not all_kw:
+    book = subject.keyword_book()
+    for ident, why, severity in book.notes:
+        report.note(ident, why, severity)
+    if book.is_empty():
         report.note("keywords", f"{subject.keywords_path} 가 없거나 비어 있다 — 전부 큐로 보낸다", "warn")
 
     # --- items/ 전체를 한 번 읽어 코퍼스 텍스트(IDF용)와 캐시를 동시에 만든다 ---
@@ -755,12 +757,14 @@ def _classify(args) -> int:
     kw_stats: dict[str, dict] = {}
     for rev in revisions:
         prefixes = subject.standard_prefixes.get(rev, [])
-        cands, weights, stats = _keyword_view(all_kw, prefixes)
+        cands, weights, stats = _keyword_view(book.revision(rev), prefixes)
         candidates_by_rev[rev] = cands
         weights_by_rev[rev] = weights
         kw_stats[rev] = stats
         if not cands:
-            report.note(rev, f"{rev} 개정 접두어에 해당하는 키워드가 없다 — 전부 큐로 감", "warn")
+            report.note(rev, f"keywords.json 에 {rev} 개정 층이 없거나 비어 있다 — 전부 큐로 감. "
+                             f"python scripts/gw.py standards --draft-keywords "
+                             f"--subject {subject.slug} --revision {rev} --force", "warn")
 
     all_candidate_keywords: set[str] = set()
     for cands in candidates_by_rev.values():
@@ -951,9 +955,10 @@ def _learn(args) -> int:
         return report.finish()
 
     only = _selection(getattr(args, "only", None))
-    raw_kw = dict(subject.keywords())
-    meta_all = raw_kw.get(_META_KEY) if isinstance(raw_kw.get(_META_KEY), dict) else {}
-    learned_from_all: dict[str, list[str]] = dict((meta_all.get("learned_from") or {}))
+    book = subject.keyword_book()
+    for ident, why, severity in book.notes:
+        report.note(ident, why, severity)
+    learned_from_all: dict[str, list[str]] = dict((book.meta.get("learned_from") or {}))
 
     n_terms = 0
     for rev in revisions:
@@ -992,14 +997,16 @@ def _learn(args) -> int:
         # --- 병합: 교육과정 유래는 보존하고, learned 만 통째로 갈아끼운다 ---
         # 덧붙이지 않고 교체하는 이유: --learn 은 언제든 다시 돌 수 있어야 하고,
         # 돌 때마다 옛 용어가 쌓이면 라벨이 늘어도 사전이 낡은 채로 굳는다.
-        for code in list(raw_kw):
-            if code == _META_KEY or (prefixes and not any(code.startswith(p) for p in prefixes)):
+        # ★ **이 개정 층만** 건드린다. 다른 개정의 사전은 이 실행의 라벨과 아무 관계가
+        #   없으므로 손대면 안 된다(같은 코드를 두 개정이 쓰는 과목에서 특히 중요하다).
+        for code, entry in list(book.revision(rev).items()):
+            if prefixes and not any(code.startswith(p) for p in prefixes):
                 continue
-            cur, _old = _kw_entry(raw_kw[code])
-            raw_kw[code] = {"curriculum": cur, "learned": learned.get(code, [])}
+            book.set_entry(rev, code, {"curriculum": list(entry.get("curriculum") or []),
+                                       "learned": learned.get(code, [])})
         for code, rows in learned.items():
-            if code not in raw_kw:
-                raw_kw[code] = {"curriculum": [], "learned": rows}
+            if code not in book.revision(rev):
+                book.set_entry(rev, code, {"curriculum": [], "learned": rows})
 
         learned_from_all[rev] = sorted(docs)
         n_terms += sum(len(v) for v in learned.values())
@@ -1009,8 +1016,10 @@ def _learn(args) -> int:
                          f"{len(learned)}개 성취기준의 용어 {sum(len(v) for v in learned.values())}개를 배웠다. "
                          f"라벨이 없는 성취기준은 교육과정 초안 키워드만 남는다", "info")
 
-    raw_kw[_META_KEY] = {
-        "schema": "code -> {curriculum: [term], learned: [{term, weight, df, lor}]}",
+    book.meta.update({
+        # schema 문자열은 사람이 읽는 메모일 뿐이다. 층을 가르는 판정은 **모양**으로
+        # 한다(keywordsio 참조) — 스키마 이름을 믿었다가 조용히 틀린 전례가 있다.
+        "schema": keywordsio.SCHEMA,
         "learned_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "learned_by": "gw classify --learn (로그 오즈비)",
         "params": {"min_df": LEARN_MIN_DF, "max_df_ratio": LEARN_MAX_DF_RATIO,
@@ -1019,12 +1028,12 @@ def _learn(args) -> int:
         # 어느 문항으로 배웠는지 남긴다. --calibrate 가 이 목록을 빼고 채점해야
         # "학습에 쓴 문항으로 자기를 채점하는" 사고를 막을 수 있다.
         "learned_from": learned_from_all,
-    }
-    # 이 사전이 어떤 문항으로 만들어졌는지도 파일이 스스로 들고 있어야 한다.
-    raw_kw[_META_KEY]["learned_from_exams"] = {
-        rev: sorted({split_qid(q)[0] for q in qids if _is_qid(q)})
-        for rev, qids in learned_from_all.items()
-    }
+        # 이 사전이 어떤 문항으로 만들어졌는지도 파일이 스스로 들고 있어야 한다.
+        "learned_from_exams": {
+            rev: sorted({split_qid(q)[0] for q in qids if _is_qid(q)})
+            for rev, qids in learned_from_all.items()
+        },
+    })
 
     if not learned_from_all:
         # 아무것도 못 배웠는데 파일을 만들면 `gw subjects` 의 readiness 가 "keywords 있음"
@@ -1035,10 +1044,7 @@ def _learn(args) -> int:
                        f"python scripts/gw.py classify --subject {subject.slug} --learn 를 다시 돌려라")
         return report.finish()
 
-    if not args.dry_run:
-        subject.keywords_path.parent.mkdir(parents=True, exist_ok=True)
-        subject.keywords_path.write_text(
-            json.dumps(raw_kw, ensure_ascii=False, indent=2), encoding="utf-8")
+    keywordsio.save(subject.keywords_path, book, dry_run=bool(args.dry_run))
 
     report.artifact(str(subject.keywords_path))
     report.count(learned_terms=n_terms)
@@ -1070,9 +1076,10 @@ def _calibrate(args) -> int:
         return report.finish()
 
     only = _selection(getattr(args, "only", None))
-    raw_kw = subject.keywords()
-    kw_meta = raw_kw.get(_META_KEY) if isinstance(raw_kw.get(_META_KEY), dict) else {}
-    trained_on = kw_meta.get("learned_from") or {}
+    book = subject.keyword_book()
+    for ident, why, severity in book.notes:
+        report.note(ident, why, severity)
+    trained_on = book.meta.get("learned_from") or {}
     corpus_texts = [_item_text(d) for d in items.values()]
 
     payload = {
@@ -1092,7 +1099,7 @@ def _calibrate(args) -> int:
 
     for rev in revisions:
         prefixes = subject.standard_prefixes.get(rev, [])
-        candidates, weights, stats = _keyword_view(raw_kw, prefixes)
+        candidates, weights, stats = _keyword_view(book.revision(rev), prefixes)
         meta_by_rev = {rev: _load_standards_meta(rev)}
         unit_of = {code: _unit_label(meta_by_rev, rev, code) for code in candidates}
 
@@ -1341,19 +1348,25 @@ def _export_xlsx(args) -> int:
         return report.finish()
 
     revisions = list(DEFAULT_REVISIONS) if args.revision == "both" else [args.revision]
-    kw = subject.keywords()
-    meta: dict[str, dict] = {}
-    prefixes: list[str] = []
+    book = subject.keyword_book()
+    for ident, why, severity in book.notes:
+        report.note(ident, why, severity)
+
+    # ── 개정 × 코드가 열이 된다 ────────────────────────────────────────────
+    # 예전에는 코드만이 열이었다. 그러면 두 개정이 같은 코드를 쓰는 과목(윤리와 사상
+    # 등 5개)에서 한 열이 두 교육과정을 가리키게 되고, 되돌릴 때 어느 개정에 써야
+    # 할지 알 수 없다. 그래서 1행에 개정을 싣는다.
+    columns: list[tuple[str, str]] = []      # (개정, 코드)
+    meta_by_rev: dict[str, dict] = {}
     for rev in revisions:
-        meta.update(_load_standards_meta(rev))
-        prefixes.extend(subject.standard_prefixes.get(rev, []))
+        meta_by_rev[rev] = _load_standards_meta(rev)
+        prefixes = subject.standard_prefixes.get(rev, [])
+        codes = set(book.revision(rev)) | set(meta_by_rev[rev])
+        if prefixes:
+            codes = {c for c in codes if any(c.startswith(p) for p in prefixes)}
+        columns.extend((rev, c) for c in sorted(codes))
 
-    codes = (set(kw.keys()) - {_META_KEY}) | set(meta.keys())
-    if prefixes:
-        codes = {c for c in codes if any(c.startswith(p) for p in prefixes)}
-    codes = sorted(codes)
-
-    if not codes:
+    if not columns:
         report.note("codes", "내보낼 성취기준 코드가 없다(keywords.json 도, curriculum/standards 도 비어 있음)", "warn")
 
     wb = Workbook()
@@ -1364,37 +1377,40 @@ def _export_xlsx(args) -> int:
     # 사라진다 — 사라진 채 --import-xlsx 하면 애써 배운 사전이 조용히 지워진다.
     # 학습분은 아래 '학습된_용어' 시트에 읽기 전용으로 따로 보여준다.
     n_learned = 0
-    for col, code in enumerate(codes, start=1):
-        ws.cell(row=1, column=col, value=code)
-        label = (meta.get(code) or {}).get("unit") or (meta.get(code) or {}).get("title") or ""
-        ws.cell(row=2, column=col, value=label)
-        cur, learned = _kw_entry(kw.get(code))
-        n_learned += len(learned)
-        for row_i, keyword in enumerate(cur, start=3):
+    for col, (rev, code) in enumerate(columns, start=1):
+        ws.cell(row=1, column=col, value=rev)
+        ws.cell(row=2, column=col, value=code)
+        info_row = (meta_by_rev.get(rev, {}).get(code) or {})
+        ws.cell(row=3, column=col, value=info_row.get("unit") or info_row.get("title") or "")
+        entry = book.entry(rev, code)
+        n_learned += len(entry.get("learned") or [])
+        for row_i, keyword in enumerate(entry.get("curriculum") or [], start=XLSX_FIRST_TERM_ROW):
             ws.cell(row=row_i, column=col, value=keyword)
         ws.column_dimensions[ws.cell(row=1, column=col).column_letter].width = 22
 
     if n_learned:
         lw = wb.create_sheet("학습된_용어")
-        for i, head in enumerate(["성취기준", "용어", "가중치", "근거 문항수", "로그오즈비"], start=1):
+        for i, head in enumerate(["개정", "성취기준", "용어", "가중치", "근거 문항수", "로그오즈비"], start=1):
             lw.cell(row=1, column=i, value=head)
         r = 2
-        for code in codes:
-            _cur, learned = _kw_entry(kw.get(code))
-            for row in learned:
-                lw.cell(row=r, column=1, value=code)
-                lw.cell(row=r, column=2, value=row.get("term"))
-                lw.cell(row=r, column=3, value=row.get("weight"))
-                lw.cell(row=r, column=4, value=row.get("df"))
-                lw.cell(row=r, column=5, value=row.get("lor"))
+        for rev, code in columns:
+            for row in book.entry(rev, code).get("learned") or []:
+                lw.cell(row=r, column=1, value=rev)
+                lw.cell(row=r, column=2, value=code)
+                lw.cell(row=r, column=3, value=row.get("term"))
+                lw.cell(row=r, column=4, value=row.get("weight"))
+                lw.cell(row=r, column=5, value=row.get("df"))
+                lw.cell(row=r, column=6, value=row.get("lor"))
                 r += 1
-        lw.column_dimensions["A"].width = 16
-        lw.column_dimensions["B"].width = 30
+        lw.column_dimensions["B"].width = 16
+        lw.column_dimensions["C"].width = 30
 
     info = wb.create_sheet("사용_안내")
     guide = [
-        "1행 = 성취기준 코드(고치지 마세요). 2행 = 단원/설명(참고용, 고쳐도 무시됩니다).",
-        "3행부터 아래로 키워드를 한 줄에 하나씩 입력하세요. 빈 셀은 무시됩니다.",
+        "1행 = 개정 교육과정 연도(2015/2022). 고치지 마세요 — 같은 성취기준 코드를 "
+        "두 개정이 함께 쓰는 과목이 있어서, 이 행이 없으면 어느 교육과정의 키워드인지 알 수 없습니다.",
+        "2행 = 성취기준 코드(고치지 마세요). 3행 = 단원/설명(참고용, 고쳐도 무시됩니다).",
+        f"{XLSX_FIRST_TERM_ROW}행부터 아래로 키워드를 한 줄에 하나씩 입력하세요. 빈 셀은 무시됩니다.",
         "'학습된_용어' 시트는 gw classify --learn 이 라벨된 문항에서 자동으로 캔 것입니다. "
         "읽기 전용이라 여기서 고쳐도 반영되지 않고, --import-xlsx 로도 지워지지 않습니다.",
         f"저장 후: python scripts/gw.py classify --subject {subject.slug} --import-xlsx <이 파일 경로>",
@@ -1410,7 +1426,8 @@ def _export_xlsx(args) -> int:
     if not args.dry_run:
         wb.save(out_path)
 
-    report.count(codes=len(codes))
+    report.count(codes=len(columns),
+                 **{f"codes_{rev}": sum(1 for r, _c in columns if r == rev) for rev in revisions})
     report.artifact(str(out_path))
     report.next = f"편집 후: python scripts/gw.py classify --subject {subject.slug} --import-xlsx {out_path}"
     return report.finish()
@@ -1435,16 +1452,41 @@ def _import_xlsx(args) -> int:
     wb = load_workbook(in_path, data_only=True)
     ws = wb["키워드_성취기준"] if "키워드_성취기준" in wb.sheetnames else wb.worksheets[0]
 
-    updated = dict(subject.keywords())
+    book = subject.keyword_book()
+    for ident, why, severity in book.notes:
+        report.note(ident, why, severity)
+
+    # ── 판형을 **모양으로** 알아본다 (스키마 이름을 믿지 않는 것과 같은 이유) ──
+    # 새 판형: 1행 개정 / 2행 코드 / 3행 단원 / 4행부터 키워드
+    # 옛 판형: 1행 코드 / 2행 단원 / 3행부터 키워드 — 개정 정보가 없다.
+    # 옛 파일로 되돌리는 사람이 있을 수 있으므로 둘 다 받는다. 옛 판형이면 개정을
+    # 접두사로 역추정하고, 추정했다는 사실을 리포트에 남긴다.
+    head = str(ws.cell(row=1, column=1).value or "").strip()
+    legacy_sheet = not keywordsio.REVISION_RE.match(head)
+    code_row = 1 if legacy_sheet else 2
+    first_term_row = 3 if legacy_sheet else XLSX_FIRST_TERM_ROW
+    owners = keywordsio.code_owners(tuple(sorted(subject.standard_prefixes or {})
+                                          or DEFAULT_REVISIONS))
+
     codes_seen = 0
     kept_learned = 0
+    guessed: list[str] = []
     for col in range(1, ws.max_column + 1):
-        code = ws.cell(row=1, column=col).value
+        code = ws.cell(row=code_row, column=col).value
         if code is None or not str(code).strip():
             continue
         code = str(code).strip()
+        if legacy_sheet:
+            rev, why = keywordsio.infer_revision(code, subject.standard_prefixes or {}, owners)
+            if why:
+                guessed.append(code)
+        else:
+            rev = str(ws.cell(row=1, column=col).value or "").strip()
+            if not keywordsio.REVISION_RE.match(rev):
+                report.note(code, f"1행의 개정 값 {rev!r} 이 연도 모양이 아니다 — 이 열은 건너뛴다", "warn")
+                continue
         kws = []
-        for row_i in range(3, ws.max_row + 1):
+        for row_i in range(first_term_row, ws.max_row + 1):
             val = ws.cell(row=row_i, column=col).value
             if val is None:
                 continue
@@ -1454,17 +1496,23 @@ def _import_xlsx(args) -> int:
         # 엑셀은 교육과정 칸만 왕복한다. 학습된 용어(가중치를 달고 있는 것)는
         # 엑셀에 실리지 않으므로 여기서 **그대로 보존**해야 한다. 예전처럼 통째로
         # 덮어쓰면 사람이 키워드 하나 고치려고 엑셀을 왕복한 순간 학습 결과가 날아간다.
-        _old_cur, learned = _kw_entry(updated.get(code))
+        learned = book.entry(rev, code).get("learned") or []
         kept_learned += len(learned)
-        updated[code] = {"curriculum": kws, "learned": learned}
+        book.set_entry(rev, code, {"curriculum": kws, "learned": learned})
         codes_seen += 1
 
-    if not args.dry_run:
-        subject.keywords_path.parent.mkdir(parents=True, exist_ok=True)
-        subject.keywords_path.write_text(
-            json.dumps(updated, ensure_ascii=False, indent=2), encoding="utf-8")
+    if legacy_sheet:
+        report.note(in_path.name,
+                    f"1행이 개정이 아니라 코드다 — 옛 판형으로 읽었다"
+                    + (f". {len(guessed)}개 코드는 개정을 접두사로도 못 갈라 추정했다"
+                       f"({', '.join(sorted(guessed)[:4])}{'…' if len(guessed) > 4 else ''}) — "
+                       f"--export-xlsx 로 새로 내보내 쓰는 편이 안전하다" if guessed else ""),
+                    "warn" if guessed else "info")
 
-    report.count(codes_updated=codes_seen, codes_total=len(updated) - (1 if _META_KEY in updated else 0),
+    keywordsio.save(subject.keywords_path, book, dry_run=bool(args.dry_run))
+
+    report.count(codes_updated=codes_seen,
+                 codes_total=sum(len(book.revision(r)) for r in book.known_revisions()),
                  learned_kept=kept_learned)
     report.artifact(str(subject.keywords_path))
     report.next = f"python scripts/gw.py classify --subject {subject.slug}"

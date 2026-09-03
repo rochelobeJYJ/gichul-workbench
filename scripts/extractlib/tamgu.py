@@ -16,7 +16,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from .textnorm import CHOICE_TO_INT, INT_TO_CHOICE, compact, squash
+from .textnorm import CHOICE_TO_INT, INT_TO_CHOICE, compact, fold_name, squash
 
 # 문항 시작: 줄머리의 'N.' — 두 자리까지.
 QUESTION_START_RE = re.compile(r"(?m)^(\d{1,2})\.(?:\s|$)")
@@ -24,6 +24,8 @@ QUESTION_START_RE = re.compile(r"(?m)^(\d{1,2})\.(?:\s|$)")
 SECTION_LABEL_RE = re.compile(r"(?<![가-힣])([ㄱ-ㅎ])\.")
 # 배점 표기. 값을 숫자로 뽑는다 — '3점'을 코드에 박지 않기 위해서다.
 POINT_MARK_RE = re.compile(r"\[\s*(\d)\s*점\s*\]")
+# 가운뎃점 변형(textnorm.NAME_SEPARATORS 와 같은 목록). 과목명이 이 글자를 품는 과목에서만 쓴다.
+MIDDOT_VARIANTS = "·∙•・･‧⋅"
 
 
 @dataclass
@@ -34,6 +36,11 @@ class ParsedQuestion:
     raw: str = ""
     error: str = ""
     warning: str = ""
+    # 이 칸의 본체가 텍스트가 아니라 그림이라는 표시. 값은 "image" 하나뿐이고,
+    # 정상(텍스트에서 복원됨)은 빈 문자열 = 표시 없음이다. items 에서는
+    # ext.choices_source / ext.boxed_source 로 실린다 (extract.py 참조).
+    choices_source: str = ""
+    boxed_source: str = ""
 
 
 # --------------------------------------------------------------------------
@@ -46,6 +53,11 @@ def noise_tokens(subject) -> set[str]:
     2단 편집 문제지의 세로 제목은 텍스트 레이어에서 '지' '구' '과' '학' 처럼
     한 글자씩 별도 줄로 나온다. 과목 이름을 코드에 적는 대신
     subject.json 의 label/aliases 에서 글자를 만들어 낸다.
+
+    이름에 가운뎃점이 있으면 **그 변형들을 전부** 넣는다. 세로 제목도 한 글자씩
+    쪼개지므로 가운뎃점 한 개가 독립된 줄로 나오는데(실측: 2024 수능 사회·문화
+    1쪽 여백 제목이 '사/회/・/문/화'), 별칭의 '·'(U+00B7)와 문제지의 '・'(U+FF65→
+    NFKC U+30FB)가 달라 그 한 줄만 살아남아 마지막 선택지 끝에 붙었다.
     """
     names = [subject.label or ""]
     kice = (subject.providers or {}).get("kice") or {}
@@ -57,31 +69,64 @@ def noise_tokens(subject) -> set[str]:
             continue
         tokens.add(flat)
         tokens.update(flat)          # 글자 단위
+        if any(ch in MIDDOT_VARIANTS for ch in flat):
+            tokens.update(MIDDOT_VARIANTS)
     if subject.area:
         tokens.add(squash(subject.area))
         tokens.add(squash(subject.area) + "영역")
     return {t for t in tokens if t}
 
 
+def folded_noise_tokens(subject) -> set[str]:
+    """noise_tokens 의 '구분자 무시' 판. **두 글자 이상만** 담는다.
+
+    같은 과목명이라도 가운뎃점 코드포인트가 자리마다 다르다(textnorm 의
+    NAME_SEPARATORS 주석 참조). 실측: 2024 수능 사회·문화 문제지 꼬리글은
+    한 쪽에서는 '사회탐구영역(사회･문화)'(U+FF65), 다른 쪽에서는
+    '2 (사회․문화)'(U+2024→마침표) 로 찍힌다. squash 로만 대조하면 둘 다 안 걸려
+    꼬리글이 **마지막 선택지 뒤에 그대로 붙는다**(⑤ … 지지한다. 사회탐구영역(사회・문화) 1).
+
+    한 글자짜리(세로 제목 조각)를 여기 넣지 않는 이유: fold_name 은 마침표도 지우므로
+    본문의 '2.' 같은 줄이 별칭 글자 '2' 와 같아져 **본문 한 줄이 조용히 사라진다.**
+    한 글자 대조는 기존 squash 경로가 그대로 맡는다.
+    """
+    names = [subject.label or ""]
+    kice = (subject.providers or {}).get("kice") or {}
+    names.extend(kice.get("aliases") or [])
+    if subject.area:
+        names.extend([subject.area, f"{subject.area}영역"])
+        names.append(f"{subject.area}영역({subject.label or ''})")
+    folded = {fold_name(n) for n in names}
+    return {t for t in folded if len(t) >= 2}
+
+
 def alias_patterns(subject) -> list[re.Pattern]:
-    """'2(지구과학II)' 같은 쪽 번호 꼬리글을 잡는 정규식."""
+    """'2(지구과학II)' 같은 쪽 번호 꼬리글을 잡는 정규식.
+
+    대조 대상은 fold_name 을 거친 줄이라 괄호가 이미 지워져 있다 — 그래서 패턴에도
+    괄호를 넣지 않는다(위 folded_noise_tokens 주석의 가운뎃점 사고와 같은 자리다).
+    """
     names = [subject.label or ""]
     kice = (subject.providers or {}).get("kice") or {}
     names.extend(kice.get("aliases") or [])
     patterns = []
     for name in names:
-        flat = squash(name)
+        flat = fold_name(name)
         if flat:
-            patterns.append(re.compile(rf"^\d+\({re.escape(flat)}\)$"))
+            patterns.append(re.compile(rf"^\d+{re.escape(flat)}$"))
     return patterns
 
 
-def should_skip_line(line: str, tokens: set[str], patterns: list[re.Pattern]) -> bool:
+def should_skip_line(line: str, tokens: set[str], patterns: list[re.Pattern],
+                     folded_tokens: set[str] | None = None) -> bool:
     """문제지 머리글/꼬리글이면 True."""
     if not line:
         return True
     flat = squash(line)
     if flat in tokens:
+        return True
+    folded = fold_name(line)
+    if folded_tokens and folded in folded_tokens:
         return True
     if "저작권" in line:
         return True
@@ -93,30 +138,63 @@ def should_skip_line(line: str, tokens: set[str], patterns: list[re.Pattern]) ->
         return True
     if "선택" in line and "제[" in flat:
         return True
-    if any(p.match(flat) for p in patterns):
+    if any(p.match(folded) for p in patterns):
         return True
     # '1 32' 처럼 쪽 번호와 문제지 코드만 있는 줄. 숫자 토큰이 2개 이상인 줄은 본문일 수 없다
-    # (선택지가 원문자 없이 숫자만으로 한 줄에 나오는 판형은 토큰 5개라 이 규칙에 걸리지만,
-    #  그 판형은 아래 선택지 파서가 줄 단위로 따로 처리하므로 여기 오기 전에 걸러진다).
+    # — **단 숫자 선택지 다섯 줄은 예외다.** '1 9 / 2 18 / …' 같은 판형이 실재하고
+    #   한 줄만 보면 쪽번호와 구분되지 않는다. 그 예외는 줄 배열을 보는 clean_text 의
+    #   numeric_choice_lines 가 미리 골라 이 함수에 오기 전에 보호한다.
     if re.fullmatch(r"(?:\d+[ \t]*){2,3}", line.strip()):
         return True
     return False
 
 
+# '1 9' 처럼 라벨과 값이 숫자 둘뿐인 줄. 쪽번호 줄('1 32')과 생김새가 완전히 같다.
+_NUM_PAIR_LINE_RE = re.compile(r"^(\d{1,2})[ \t]+\d{1,4}$")
+
+
+def numeric_choice_lines(lines: list[str]) -> set[int]:
+    """숫자만으로 된 선택지 다섯 줄의 줄 번호.
+
+    (실측 사고) 화학Ⅰ 2025 수능 19번의 선택지는 '1 9 / 2 18 / 3 21 / 4 24 / 5 27'
+    다섯 줄이다. 한 줄만 보면 쪽번호+문제지코드 줄('1 32')과 구분할 수 없어서
+    should_skip_line 의 잡음 규칙이 **다섯 줄을 통째로 지웠고**, 그 문항의 choices 가
+    0개가 됐다(계산 답이 숫자인 문항이라 화학·물리에서 흔하다).
+
+    한 줄로는 못 가르지만 **1~5 가 붙어 있는 다섯 줄**이라는 배열은 쪽번호가 흉내낼 수
+    없다. 그래서 줄 단위 판정 대신 배열로 보호한다. 줄 간격이 정확히 1일 때만 인정해
+    표 한가운데의 숫자 행이 우연히 걸리는 것을 막는다.
+    """
+    pairs = [(index, int(m.group(1)))
+             for index, line in enumerate(lines)
+             if (m := _NUM_PAIR_LINE_RE.match(line))]
+    protected: set[int] = set()
+    for start in range(len(pairs) - 4):
+        window = pairs[start:start + 5]
+        if [label for _, label in window] != [1, 2, 3, 4, 5]:
+            continue
+        if window[-1][0] - window[0][0] != 4:      # 다섯 줄이 연속이어야 한다
+            continue
+        protected.update(index for index, _ in window)
+    return protected
+
+
 def clean_text(text: str, subject) -> str:
     """1번 문항이 시작하는 줄부터 남기고 머리글/꼬리글을 걷어낸다."""
     tokens = noise_tokens(subject)
+    folded = folded_noise_tokens(subject)
     patterns = alias_patterns(subject)
+    raw_lines = [raw_line.strip() for raw_line in text.splitlines()]
+    protected = numeric_choice_lines(raw_lines)
     lines: list[str] = []
     started = False
-    for raw_line in text.splitlines():
-        line = raw_line.strip()
+    for index, line in enumerate(raw_lines):
         if not started:
             if re.match(r"^1\.(\s|$)", line):
                 started = True
             else:
                 continue
-        if should_skip_line(line, tokens, patterns):
+        if index not in protected and should_skip_line(line, tokens, patterns, folded):
             continue
         lines.append(line)
     return "\n".join(lines).strip()
@@ -176,19 +254,26 @@ def split_questions(text: str, count: int) -> dict[int, str]:
 # 선택지
 # --------------------------------------------------------------------------
 
-def _label_rows(lines: list[str]) -> list[tuple[int, str, str]]:
+def _label_rows(lines: list[str], digit_after: bool = False) -> list[tuple[int, str, str]]:
     """(줄 번호, 정규화한 라벨, 라벨 뒤에 붙어 있던 글자) 목록.
 
     NFKC 정규화를 거치면 원문자 ①~⑤ 가 평문 1~5 가 되므로 둘 다 받는다.
     라벨 뒤에 공백 없이 글자가 바로 붙는 판형('1저기압 하강')이 실제로 있어서
     `(?=[^\\d\\s])` 선행 검사를 함께 쓴다. 숫자가 이어지면(10hPa) 라벨이 아니다.
+
+    `digit_after=True` 면 그 선행 검사를 풀어 **선택지 본문이 숫자로 시작하는** 줄도
+    받는다. 오탐이 크게 늘기 때문에 기본값은 False 이고, 아래 3차 시도에서만 켠다.
     """
     rows: list[tuple[int, str, str]] = []
+    tight = re.compile(r"^([①②③④⑤1-5])(?:\s+|(?=[^\d\s]))(.*)$")
+    loose = re.compile(r"^([①②③④⑤1-5])\s*(\S.*)$")
     for index, raw_line in enumerate(lines):
         line = compact(raw_line)
         match = re.match(r"^([①②③④⑤1-5])$", line)
         if match is None:
-            match = re.match(r"^([①②③④⑤1-5])(?:\s+|(?=[^\d\s]))(.*)$", line)
+            match = tight.match(line)
+        if match is None and digit_after:
+            match = loose.match(line)
         if match is None:
             continue
         groups = match.groups()
@@ -213,10 +298,26 @@ def _build_choices(lines: list[str], window: list[tuple[int, str, str]]) -> list
         # 숫자만 있는 꼬리는 쪽 번호다. 단, 마지막 선택지에서만 떼어낸다 —
         # 표 판형에서는 행의 마지막 칸이 숫자('0+1', '1')인 경우가 있어
         # 모든 선택지에서 떼면 정답 후보 값을 지워 버린다.
+        #
+        # 두 가지 안전장치가 더 있다. 둘 다 **선택지 값 자체가 숫자인 문항**(화학·물리의
+        # 계산 문항이 그렇다) 때문에 생겼다. 실측: 화학Ⅰ 2025 수능 19번 '⑤ 27' 의 27 이
+        # 쪽번호로 오인돼 지워지고 ⑤ 가 빈 선택지가 됐다.
+        #   (1) 라벨 줄에 붙어 있던 조각(remainder)은 떼지 않는다. 쪽번호는 언제나
+        #       다음 줄에 따로 오지, '⑤' 와 같은 줄에 붙지 않는다.
+        #   (2) 숫자 꼬리는 한 번만 뗀다. 쪽번호 줄은 하나뿐이다.
         last = offset + 1 == len(window)
-        while parts and (is_trailer_line(parts[-1].strip())
-                         or (last and re.fullmatch(r"\d+", squash(parts[-1])))):
-            parts.pop()
+        floor = 1 if remainder else 0
+        digits_trimmed = 0
+        while len(parts) > floor:
+            tail = parts[-1].strip()
+            if is_trailer_line(tail):
+                parts.pop()
+                continue
+            if last and not digits_trimmed and re.fullmatch(r"\d+", squash(tail)):
+                parts.pop()
+                digits_trimmed += 1
+                continue
+            break
         choices.append(f"{INT_TO_CHOICE[int(label)]} {compact(' '.join(parts))}".strip())
     return choices
 
@@ -226,13 +327,18 @@ def extract_choices_from_lines(lines: list[str]) -> tuple[list[str], list[str], 
 
     기본 규칙: 라벨 1~5 가 **연속한 다섯 줄**에 나온다. 뒤에서부터 훑는 이유는
     본문에도 '1' 로 시작하는 줄이 얼마든지 있고 선택지는 항상 문항 맨 끝이기 때문이다.
+
+    시도 순서는 '엄격 → 느슨' 이다. 뒤로 갈수록 오탐 위험이 커지므로 앞 규칙이
+    답을 주면 절대 뒤 규칙을 보지 않는다.
+      1) 엄격 라벨 · 연속 다섯 줄            (완화 표시 없음)
+      2) 엄격 라벨 · 순서만 유지             (표 판형. 완화 표시)
+      3) 숫자 뒤따름 허용 · 연속 다섯 줄     (사회탐구. 완화 표시)
     """
     label_rows = _label_rows(lines)
 
-    for start in range(len(label_rows) - 5, -1, -1):
-        window = label_rows[start:start + 5]
-        if [label for _, label, _ in window] == ["1", "2", "3", "4", "5"]:
-            return _build_choices(lines, window), lines[:window[0][0]], False
+    window = _consecutive_window(label_rows)
+    if window is not None:
+        return _build_choices(lines, window), lines[:window[0][0]], False
 
     # --- 완화 규칙 -------------------------------------------------------
     # 선택지가 표로 짜인 문항(각 행이 여러 칸으로 쪼개져 나온다)에서는 라벨 사이에
@@ -249,10 +355,111 @@ def extract_choices_from_lines(lines: list[str]) -> tuple[list[str], list[str], 
         candidate = next(((i, lab, rem) for i, lab, rem in label_rows
                           if lab == wanted and i > cursor), None)
         if candidate is None:
-            return [], lines, False
+            chain = []
+            break
         chain.append(candidate)
         cursor = candidate[0]
-    return _build_choices(lines, chain), lines[:chain[0][0]], True
+    if chain:
+        return _build_choices(lines, chain), lines[:chain[0][0]], True
+
+    # --- 3차: 선택지 본문이 숫자로 시작하는 판형 --------------------------
+    # NFKC 가 ⑤ 를 '5' 로 눕혀 놓기 때문에(textnorm 주석 참조) '⑤2단계에서…' 는
+    # '52단계에서…' 가 된다. 라벨 뒤에 숫자가 오면 라벨로 안 보는 기본 규칙이
+    # 여기서 정면으로 걸린다 — 사회탐구는 선택지가 숫자로 시작하는 일이 흔하다.
+    # 실측(2024 수능 사회·문화): 5번 '⑤2단계에서 도출한…', 14번 '①1모둠과 2모둠이…',
+    # 2025 수능 10번 '①1970년 계층 구조는…' 세 문항에서 선택지가 0개로 사라졌다.
+    #
+    # 그래서 '숫자가 이어져도 라벨로 본다'를 켜되, **연속 다섯 줄 규칙만** 남긴다.
+    # 순서만 맞으면 받아 주는 2차 완화 규칙까지 함께 풀면 본문 표의 숫자 다섯 개가
+    # 선택지로 둔갑한다. 이 경로로 뽑은 것도 검수 대상으로 표시한다.
+    window = _consecutive_window(_label_rows(lines, digit_after=True))
+    if window is not None:
+        return _build_choices(lines, window), lines[:window[0][0]], True
+    return [], lines, False
+
+
+def _consecutive_window(label_rows: list[tuple[int, str, str]]):
+    """라벨 1~5 가 연속한 다섯 줄로 나오는 마지막 구간. 없으면 None."""
+    for start in range(len(label_rows) - 5, -1, -1):
+        window = label_rows[start:start + 5]
+        if [label for _, label, _ in window] == ["1", "2", "3", "4", "5"]:
+            return window
+    return None
+
+
+# --------------------------------------------------------------------------
+# 선택지가 그림인 문항
+# --------------------------------------------------------------------------
+
+# 선택지 자리가 분수·도형이면 텍스트 레이어에는 조각만 남는다. 조각의 최대 길이 —
+# 실측(화학Ⅰ 2024 수능 3번 '1 /', '5 /2', 물리학Ⅰ 2024 수능 6번 '3 /2', 18번 '4 2B0')
+# 은 전부 6자 이하다. 12 는 'A/2' 류가 한 줄에 다 붙어 나오는 변형까지 덮되
+# 문장 한 조각('~로 옳은 것은?')은 못 들어오는 값이다.
+IMAGE_FRAGMENT_MAX_LEN = 12
+IMAGE_BAND_MIN_LINES = 3      # 조각이 이보다 적으면 쪽번호·꼬리글과 구분되지 않는다
+# 조각 줄머리에서 살아남은 선택지 번호(1~5)의 가짓수. 2 인 이유: 실측에서 라벨이
+# 통째로 사라지는 문항이 있다 — 화학Ⅰ 2024 수능 20번의 선택지 자리에는 '1 /2' '3'
+# '3 /2' '9' 네 줄뿐이라 살아남은 번호가 1·3 둘이다. 3 으로 두면 이 문항이 계속
+# error 로 남는다. 1 로 내리지 않는 이유는 그 자리가 선택지 자리인지 확인할 근거가
+# 번호밖에 없어서다.
+IMAGE_BAND_MIN_LABELS = 2
+# 조각에 허용하는 글자. 한글·따옴표·물음표가 하나라도 있으면 문장이지 조각이 아니다.
+_FRAGMENT_CHARS_RE = re.compile(r"^[0-9A-Za-z+\-−~×÷·/().,:;'\[\]{}<>=^_|²³½¼¾°∘Δ\s]+$")
+_FRAGMENT_LABEL_RE = re.compile(r"^([1-5])(?!\d)")
+
+
+def _is_image_fragment(line: str) -> bool:
+    """수식·도형이 그림으로 그려질 때 텍스트 레이어에 남는 조각인가.
+
+    한글이 한 글자라도 있으면 조각이 아니다 — 판정을 '글자 모양'이 아니라
+    '문장인가'에 걸어야 오탐이 안 난다(PITFALLS 4-3). 선택지가 통째로
+    그림이면 그 자리에는 문장이 남을 수 없다.
+    """
+    text = compact(line)
+    if not text or len(text) > IMAGE_FRAGMENT_MAX_LEN:
+        return False
+    if re.search(r"[가-힣ㄱ-ㅎㅏ-ㅣ]", text):
+        return False
+    return bool(_FRAGMENT_CHARS_RE.fullmatch(text))
+
+
+def image_choice_band(lines: list[str]) -> int | None:
+    """선택지 자리가 그림인 문항에서 그 자리가 시작하는 줄 번호. 아니면 None.
+
+    (실측) 화학·물리는 선택지가 분수·그래프인 문항이 회차당 2~4건 있다. 분자·분모·
+    빗금이 서로 다른 줄로 흩어지고, NFKC 가 ①을 '1' 로 눕혀 놓기 때문에 분모의 '2'와
+    라벨 '②'를 원리적으로 가를 수 없다 — **텍스트로는 복원이 불가능하다.** 실측 잔해:
+      화학Ⅰ 2024 수능 3번  '1 /' '2' '3 /' '2' '5 /2' '9'
+      물리학Ⅰ 2024 수능 17번 '2' '3' '4' '5'   (선택지가 그래프 다섯 장)
+    이런 문항은 크롭 이미지가 본체라는 점에서 vision 회차와 같다(CONTRACT 4절).
+    복원 불가를 error 로 올리면 검증기가 매 회차 오탐을 쏟아 신뢰를 잃는다.
+
+    판정은 **선택지 추출이 이미 실패한 뒤에만** 부른다. 그 위에서 요구하는 근거 셋:
+      1. 블록 끝이 조각 줄로만 이어질 것 — 문장이 남았다면 그건 다른 실패다.
+         (답안지 안내 꼬리글은 건너뛴다. trim_block 이 떼지 못한 채 남는 회차가 있다 —
+          실측 물리학Ⅰ 2024 수능 6번의 '제[' '] 선택' 이 선택지 자리 한복판을 끊었다.)
+      2. 조각이 IMAGE_BAND_MIN_LINES 줄 이상일 것.
+      3. 조각 줄머리에서 선택지 번호가 IMAGE_BAND_MIN_LABELS 가지 이상 보일 것 —
+         번호가 하나도 안 보이면 그 자리가 선택지 자리인지 알 방법이 없다.
+      4. 그 앞에 발문이 남아 있을 것 — 블록 전체가 조각이면 잃은 것이 선택지만이
+         아니다. 그건 다른 실패이고 error 로 남아야 한다.
+    """
+    start = len(lines)
+    fragments = 0
+    while start > 0:
+        line = lines[start - 1]
+        if _is_image_fragment(line):
+            fragments += 1
+        elif not is_trailer_line(line):
+            break
+        start -= 1
+    if start == 0 or fragments < IMAGE_BAND_MIN_LINES:
+        return None
+    labels = {m.group(1) for line in lines[start:]
+              if _is_image_fragment(line) and (m := _FRAGMENT_LABEL_RE.match(compact(line)))}
+    if len(labels) < IMAGE_BAND_MIN_LABELS:
+        return None
+    return start
 
 
 def split_boxed(statement_part: str) -> str:
@@ -268,25 +475,80 @@ def split_boxed(statement_part: str) -> str:
     return "\n".join(segments)
 
 
+def _boxed_label_pos(stem_blob: str) -> int | None:
+    """'<보기>' 중 **상자 머리표**인 것의 위치. 없으면 None.
+
+    발문 문장에도 '<보기>에서 (있는 대로) 고른 것은?' 이 들어가므로 예전에는 그냥
+    마지막 것에서 잘랐다. 그러면 상자 머리표가 텍스트 레이어에 없는 문항에서
+    **발문 한복판이 잘린다** — 2025학년도 수능 한국지리 15번이 그랬다. 자료 상자와
+    <보 기> 상자가 통째로 벡터로 그려져 텍스트가 없어서, 발문 안의 '<보기>에서' 가
+    마지막 후보가 됐고 그 뒤의 '(단, …) [3점]' 이 boxed 로 밀려났다. 그 결과
+    validate 의 '[N점] 표기 ↔ points' 대조가 **정상 문항을 error 로 잡았다.**
+
+    가르는 규칙은 조사(助詞) 하나면 충분하다. 상자 머리표는 홀로 서고, 발문 안의
+    것은 반드시 '에'(에서/에게)가 곧바로 붙는다. 좁게 잡는다 — 손상 탐지 패턴은
+    넓게 잡았다가 좁히면 이미 신뢰를 잃은 뒤다(PITFALLS 4-3).
+    """
+    positions = [m.start() for m in re.finditer(re.escape("<보기>"), stem_blob)]
+    for pos in reversed(positions):
+        if not stem_blob[pos + len("<보기>"):].startswith("에"):
+            return pos
+    return None
+
+
+def boxed_source(stem: str, boxed: str) -> str:
+    """<보기> 상자가 그림이라 텍스트에 없으면 "image", 아니면 "".
+
+    (실측) 2025학년도 수능 한국지리는 자료 표와 <보 기> 상자가 통째로 벡터로 그려져
+    텍스트 레이어에 없다. 15번이 그런 문항인데 `extraction_mode` 는 direct 이고
+    text.boxed 만 빈다 — 회차 단위 모드로는 표현할 수 없는 **문항 단위 부분 손실**이다.
+
+    판정 근거는 **발문이 상자를 가리키는데 상자가 없다**는 모순 하나뿐이다.
+    '자료 이미지가 있는데 boxed 가 비었다'는 근거로 삼지 않았다. 실측으로 반증된다 —
+    2024학년도 수능 한국지리 20문항 중 17문항이 '자료 이미지 있음 + boxed 빔'인데
+    그중 16문항은 애초에 <보기> 상자가 없는 정상 문항이다(지도·그래프 자료가 본체).
+    그 근거를 쓰면 정상 문항 열여섯 개에 거짓 표시를 달게 된다.
+
+    보기 항목(ㄱ.ㄴ.ㄷ.)이 발문 쪽에 살아 있으면 표시하지 않는다. 그건 상자가
+    그림인 것이 아니라 상자 머리표만 못 찾아 내용이 발문에 섞인 것이라, 고칠 데가
+    파싱 쪽에 있다 — 그림이라고 적으면 고칠 수 있는 버그를 덮는다.
+    """
+    if boxed.strip():
+        return ""
+    if not re.search(re.escape("<보기>"), stem or ""):
+        return ""
+    if len(SECTION_LABEL_RE.findall(stem)) >= 2:
+        return ""
+    return "image"
+
+
 def parse_question(block: str, choice_count: int = 5) -> ParsedQuestion:
     """한 문항 블록 → 발문 / <보기> / 선택지."""
     block = trim_block(block)
     body = re.sub(r"^\d+\.\s*", "", block, count=1).strip()
     lines = [compact(line) for line in body.splitlines() if compact(line)]
     choices, stem_lines, relaxed = extract_choices_from_lines(lines)
+    choices_source = ""
     if len(choices) != choice_count:
-        return ParsedQuestion(raw=body,
-                              error=f"선택지 {choice_count}개를 추출하지 못했다({len(choices)}개)")
+        # 선택지가 그림인 문항이면 실패가 아니다 — 선택지 자리만 비우고 발문은 살린다.
+        # 발문까지 버리면 '[N점] 표기가 없음' 같은 파생 오탐이 문항마다 하나씩 더 붙는다.
+        band = image_choice_band(lines)
+        if band is None:
+            return ParsedQuestion(raw=body,
+                                  error=f"선택지 {choice_count}개를 추출하지 못했다({len(choices)}개)")
+        choices, stem_lines, relaxed = [], lines[:band], False
+        choices_source = "image"
 
     stem_blob = compact(" ".join(stem_lines))
     stem, boxed = stem_blob, ""
-    if "<보기>" in stem_blob:
-        # 발문 문장에도 '<보기>에서 있는 대로 고른 것은?' 이 들어가므로 마지막 것으로 자른다.
-        head, tail = stem_blob.rsplit("<보기>", 1)
-        stem, boxed = head.strip(), split_boxed(tail)
+    cut = _boxed_label_pos(stem_blob)
+    if cut is not None:
+        stem = stem_blob[:cut].strip()
+        boxed = split_boxed(stem_blob[cut + len("<보기>"):])
     warning = "선택지를 완화 규칙(표 판형)으로 뽑았다 — 검수 필요" if relaxed else ""
     return ParsedQuestion(stem=stem, boxed=boxed, choices=choices, raw=body,
-                          warning=warning)
+                          warning=warning, choices_source=choices_source,
+                          boxed_source=boxed_source(stem, boxed))
 
 
 # --------------------------------------------------------------------------

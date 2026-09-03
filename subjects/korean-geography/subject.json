@@ -31,8 +31,12 @@
     }
   },
   "standard_prefixes": {
-    "2015": [],
-    "2022": []
+    "2015": [
+      "12한지"
+    ],
+    "2022": [
+      "12한탐"
+    ]
   },
-  "notes": "[주의] 이 파일은 download 모듈 작업 중 실수로 덮어써져 재구성되었다. standard_prefixes 와 curriculum, notes 의 교육과정 근거는 과목 등록 담당이 다시 채워야 한다. ebsi.subject_id(141)는 `gw download --probe --area 사회탐구 --year 2024 --exam 수능` 으로 실측한 값이고, 2024학년도 수능에서 문제·정답·해설 세 종류가 모두 조회되며 실제 다운로드까지 확인했다. ebsi.national.subject_id(17029)는 학평 계열, NATIONAL_2015_SUBJECTS 출처."
+  "notes": "[EBSi ID 실측 2026-09-03] providers.ebsi.subject_id(141) 는 `gw download --probe --area 사회탐구 --year 2024|2026 --exam 수능` 으로 EBSi 목록 페이지에서 직접 읽은 값이다. **과목ID 를 가르는 축은 계열(수능/학평)이 아니라 학년 목록(targetCd)이다** — 고3 목록(D300)의 이 ID 하나가 수능·6월모평·9월모평·고3 학평을 전부 담는다. 2024·2026 두 학년도 수능에서 같은 값이 나왔고 problem/answer/solution 세 종류가 모두 조회됐다. 이 ID 로 조회되는 수능은 2013~2026학년도 14회차. providers.ebsi.national(17029) 은 **고2 목록(D200) 전용** ID 다. 옛 표(NATIONAL_2015_SUBJECTS)가 '학평 계열'이라 부르던 값인데, 실측하니 고3 목록에서는 2019년까지 거슬러 올라가도 0건이고 고2 목록에서만 조회된다(대조 실측: 지구과학Ⅰ 17041 은 D200 에서 2015~2025년 44건, D300 에서 0건). 그래서 ebsi.py 의 _conf_for 는 이 블록을 targetCd 가 D300 이 아닐 때만 적용한다. standard_prefixes 는 curriculum/standards/*.json 실측값 — 2015 '12한지'는 별책7_사회과 교육과정(제2018-162호).pdf 의 [12한지01-01](p.166), 2022 '12한탐'은 [별책7] 사회과 교육과정.pdf 의 [12한탐01-01](p.176). 2022개정에서 '한국지리'는 진로선택 '한국지리 탐구'로 개편되며 과목명이 바뀌어 curriculum.2022 는 null. (이 파일은 앞선 download 작업 중 덮어써져 비어 있던 standard_prefixes·curriculum 을 되채운 것이다.)"
 }

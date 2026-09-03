@@ -150,6 +150,10 @@ def register(parser) -> None:
                         help="목록 조회까지만 하고 파일은 받지 않는다(계획이 현실과 맞는지 확인)")
     parser.add_argument("--force", action="store_true", help="이미 있는 파일도 다시 받는다")
     parser.add_argument("--quiet", action="store_true", help="리포트 경로만 출력")
+    # --workspace 는 CONTRACT 6절의 7개 명령 공통 옵션인데 download 에만 빠져 있었다.
+    # 없으면 병렬 작업이 공유 workspace/<slug>/sources 를 서로 밟는다 — 실제로 겪은 사고라
+    # 다른 여섯 명령은 이미 갖고 있었다. probe 도 리포트를 남기므로 같은 옵션을 받는다.
+    parser.add_argument("--workspace", help="작업 공간 경로 직접 지정 (기본 workspace/<slug>)")
     parser.add_argument("--fast", action="store_true",
                         help="요청 사이 딜레이를 줄인다. 소량 재시도용 — 대량 수집에는 쓰지 마라")
     # --- 실측 도구 ---
@@ -180,7 +184,7 @@ def _run_probe(args, http: Http) -> int:
     넓히는 사람이 제일 먼저 돌리는 명령이다.
     """
     slug = args.subject or "_probe"
-    space = Space(slug)
+    space = Space(slug, getattr(args, "workspace", None))
     report = Report("download_probe", slug, space)
     report.extra["area"] = args.area
     try:
@@ -247,7 +251,7 @@ def _run_download(args, http: Http) -> int:
         # 리포트를 쓸 작업 공간조차 정할 수 없는 단계라 여기서만 stdout 으로 끝낸다.
         print(f"[FAIL] {exc}")
         return 2
-    space = Space(subject.slug)
+    space = Space(subject.slug, getattr(args, "workspace", None))
     space.ensure()
     report = Report("download", subject.slug, space)
 

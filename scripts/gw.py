@@ -34,6 +34,7 @@ COMMANDS = {
     "build": ("build", "문항집 제작기 HTML 생성"),
     "validate": ("validate", "구조·정답·불변식 검증"),
     "standards": ("standards", "교육과정 PDF → 성취기준 JSON"),
+    "standards-md": ("curriculum_md", "성취기준 JSON → 과목별 마크다운"),
 }
 
 

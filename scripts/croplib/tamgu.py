@@ -121,6 +121,22 @@ def detect_columns(tokens) -> list[float]:
     기본이지만 판형이 바뀌면 1단·3단도 나온다. 토큰 클러스터링은 그때도 그대로
     동작한다(CSAT_Clipper 의 detect_column_layout 은 mid_x=page_width/2 를 전제해
     이 조건에서 무너진다).
+
+    ## 왜 클러스터 평균이 아니라 **최솟값**인가 (실측 사고)
+
+    예전에는 클러스터 평균을 컬럼 대표값으로 썼다. 그런데 이 값이 곧바로
+    `x0 = cols[i] - COL_LEFT_PAD` 로 크롭 왼쪽 경계가 되므로, 클러스터에 **오른쪽으로
+    치우친 가짜 토큰**이 하나라도 섞이면 컬럼 전체가 오른쪽으로 밀려 번호가 잘린다.
+    2025학년도 수능 사회·문화 문제지가 그랬다 — 20번 <조건> 상자 안의 번호 목록
+    ('1.' '2.' '3.', x=474.8)이 오른쪽 컬럼(x=436.6) 클러스터에 섞여 평균이 456.0 이
+    됐고, 그 컬럼의 여덟 문항(4·5·9·10·14·15·19·20) 전부에서 두 자리 번호의 앞자리가
+    잘렸다('14.'→'4.'). **자동 검증으로는 안 잡힌다. 대지에서 눈으로 봤다.**
+
+    최솟값은 실패 방향이 안전하다. 가짜 토큰이 오른쪽에 있으면 무시되고, 왼쪽에
+    있으면 크롭이 조금 넓어질 뿐이다 — 넓어지는 것보다 잘리는 것이 훨씬 나쁘다
+    (모듈 서두의 '가장 두려워하는 사고' 참조). 같은 컬럼의 진짜 번호 토큰들은 x 가
+    완전히 동일하게 나오므로(실측: 사회·문화 2025 왼쪽 컬럼 12개 토큰 전부 87.9)
+    최솟값이 곧 진짜 컬럼 시작이다.
     """
     xs = sorted({round(t[1]) for t in tokens})
     if not xs:
@@ -130,9 +146,9 @@ def detect_columns(tokens) -> list[float]:
         if x - cur[-1] <= COL_TOL:
             cur.append(x)
         else:
-            cols.append(sum(cur) / len(cur))
+            cols.append(float(min(cur)))
             cur = [x]
-    cols.append(sum(cur) / len(cur))
+    cols.append(float(min(cur)))
     return cols
 
 

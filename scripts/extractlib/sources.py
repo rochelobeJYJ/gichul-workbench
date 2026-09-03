@@ -18,7 +18,7 @@ from pathlib import Path
 
 import manifest as mf
 
-from .textnorm import hangul_ratio, normalize_text
+from .textnorm import hangul_ratio, normalize_text, unmapped_pua
 
 # 회차 폴더 안의 역할별 파일. docs/CONTRACT.md 1절.
 ROLES = ("problem", "answer", "solution")
@@ -81,6 +81,9 @@ class TextLayers:
     plumber: str = ""     # pdfplumber layout 모드 — 다단/표를 좌표대로 편다
     ocr: str = ""         # Windows OCR (단 정렬 적용)
     ocr_error: str = ""
+    # 매핑표에 없어 normalize_text 가 지워 버린 수식 폰트 글자 {글자: 개수}.
+    # 지워진 뒤에는 흔적이 남지 않아(문장이 멀쩡해 보인다) 여기서만 알 수 있다.
+    unmapped_pua: dict = field(default_factory=dict)
 
     @property
     def direct_usable(self) -> bool:
@@ -97,15 +100,26 @@ class TextLayers:
         return "", "vision"
 
 
-def read_pdf_fitz(path: Path) -> str:
+def read_pdf_fitz(path: Path) -> tuple[str, dict[str, int]]:
+    """(정규화한 텍스트, 매핑 못 한 수식 폰트 글자 수).
+
+    두 번째 값을 함께 돌려주는 이유: normalize_text 는 매핑표에 없는 사설 영역
+    글자를 **말없이 버린다**. 버려진 뒤의 문장은 멀쩡해 보이므로('Al(s)' → 'Al()')
+    원문을 손에 쥐고 있는 이 자리에서 세지 않으면 영영 알 수 없다.
+    """
     import fitz
 
     document = fitz.open(path)
     try:
-        pages = [normalize_text(page.get_text("text")) for page in document]
+        raw_pages = [page.get_text("text") for page in document]
     finally:
         document.close()
-    return "\n\n".join(page for page in pages if page)
+    leftovers: dict[str, int] = {}
+    for raw in raw_pages:
+        for char, count in unmapped_pua(raw).items():
+            leftovers[char] = leftovers.get(char, 0) + count
+    pages = [normalize_text(raw) for raw in raw_pages]
+    return "\n\n".join(page for page in pages if page), leftovers
 
 
 def read_pdf_plumber(path: Path) -> str:
@@ -260,7 +274,7 @@ def load_layers(path: Path | None, *, want_plumber: bool = True,
     layers = TextLayers(path=path)
     if path.suffix.lower() in DOC_SUFFIXES:
         try:
-            layers.direct = read_pdf_fitz(path)
+            layers.direct, layers.unmapped_pua = read_pdf_fitz(path)
         except Exception as exc:
             layers.ocr_error = f"fitz 실패: {exc}"
         if want_plumber:

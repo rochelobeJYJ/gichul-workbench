@@ -7,12 +7,12 @@
   "points_total": 50,
   "curriculum": {
     "2015": "생활과 윤리",
-    "2022": null
+    "2022": "현대사회와 윤리"
   },
   "providers": {
     "ebsi": {
       "family": "kice",
-      "subject_id": "",
+      "subject_id": "63002",
       "form_field": "sFormPartSoc",
       "area_order": "5",
       "national": {
@@ -31,8 +31,12 @@
     }
   },
   "standard_prefixes": {
-    "2015": [],
-    "2022": ["12현윤"]
+    "2015": [
+      "12생윤"
+    ],
+    "2022": [
+      "12현윤"
+    ]
   },
-  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 exam-source-downloader/scripts/download_exam_sources.py 어디에도 없다 — 빈 문자열로 두었으니 gw download --probe 로 실측 필요. ebsi.national.subject_id(50615)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015 는 비워둠 — REPO curriculum/pdf/ 에 2015개정 도덕과 교육과정 원본이 없다(있는 [별책6] 도덕과 교육과정.pdf 는 '교육부 고시 제2022-33호'로 2022개정판뿐). 세간에 '12생윤'으로 알려져 있으나 이 저장소 안에서 직접 확인할 수 없어 CONTRACT의 '추측 금지' 원칙에 따라 비워둠 — 2015개정 도덕과 교육과정 PDF를 curriculum/pdf/ 에 추가하면 채울 수 있음. standard_prefixes.2022(12현윤)는 그 2022개정 PDF에서 [12현윤01-01] 로 직접 확인 — 단 2022개정에서는 '생활과 윤리'가 아니라 이름이 바뀐 후속 과목 '현대사회와 윤리'(일반선택)이므로 curriculum.2022 는 null."
+  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 exam-source-downloader/scripts/download_exam_sources.py 어디에도 없다 — 빈 문자열로 두었으니 gw download --probe 로 실측 필요. ebsi.national.subject_id(50615)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015(12생윤)는 curriculum/pdf/[별책6] 도덕과 교육과정(2015).pdf 를 파싱한 curriculum/standards/2015.json 의 code_prefix 실측값이다. 그 PDF 45쪽을 이미지로 렌더해 [12생윤01-01]·[12생윤01-02]·[12생윤01-03] 을 눈으로도 확인했다 — 단원 6개, 성취기준 18개(01-01~06-03), 빠진 번호 없음. standard_prefixes.2022(12현윤)는 2022개정 PDF에서 [12현윤01-01] 로 직접 확인 — 단 2022개정에서는 '생활과 윤리'가 아니라 이름이 바뀐 후속 과목 '현대사회와 윤리'(일반선택)이므로 curriculum.2022 는 null."
 }

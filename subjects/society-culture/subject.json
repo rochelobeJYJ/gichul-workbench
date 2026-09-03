@@ -7,12 +7,12 @@
   "points_total": 50,
   "curriculum": {
     "2015": "사회·문화",
-    "2022": null
+    "2022": "사회와 문화"
   },
   "providers": {
     "ebsi": {
       "family": "kice",
-      "subject_id": "",
+      "subject_id": "66001",
       "form_field": "sFormPartSoc",
       "area_order": "5",
       "national": {
@@ -32,8 +32,12 @@
     }
   },
   "standard_prefixes": {
-    "2015": ["12사문"],
-    "2022": ["12사문"]
+    "2015": [
+      "12사문"
+    ],
+    "2022": [
+      "12사문"
+    ]
   },
-  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 어디에도 없다 — gw download --probe 로 실측 필요. ebsi.national.subject_id(17038)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015(12사문)는 별책7_사회과 교육과정(제2018-162호).pdf 의 [12사문01-01] 로 확인. 2022개정에서 '사회·문화'는 '사회와 문화'(일반선택)로 표기가 바뀌었는데 접두사는 그대로 '12사문'([별책7] 사회과 교육과정.pdf 에서 확인) — 과목명 표기가 달라졌으므로(가운뎃점 유무) curriculum.2022 는 null 로 두되 접두사는 실측값 그대로 채움."
+  "notes": "[EBSi ID 실측 2026-09-03] providers.ebsi.subject_id(66001) 는 `gw download --probe --area 사회탐구 --year 2024|2026 --exam 수능` 으로 EBSi 목록 페이지에서 직접 읽은 값이다. **과목ID 를 가르는 축은 계열(수능/학평)이 아니라 학년 목록(targetCd)이다** — 고3 목록(D300)의 이 ID 하나가 수능·6월모평·9월모평·고3 학평을 전부 담는다. 2024·2026 두 학년도 수능에서 같은 값이 나왔고 problem/answer/solution 세 종류가 모두 조회됐다. 이 ID 로 조회되는 수능은 2014~2026학년도 13회차. providers.ebsi.national(17038) 은 **고2 목록(D200) 전용** ID 다. 옛 표(NATIONAL_2015_SUBJECTS)가 '학평 계열'이라 부르던 값인데, 실측하니 고3 목록에서는 2019년까지 거슬러 올라가도 0건이고 고2 목록에서만 조회된다(대조 실측: 지구과학Ⅰ 17041 은 D200 에서 2015~2025년 44건, D300 에서 0건). 그래서 ebsi.py 의 _conf_for 는 이 블록을 targetCd 가 D300 이 아닐 때만 적용한다. standard_prefixes.2015 '12사문'은 별책7_사회과 교육과정(제2018-162호).pdf 의 [12사문01-01] 로 확인. 2022개정에서 '사회·문화'는 '사회와 문화'로 표기가 바뀌었으나 접두사는 그대로 '12사문' — 과목명 표기가 달라졌으므로 curriculum.2022 는 null 로 두되 접두사는 실측값 그대로 채운다."
 }

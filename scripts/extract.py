@@ -37,7 +37,13 @@ OWNED_KEYS = ("number", "points", "answer", "answer_symbol", "text",
 #   answer_check → ext.answer_check   (validate 가 실제로 소비한다. 지우면 안 된다)
 #   text["raw"]  → ext.text_raw       (파싱 실패 시 전사 단계가 붙잡을 원문)
 # ext 전체를 통째로 덮지 않는 이유: 다른 단계가 자기 확장 필드를 같은 자리에 둘 수 있다.
-OWNED_EXT_KEYS = ("answer_check", "text_raw")
+#
+# choices_source / boxed_source 는 **문항 단위 부분 vision** 표시다. extraction_mode 는
+# 회차 단위(문제지 한 권에 텍스트 레이어가 있는가)라 같은 회차 안에서 문항마다 갈리는
+# 손실을 담지 못한다. 값은 "image" 하나뿐이고 정상이면 키 자체가 없다 — 멀쩡한 문항까지
+# "text" 로 채워 봐야 읽는 쪽에 정보가 늘지 않는다. 판정 근거는
+# extractlib/tamgu.py 의 image_choice_band() / boxed_source() 주석에 있다.
+OWNED_EXT_KEYS = ("answer_check", "text_raw", "choices_source", "boxed_source")
 NOTE_PREFIX = "extract: "
 
 # 비직접(OCR) 텍스트를 본문으로 인정할 최소 성공률.
@@ -138,6 +144,9 @@ class ExamResult:
         self.notes: list[tuple[str, str, str]] = []   # (id, why, severity)
         self.mode = "vision"
         self.axes: dict[str, str] = {}
+        # 부분 vision 문항 번호. 문항마다 note 를 남기면 회차 하나가 attention 상한
+        # 30건(CONTRACT 5절)을 혼자 먹으므로 회차 끝에서 한 줄로 모아 알린다.
+        self.image_parts: dict[str, list[int]] = {}
 
 
 def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> ExamResult:
@@ -159,6 +168,20 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
     # 정답지는 PNG 로만 제공되는 회차가 많아 OCR 을 시도해 볼 값어치가 있다(이미지 1장).
     answer = src.load_layers(found.get("answer"), want_plumber=True, want_ocr=use_ocr,
                              columns=1)
+
+    # 수식 폰트의 사설 영역 글자가 매핑표에 없으면 normalize_text 가 조용히 지운다.
+    # 지워진 문장은 멀쩡해 보이기 때문에('Al(s)' → 'Al()') 리포트로 끌어올리지 않으면
+    # 아무도 모른다. 실제로 화학Ⅰ 2024 수능 문제지에서 199자가 그렇게 사라져 있었다.
+    for role, layers in (("문제지", problem), ("해설지", solution), ("정답지", answer)):
+        leftovers = getattr(layers, "unmapped_pua", None) if layers else None
+        if not leftovers:
+            continue
+        top = ", ".join(f"U+{ord(c):04X}×{n}" for c, n in
+                        sorted(leftovers.items(), key=lambda kv: -kv[1])[:5])
+        result.notes.append(
+            (exam_id, f"{role}에서 매핑되지 않은 수식 폰트 글자 {sum(leftovers.values())}자가 "
+                      f"지워졌다({len(leftovers)}종: {top}) — extractlib/textnorm.py 의 "
+                      f"EQFONT_REPLACEMENTS 에 추가해야 전사가 온전해진다", "warn"))
 
     body_text, mode = (problem.body() if problem else ("", "vision"))
     if problem is not None and mode == "vision" and problem.ocr_error:
@@ -270,6 +293,15 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
                 if item_parsed.warning:
                     notes.append(item_parsed.warning)
                     result.notes.append((qid, item_parsed.warning, "warn"))
+                # 부분 vision 표시. 값이 있을 때만 키를 만든다 — 멀쩡한 문항에
+                # "text" 를 채워 넣으면 items 만 커지고 읽는 쪽은 얻는 게 없다.
+                for key, value in (("choices_source", item_parsed.choices_source),
+                                   ("boxed_source", item_parsed.boxed_source)):
+                    if not value:
+                        continue
+                    ext[key] = value
+                    notes.append(f"{key}={value} — 크롭 이미지가 본체다(전사 대기)")
+                    result.image_parts.setdefault(key, []).append(number)
             # 파싱에 실패해도 원문은 남긴다. 전사 단계가 붙잡을 유일한 실마리다.
             if item_parsed.raw:
                 ext["text_raw"] = item_parsed.raw
@@ -288,6 +320,13 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
             "ext": ext,
         }
         result.item_notes[number] = notes
+
+    # 부분 vision 문항은 회차 단위로 한 줄만 남긴다(위 image_parts 주석 참조).
+    # severity 는 info 다 — 코드로 고칠 것이 없고 전사 단계가 이미지에서 읽어야 한다.
+    for key, numbers in sorted(result.image_parts.items()):
+        result.notes.append(
+            (exam_id, f"{key}=image 문항 {len(numbers)}건 — 텍스트 레이어로 복원 불가, "
+                      f"크롭 이미지가 본체다: {', '.join(str(n) for n in numbers)}", "info"))
 
     # --- 불변식 ----------------------------------------------------------
     if subject.points_total and total_points and total_points != subject.points_total:

@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .textnorm import (ANSWER_NONE, CHOICE_SYMBOLS, answer_to_int, compact,
-                       squash)
+                       fold_name, squash)
 
 # 번호와 정답이 같은 줄에 있는 판형: '01. 4  02. 5 ...', '01.5  02.1 ...'
 # \s* 가 아니라 [ \t]* 인 이유는 위 주석 참조. 줄바꿈을 절대 넘지 않는다.
@@ -258,13 +258,16 @@ def select_subject_section(text: str, aliases: list[str]) -> tuple[str, str]:
 
     과목 머리글이 아예 없으면 단일 과목 정답표로 보고 전체를 돌려준다.
     (EBSi 가 과목별로 쪼개서 주는 회차가 그렇다.)
+
+    대조는 squash 가 아니라 fold_name 으로 한다 — 가운뎃점 코드포인트가 회차마다
+    달라서 '사회·문화' 별칭이 정답표의 '사회․문화' 에 안 걸렸다(textnorm 주석 참조).
     """
-    wanted = {squash(a).casefold() for a in aliases if a}
+    wanted = {fold_name(a) for a in aliases if a}
     matches = list(SUBJECT_SECTION_RE.finditer(text))
     if not matches:
         return text, "single-section"
     for index, match in enumerate(matches):
-        name = squash(match.group(1)).casefold()
+        name = fold_name(match.group(1))
         if name in wanted:
             start = match.end()
             end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
@@ -825,18 +828,18 @@ def read_answer_sheet(layers, aliases: list[str], count: int,
                       points_total: int | None = None) -> Reading:
     """정답지(정답표)를 읽는다. 배점까지 나오는 유일한 축.
 
-    두 가지 방법을 쓴다. **텍스트가 먼저다.** 텍스트로 완전한 정답표를 읽어내면
-    그것으로 끝내고, 그러지 못했을 때만 원문자 ①~⑤ 픽셀 대조로 내려간다.
+    두 가지 방법을 쓴다. **직접 텍스트 레이어가 먼저다.** 그것으로 완전한 정답표를
+    읽어내면 끝내고, 그러지 못했을 때만 원문자 ①~⑤ 픽셀 대조로 내려간다.
 
     순서가 이 방향인 이유는 실측 사고 때문이다. 픽셀 대조를 먼저 돌게 했더니
     2021학년도 수능 정답표 PDF(원문자가 없는 텍스트 판형)에서 한글 자모 조각이
     '닫힌 고리'로 잡혀 **자신 있게 틀린 정답 20개**를 만들었다. 텍스트가 이미
-    완전한 답을 주는 자리에서는 그림을 다시 볼 이유가 없다. 픽셀 대조는 지금까지
-    아무것도 못 얻던 자리(스캔 정답표)에서만 쓴다 — 그래야 이 축이 나빠질 수 없다.
+    완전한 답을 주는 자리에서는 그림을 다시 볼 이유가 없다.
 
-    이 폴백이 없으면 정답지가 스캔 이미지인 회차에서 이 축이 통째로 죽는다.
-    사회탐구와 2010년대 초반 회차가 그랬고, '3중 대조'가 해설지 1축만 남은
-    이름뿐인 검증이 되어 있었다.
+    **단 그 원칙은 '직접 텍스트 레이어'에만 해당한다. OCR 텍스트는 픽셀 대조보다
+    뒤다**(아래 from_ocr 분기 참조). 이 폴백이 없으면 정답지가 스캔 이미지인
+    회차에서 이 축이 통째로 죽는다. 사회탐구와 2010년대 초반 회차가 그랬고,
+    '3중 대조'가 해설지 1축만 남은 이름뿐인 검증이 되어 있었다.
     """
     reading = Reading(source="answer_sheet")
     if layers is None:
@@ -845,6 +848,14 @@ def read_answer_sheet(layers, aliases: list[str], count: int,
     reading.origin = layers.path.name
 
     from_ocr = not layers.direct.strip()
+    circled_cache: tuple[dict[int, int], str] | None = None
+
+    def circled() -> tuple[dict[int, int], str]:
+        """픽셀 대조 결과. 한 번만 계산한다(같은 파일을 두 번 렌더할 이유가 없다)."""
+        nonlocal circled_cache
+        if circled_cache is None:
+            circled_cache = parse_circled_answer_image(layers.path, count, aliases)
+        return circled_cache
 
     def circled_fallback(why_before: str, keep: dict[int, int] | None = None,
                          keep_points: dict[int, int] | None = None) -> Reading:
@@ -854,7 +865,7 @@ def read_answer_sheet(layers, aliases: list[str], count: int,
         갈아끼우고, 못 주면 부분 결과를 그대로 되돌려 놓는다 — 폴백을 붙인 것 때문에
         원래 있던 표가 사라지면 안 된다.
         """
-        found, why = parse_circled_answer_image(layers.path, count, aliases)
+        found, why = circled()
         if len(found) >= count:
             reading.answers = found
             reading.points = {}          # 원문자 표에는 배점이 없다
@@ -865,6 +876,23 @@ def read_answer_sheet(layers, aliases: list[str], count: int,
         reading.points = dict(keep_points or {})
         reading.reason = f"{why_before} / 원문자 대조도 실패: {why}"
         return reading
+
+    if from_ocr:
+        # ── 이미지 정답표에서는 픽셀 대조가 OCR 텍스트보다 **앞선다** ──────────
+        # (실측 사고) 2025학년도 수능 평가원 정답표는 텍스트 레이어가 없는 이미지다.
+        # Windows OCR 은 원문자 ①~⑤ 를 ㅅ·ㅎ·ㅈ 따위로 읽어 버리고 번호 칸과 배점
+        # 칸의 숫자만 남긴다. 그러면 '번호 정답' 2칸 묶기가 (1,2)(6,2)(11,3)… 을 만들어
+        # **20문항이 꽉 찬, 그런데 정답이 전부 배점인 표**가 완성된다. 완전한 표라서
+        # 아래 자기검증(부분적이면 버린다)을 통과했고, 생명과학Ⅰ·화학Ⅰ 2025 수능에서
+        # 3중 대조가 조용히 2축으로 주저앉아 있었다(20문항 중 18문항 불일치, 나머지
+        # 2문항은 정답과 배점이 우연히 같아 '일치'로 보였다 — 더 나쁜 종류의 침묵이다).
+        # 픽셀 대조는 같은 파일에서 20/20 을 정확히 읽었다.
+        found, why = circled()
+        if len(found) >= count:
+            reading.answers = found
+            reading.points = {}          # 원문자 표에는 배점이 없다
+            reading.origin = f"{layers.path.name}({why})"
+            return reading
 
     text = layers.direct or layers.ocr
     if not text.strip():
@@ -896,6 +924,19 @@ def read_answer_sheet(layers, aliases: list[str], count: int,
             return circled_fallback(
                 f"OCR 정답표의 배점 합이 맞지 않는다"
                 f"({sum(points.values())} != {points_total}) — 잡음으로 보고 버린다")
+        # (3) 위 픽셀 대조가 실패해서 여기까지 내려온 경우의 마지막 그물.
+        #     원문자를 놓친 OCR 이 '번호·배점' 두 칸만 짝지으면 표가 꽉 찬 채로
+        #     정답 자리에 배점이 들어앉는다. 그 표는 배점 합이 정확히 총점이 되고
+        #     값의 가짓수가 배점 계단 수(탐구는 2·3점 두 가지)밖에 안 된다.
+        #     진짜 정답표가 이 둘을 동시에 만족하기는 어렵다(정답은 1~5 가 고루 섞여
+        #     합이 60 언저리다). 애매하면 축을 비우는 편이 낫다 — 3중 대조는 축이
+        #     하나 없는 것보다 조용히 틀린 축이 있는 것이 훨씬 위험하다.
+        values = sorted(set(answers.values()))
+        if (points_total and not points and len(answers) >= count
+                and sum(answers.values()) == points_total and len(values) <= 3):
+            return circled_fallback(
+                f"OCR 정답표의 '정답' 이 배점 칸으로 보인다(합 {points_total} 일치, 값 {values})"
+                f" — 원문자를 못 읽고 번호·배점만 짝지은 표로 보고 버린다")
 
     if len(answers) < count:
         # 직접 텍스트로도 표를 다 못 채웠다. 완전한 표를 줄 수 있는 픽셀 대조에 한 번 더

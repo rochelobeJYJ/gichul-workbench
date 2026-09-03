@@ -1,6 +1,10 @@
 # 저작물은 절대 커밋되지 않는다 (docs/CONTRACT.md 0절)
 workspace/
-curriculum/pdf/
+
+# 교육과정 원본 PDF 는 배포하지 않는다(45MB). 추출 결과(standards/*.json, standards/md/)만 배포한다.
+# 다시 받는 법은 curriculum/pdf/README.md 에 있다.
+curriculum/pdf/*
+!curriculum/pdf/README.md
 *.pdf
 
 __pycache__/

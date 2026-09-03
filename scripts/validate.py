@@ -38,18 +38,90 @@ CHOICE_SYMBOLS = "①②③④⑤"
 CHOICE_TO_INT = {sym: i + 1 for i, sym in enumerate(CHOICE_SYMBOLS)}
 
 # 텍스트 레이어 손상이 복원되지 않고 남은 흔적 (validate_cards.py GLYPH_SMELLS 원본).
-# 과목마다 손상 양상이 다를 수 있다 — 지금은 지구과학Ⅱ 실전에서 나온 5개뿐이라
-# contract_gaps 로 "subject.json 에 확장 자리 필요"를 남긴다(직접 스키마를 늘리지 않음).
-GLYPH_SMELLS = [
-    (re.compile(r"\d\s?km\s?s(?![a-z])"), "km/s 빗금 유실 의심"),
-    (re.compile(r"[ᄀ-ᄒ]"), "옛한글 자모(ㄱㄴㄷ 미복원)"),
-    (re.compile(r"(?<![\w/])/\s*\d{2,}-\d{2,}"), "근호+지수 붕괴 흔적(/ 202-82 꼴)"),
+# **이 목록은 지구과학Ⅱ 실전에서 나온 다섯 개다 — 모든 과목의 목록이 아니다.**
+# 과목별 목록은 subjects/<slug>/subject.json 의 glyph_smells 에서 온다(glyph_smells()).
+#
+# 항목은 {id, pattern, why, context?}. **context 가 있으면 같은 문항 안에 그 단서가
+# 함께 있을 때만 신고한다.** 어떤 흔적은 한 과목에서는 손상이고 다른 과목에서는
+# 멀쩡한 표기라서, 패턴만으로는 영영 좁혀지지 않는다(아래 angle_mark 참조).
+# id 는 과목 목록이 이 항목을 덮어쓰거나 끌 때 쓰는 이름이라 바꾸면 안 된다.
+DEFAULT_GLYPH_SMELLS = [
+    {"id": "km_per_s", "pattern": r"\d\s?km\s?s(?![a-z])", "why": "km/s 빗금 유실 의심"},
+    {"id": "old_jamo", "pattern": r"[ᄀ-ᄒ]", "why": "옛한글 자모(ㄱㄴㄷ 미복원)"},
+    {"id": "radical_collapse", "pattern": r"(?<![\w/])/\s*\d{2,}-\d{2,}",
+     "why": "근호+지수 붕괴 흔적(/ 202-82 꼴)"},
     # 위도/경도 표기(90N 꼴)만 잡으려 좁힌 정규식. 실전에서 압력 단위 "100N/m²"가
     # 느슨한 패턴( \d+[NSEW] )에 걸려 오탐이 났다 — 뒤에 '/'나 글자가 오면 단위이지
     # 각도가 아니므로 부정 전방탐색으로 뺐다.
-    (re.compile(r"(?<!\d)\d{1,2}[NSEW](?![/\w])"), "각도 기호 누락 의심(90N 꼴)"),
-    (re.compile(r"\bSiO\b(?!₄|<sub)"), "아래첨자 누락 의심(SiO)"),
+    #
+    # 그것으로도 부족했다. 과학탐구 다른 과목을 돌리자 뉴턴(N)이 그대로 걸린다 —
+    # 실측: 화학Ⅰ 2024 수능 9번 '전체 양이온 수(mol) 12N', 물리학Ⅰ 2024 수능 7번
+    # '면적은 10N·s이다'(가운뎃점이 마침표로 눕혀져 부정 전방탐색을 빠져나간다).
+    # 같은 회차 지구과학Ⅱ 380문항에서는 이 패턴이 참인 적이 **한 번도 없었다**.
+    # 'N 뒤에 무엇이 오는가'로는 뉴턴과 북위를 영영 못 가른다. 그래서 판정 근거를
+    # 글자 모양에서 문맥으로 옮겼다 — 위도·경도 이야기를 하는 문항에서만 신고한다.
+    # 문맥 조건은 응급처치이고, 근본은 이 항목을 쓰는 과목만 켜는 것이다:
+    # 화학·물리 subject.json 에 {"id": "angle_mark", "off": true} 를 넣으면 꺼진다.
+    {"id": "angle_mark", "pattern": r"(?<!\d)\d{1,2}[NSEW](?![/\w])",
+     "why": "각도 기호 누락 의심(90N 꼴)", "context": r"위도|경도|북위|남위|적도|위선|경선"},
+    {"id": "subscript_sio", "pattern": r"\bSiO\b(?!₄|<sub)", "why": "아래첨자 누락 의심(SiO)"},
 ]
+
+
+# 발문이 <보기> 상자를 가리키는지. "보기에서 고른 것은?" 처럼 조사가 붙는다.
+_STEM_REFERS_TO_BOX = re.compile(r"<\s*보\s*기\s*>|보기에서|보기 에서")
+
+def glyph_smells(subject) -> tuple[list[tuple], list[str]]:
+    """(쓸 규칙 목록, 사람이 고쳐야 할 문제 목록).
+
+    기본 목록 + `subject.json` 의 `glyph_smells` 를 **id 로 합친다.** 같은 id 가
+    오면 과목 것이 이기고, `{"id": ..., "off": true}` 면 그 규칙을 끈다. 과목
+    목록이 없으면 결과는 기본 목록 그대로다 — 지금까지 돌던 과목의 판정은 변하지 않는다.
+
+    왜 병합인가: 손상 양상은 과목마다 다르다(지구과학의 '90N'은 위도, 물리의 '10N'은
+    뉴턴이다). 목록을 코드에 하나만 두면 과목이 늘 때마다 이 파일이 과목 이름을 알게
+    되고, 그 순간 CONTRACT 0절이 무너진다. 반대로 기본 목록을 없애면 새 과목마다
+    다섯 개를 다시 적어야 한다. 그래서 '기본 + 과목 덮어쓰기' 다.
+
+    왜 끄는 기능(off)까지 두는가: 병합만으로는 **기본 목록의 오탐을 과목이 막을 수
+    없다.** 오탐이 나는 검사는 아무도 안 보게 되므로(PITFALLS 4-3) 끌 자리가 필요하다.
+
+    깨진 정규식 하나가 검증 전체를 멈추지 않게 여기서 걸러 문제 목록으로 돌려준다.
+    조용히 무시하지는 않는다 — 안 도는 검사가 도는 척하는 것이 가장 나쁘다.
+    """
+    merged: dict[str, dict] = {rule["id"]: dict(rule) for rule in DEFAULT_GLYPH_SMELLS}
+    problems: list[str] = []
+    extra = getattr(subject, "glyph_smells", None) or []
+    if not isinstance(extra, list):
+        return _compile_glyph_rules(merged, problems), [
+            f"subject.json 의 glyph_smells 가 배열이 아니다({type(extra).__name__}) — 무시함"]
+    for index, rule in enumerate(extra):
+        if not isinstance(rule, dict) or not rule.get("id"):
+            problems.append(f"subject.json glyph_smells[{index}] 에 id 가 없다 — 무시함")
+            continue
+        rid = str(rule["id"])
+        if rule.get("off"):
+            merged.pop(rid, None)
+            continue
+        if not rule.get("pattern"):
+            problems.append(f"subject.json glyph_smells[{rid}] 에 pattern 이 없다 — 무시함")
+            continue
+        merged[rid] = dict(rule)
+    return _compile_glyph_rules(merged, problems), problems
+
+
+def _compile_glyph_rules(merged: dict[str, dict], problems: list[str]) -> list[tuple]:
+    """{id: 규칙} → [(패턴, 설명, 문맥|None)]. 못 컴파일하는 규칙은 빼고 알린다."""
+    compiled: list[tuple] = []
+    for rid, rule in merged.items():
+        try:
+            pattern = re.compile(rule["pattern"])
+            context = re.compile(rule["context"]) if rule.get("context") else None
+        except re.error as exc:
+            problems.append(f"glyph_smells[{rid}] 정규식을 컴파일할 수 없다({exc}) — 이 규칙만 건너뜀")
+            continue
+        compiled.append((pattern, rule.get("why") or rid, context))
+    return compiled
 
 # 크롭 이미지 정상성 판정 기준. 과목과 무관한 일반 휴리스틱이라 상수로 둔다.
 MIN_IMAGE_DIM_PX = 20
@@ -238,13 +310,17 @@ def _point_tiers(subject) -> tuple[int, int] | None:
 
 
 def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
-                                known_codes: dict[str, set[str]], note) -> None:
+                                known_codes: dict[str, set[str]], note,
+                                glyph_rules: list[tuple] | None = None) -> None:
     text = item.get("text") or {}
     mode = item.get("extraction_mode")
     stem = text.get("stem") or ""
     choices = text.get("choices") or []
     points = item.get("points")
     tiers = _point_tiers(subject)
+    ext = item.get("ext") or {}
+    if glyph_rules is None:
+        glyph_rules, _ = glyph_smells(subject)
 
     # extraction_mode == vision 은 텍스트 레이어가 없는 회차다(실측: 2025 수능
     # 문제지가 그렇다). text 가 비어 있는 게 정상이라 CONTRACT 4절이 명시한
@@ -254,13 +330,39 @@ def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
             note(qid, "extraction_mode=vision인데 text가 채워져 있음 — vision 예외를 재확인해야 한다", "info")
     else:
         # 5지선다는 과목이 아니라 국가 시험 형식이라 CHOICE_SYMBOLS 한 곳에서만 센다.
-        if len(choices) != len(CHOICE_SYMBOLS):
+        #
+        # 선택지 자리가 분수·도형인 문항은 **정상 문항인데 텍스트가 원리적으로 없다**
+        # (extractlib/tamgu.py image_choice_band 참조). 회차 전체가 vision 인 것과
+        # 근거가 같고 크롭 이미지가 본체라는 점도 같으므로 error 가 아니라 '전사 대기'
+        # 로 낮춘다. 실측: 화학Ⅰ 7건·물리학Ⅰ 3건/2회차. 고칠 코드가 없는 것을 error 로
+        # 쏟으면 리포트 전체가 안 읽힌다(PITFALLS 4-3).
+        # 표시가 있는데 선택지가 남아 있으면 그건 표시와 데이터가 어긋난 것이라
+        # 그대로 error 다 — 표시 하나로 검사를 통째로 끄지는 않는다.
+        if ext.get("choices_source") == "image" and not choices:
+            note(qid, "선택지가 그림이라 텍스트가 없다(ext.choices_source=image) — 전사 대기", "warn")
+        elif len(choices) != len(CHOICE_SYMBOLS):
             note(qid, f"선택지 {len(choices)}개({len(CHOICE_SYMBOLS)}개 아님)", "error")
 
         # [N점] 표기 ↔ points. CONTRACT가 "가장 강한 자동 검증"이라 부르는 축이라
         # 양방향 다 error 로 둔다(원본 validate_scaffold.py 도 예외 없이 problem 처리).
         # 표기 안의 숫자를 읽는다 — '3' 을 박으면 배점 계단이 다른 과목에서 무너진다.
-        mark = POINT_MARK_RE.search(stem)
+        # 표기는 발문에 있는 것이 정상이지만, 전사가 어긋난 문항에서는 다른 칸에 가 있다.
+        # 그대로 두면 '[3점] 표기가 없음' 이라는 **가짜 error** 가 붙는다 — 오탐이 섞이면
+        # 아무도 이 검사를 안 보게 된다(PITFALLS 4-3). 실측 두 가지:
+        #   · 선택지가 분수·도형이라 파싱이 통째로 실패한 문항(화학Ⅰ 2024 수능 3·12·20번)
+        #     → stem 이 비고 표기는 ext.text_raw 에만 남는다.
+        #   · 분수 선택지 때문에 완화 규칙이 경계를 잘못 잡은 문항(물리학Ⅰ 2024 수능 19번)
+        #     → 발문 끝부분이 ① 안으로 들어가 표기가 choices 에 있다.
+        # 어느 칸에 있든 '이 문항에 [N점] 표기가 있다'는 사실은 같으므로 순서대로 찾는다.
+        # (원문 보존 필드는 맨 뒤다 — 전사된 값이 있으면 그것을 먼저 믿는다.)
+        # (선택지가 그림인 문항의 파생 오탐은 이제 뿌리에서 없어졌다 — extract 가
+        #  선택지 자리만 비우고 발문은 채우므로 표기가 stem 에서 그대로 보인다.
+        #  아래 ext.text_raw 폴백은 그 밖의 파싱 실패용으로 남긴다.)
+        mark_source = (stem or "") + " " + " ".join(choices)
+        mark = POINT_MARK_RE.search(mark_source)
+        if not mark:
+            raw_text = (item.get("ext") or {}).get("text_raw") or text.get("raw") or ""
+            mark = POINT_MARK_RE.search(raw_text)
         if mark:
             marked = int(mark.group(1))
             if points != marked:
@@ -271,9 +373,9 @@ def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
         # 글리프 손상 잔존 — 발문 + 자료 서술 + 선택지만 본다. 원문 보존 필드가
         # 있다면 그건 무수정 보존이 원칙이라(CONTRACT) 검사 대상에서 뺀다.
         target = stem + " " + (text.get("boxed") or "") + " " + " ".join(choices)
-        for pattern, label in GLYPH_SMELLS:
+        for pattern, label, context in glyph_rules:
             hit = pattern.search(target)
-            if hit:
+            if hit and (context is None or context.search(target)):
                 note(qid, f"{label} — {hit.group(0)!r}", "warn")
 
     if tiers is None:
@@ -307,8 +409,21 @@ def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
     for d in declared:
         if not (space.root / d).exists():
             note(qid, f"materials에 선언된 파일이 실제로 없음: {d}", "error")
-    if actual and mode != "vision" and not (text.get("boxed") or "").strip():
-        note(qid, f"자료 이미지 {len(actual)}장인데 자료 서술(text.boxed)이 비어 있음", "warn")
+    # <보기> 상자가 통째로 벡터로 그려진 문항은 자료 이미지 유무와 무관하게 '전사 대기'다
+    # (extractlib/tamgu.py boxed_source 참조). 실측: 2025학년도 수능 한국지리 15번.
+    # 이 표시가 있으면 아래 '자료 서술이 비어 있음' 은 같은 사실을 다른 말로 두 번
+    # 세는 것이라 하나로 합친다.
+    if mode != "vision" and not (text.get("boxed") or "").strip():
+        if ext.get("boxed_source") == "image":
+            note(qid, "발문이 <보기> 상자를 가리키는데 상자가 그림이라 텍스트가 없다"
+                      "(ext.boxed_source=image) — 전사 대기", "warn")
+        elif actual and _STEM_REFERS_TO_BOX.search(stem):
+            # '자료 이미지가 있는데 boxed 가 비었다' 만으로는 손실의 근거가 못 된다 —
+            # 실측: 2024학년도 수능 한국지리에서 이 조건에 걸린 17문항 중 16개가
+            # <보기> 상자가 애초에 없는 정상 문항이었고, 지구과학Ⅱ 20건도 전부 그랬다.
+            # 근거가 되는 것은 '발문이 상자를 가리키는데 상자가 없다'는 모순 하나뿐이다.
+            note(qid, f"발문이 <보기>를 가리키는데 자료 서술(text.boxed)이 비어 있음"
+                      f" (자료 이미지 {len(actual)}장) — 상자 머리표를 못 찾았을 수 있다", "warn")
 
     # 크롭 이미지 존재 + 최소 크기(빈 이미지·너무 작은 이미지 탐지)
     qpng = space.question_png(qid)
@@ -455,7 +570,8 @@ def cross_check_answers(space: Space, exam_id: str, subject, rows: list[tuple[in
             note(qid, f"정답 3중 대조 전원 불일치: {detail}", "error")
 
 
-def _check_item_passage_group(space, subject, qid, item, known_codes, note) -> None:
+def _check_item_passage_group(space, subject, qid, item, known_codes, note,
+                              glyph_rules=None) -> None:
     raise NotImplementedError(
         "passage-group 판형(국어·영어, 지문 하나에 문항 여러 개)은 아직 validate가 모른다. "
         "지문 하나를 공유하는 문항들을 무엇으로 묶어 검증할지(지문 id? 문항 범위?)부터 "
@@ -463,7 +579,8 @@ def _check_item_passage_group(space, subject, qid, item, known_codes, note) -> N
     )
 
 
-def _check_item_math_mixed(space, subject, qid, item, known_codes, note) -> None:
+def _check_item_math_mixed(space, subject, qid, item, known_codes, note,
+                           glyph_rules=None) -> None:
     raise NotImplementedError(
         "math-mixed 판형(객관식+단답형 혼합)은 아직 validate가 모른다. "
         "단답형 문항은 '선택지 5개' 불변식이 애초에 성립하지 않으므로 문항 타입별 "
@@ -576,6 +693,11 @@ def run(args) -> int:
     checker = LAYOUT_CHECKERS.get(subject.layout)
     cross_checker = CROSS_CHECKERS.get(subject.layout)
     verified = scaffold = vision = 0
+    # 글리프 손상 목록은 과목당 한 번만 합쳐 컴파일한다. 문항마다 다시 만들면
+    # 같은 정규식을 400번 컴파일하고, 잘못된 규칙 경고도 400번 쌓인다.
+    glyph_rules, glyph_problems = glyph_smells(subject)
+    for problem in glyph_problems:
+        note(subject.slug, problem, "warn")
 
     try:
         for exam_id in sorted(exams):
@@ -607,7 +729,7 @@ def run(args) -> int:
                 if item.get("extraction_mode") == "vision":
                     vision += 1
                 if checker is not None:
-                    checker(space, subject, qid, item, known_codes, note)
+                    checker(space, subject, qid, item, known_codes, note, glyph_rules)
     except NotImplementedError as exc:
         note(subject.slug, str(exc), "error")
         report.next = "docs/LAYOUTS.md 를 보고 이 판형의 검증 로직부터 설계한다"

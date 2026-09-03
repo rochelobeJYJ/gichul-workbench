@@ -12,7 +12,7 @@
   "providers": {
     "ebsi": {
       "family": "kice",
-      "subject_id": "",
+      "subject_id": "63003",
       "form_field": "sFormPartSoc",
       "area_order": "5",
       "national": {
@@ -32,8 +32,12 @@
     }
   },
   "standard_prefixes": {
-    "2015": [],
-    "2022": ["12윤사"]
+    "2015": [
+      "12윤사"
+    ],
+    "2022": [
+      "12윤사"
+    ]
   },
-  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 어디에도 없다 — gw download --probe 로 실측 필요. ebsi.national.subject_id(50616)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015 는 비워둠 — life-ethics 와 같은 이유로 2015개정 도덕과 교육과정 PDF가 repo에 없음(repo의 [별책6] 도덕과 교육과정.pdf 는 2022개정판). standard_prefixes.2022(12윤사)는 그 2022개정 PDF에서 [12윤사01-01] 로 확인. 이 과목은 지구과학 레퍼런스와 달리 2015→2022 개정에도 과목명이 '윤리와 사상'으로 그대로 유지된 드문 경우라(도덕과 진로선택으로 소속만 이동) curriculum.2022 를 null 대신 채워둠 — null 처리는 '과목명이 바뀌거나 사라진 경우'에만 쓴다는 지시를 따른 것."
+  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 어디에도 없다 — gw download --probe 로 실측 필요. ebsi.national.subject_id(50616)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015(12윤사)는 curriculum/pdf/[별책6] 도덕과 교육과정(2015).pdf 를 파싱한 curriculum/standards/2015.json 의 code_prefix 실측값이다. 그 PDF 62쪽을 이미지로 렌더해 [12윤사02-01]~[12윤사02-04] 를 눈으로도 확인했다 — 단원 4개, 성취기준 22개(01-01~01-02, 02-01~02-07, 03-01~03-07, 04-01~04-06), 빠진 번호 없음. standard_prefixes.2022(12윤사)는 2022개정 PDF에서 [12윤사01-01] 로 확인. **두 개정의 접두사가 같다** — PITFALLS 5-6('12지구'가 다른 개정의 실재 코드라 대조를 통과할 뻔한 사고)과 달리 여기서는 진짜로 같은 접두사를 쓰는 같은 이름의 과목이라, 개정별로 나눠 대조하지 않으면 2015 문항이 2022 성취기준에 붙어도 눈치채지 못한다. 2015→2022 개정에도 과목명이 '윤리와 사상'으로 유지된 드문 경우라(도덕과 진로선택으로 소속만 이동) curriculum.2022 를 null 대신 채워둠."
 }

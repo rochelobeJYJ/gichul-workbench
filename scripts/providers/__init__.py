@@ -252,7 +252,10 @@ def normalize_roman(text: str) -> str:
 
 def normalize_name(value: str) -> str:
     """파일명 비교용 정규화. 공백·구분자·괄호를 지우고 로마숫자를 토큰화한다."""
-    cleaned = re.sub(r"[\s_\-·∙・()（）\[\]]", "", value).lower()
+    # 가운뎃점은 코드포인트가 여러 종류다. ･(U+FF65)를 넣은 근거: 2024학년도 수능 사회·문화
+    # 문제지(EBSi 배포본) 머리글이 '사회･문화' 로 이 반각 문자를 쓴다. 파일명에서 같은 표기를
+    # 만나면 '사회문화' 별칭이 걸리지 않아 ZIP 안에서 과목을 못 찾고 통째로 실패한다.
+    cleaned = re.sub(r"[\s_\-·∙・･‧()（）\[\]]", "", value).lower()
     return normalize_roman(cleaned)
 
 

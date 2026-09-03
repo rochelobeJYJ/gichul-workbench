@@ -22,6 +22,11 @@
     그래서 여기서는 **월로 거르지 않는다.** 넉넉한 월 범위로 조회한 뒤, 회차 종류는 목록 제목
     ('대학수학능력시험' / '9월 모평(평가원)' / '3월 학력평가(교육청)') 으로 판정한다.
     학년도는 목록 연도 + 1 로 환산하되, 제목에 '2021학년도'가 있으면 그쪽을 믿는다.
+
+바로잡음 (2026-09 실측). 과목ID 를 가르는 축은 '계열'이 아니라 '학년 목록(targetCd)' 이다.
+    고3 목록(D300) 의 ID 하나가 수능·모평·고3 학평을 전부 담는다. 옛 표가 '학평용'이라 부르던
+    값(지구과학Ⅰ 17041, 한국지리 17029 …)은 실은 고2 목록(D200) 용이다. 자세한 근거는
+    _conf_for 의 주석과 docs/SUBJECT_IDS.md 1절에 있다.
 ────────────────────────────────────────────────────────────────────────────
 """
 from __future__ import annotations
@@ -274,17 +279,29 @@ class EbsiProvider(SourceProvider):
 
     # ------------------------------------------------------------------ discover
 
-    def _conf_for(self, subject, national: bool) -> dict:
-        """계열별 조회 설정.
+    def _conf_for(self, subject, target_cd: str) -> dict:
+        """학년 목록별 조회 설정.
 
-        **같은 과목이라도 EBSi 과목ID 가 계열마다 다르다.** 지구과학Ⅰ은 수능·모평 목록에서 154 지만
-        전국연합학력평가 목록에서는 17041 이다. 교육과정도 주관 기관도 다른 별개 목록이기 때문이다.
-        그래서 subject.json 은 providers.ebsi 안에 학평용 하위 블록 national 을 둘 수 있고,
-        학평 조회일 때만 그 값이 위를 덮는다. 없으면 상위 값을 그대로 쓴다.
+        **같은 과목이라도 EBSi 과목ID 가 학년 목록(targetCd)마다 다르다.**
+        지구과학Ⅰ은 고3 목록(D300)에서 154, 고2 목록(D200)에서 17041 이다.
+
+        예전 주석은 이 차이를 '계열(수능·모평 / 학평)' 탓으로 적었는데 **실측 결과 틀렸다.**
+        2026-09 실측(고3 목록, 17과목 전수):
+          - 고3 목록의 subject_id 하나가 수능·6월모평·9월모평·고3 학평을 **전부** 담는다.
+            (예: 한국지리 141 로 '2026학년도 수능'과 '고3 3월 학평(서울)'이 같이 나온다)
+          - 옛 표의 '학평 계열 ID'(한국지리 17029, 지구과학Ⅰ 17041 …)는 고3 목록에서 2019년까지
+            거슬러 올라가도 0건이고, 고2 목록(D200)에서는 2015~2025년 44건이 정상 조회된다.
+            즉 그 값들은 '학평용'이 아니라 **고2 목록용**이었다.
+        계열로 갈랐던 예전 코드는 고3 학평을 고2 ID 로 조회해 0건을 받고
+        "national 이 낡았을 수 있다"는 **틀린 진단**을 붙였다. 그래서 축을 학년으로 바꾼다.
+
+        subject.json 의 providers.ebsi.national 은 이제 '고1·고2 목록 전용 override' 다.
+        (키 이름은 기존 파일과의 호환을 위해 유지한다 — 뜻은 이 주석이 정한다.)
         """
         base = dict(subject.provider("ebsi") or {})
         override = base.get("national")
-        if national and isinstance(override, dict):
+        # 고3 목록(D300)에는 override 를 적용하지 않는다. 고3 은 상위 값 하나로 전부 조회된다.
+        if target_cd != "D300" and isinstance(override, dict):
             base.update({k: v for k, v in override.items() if v})
         base.pop("national", None)
         return base
@@ -301,10 +318,11 @@ class EbsiProvider(SourceProvider):
         wanted = {t.exam_id: t for t in targets}
         out: list[Candidate] = []
         for (national, target_cd), group in groups.items():
-            conf = self._conf_for(subject, national)
+            conf = self._conf_for(subject, target_cd)
             subject_id = str(conf.get("subject_id") or "").strip()
             if not subject_id:
-                where = "providers.ebsi.national.subject_id" if national else "providers.ebsi.subject_id"
+                where = ("providers.ebsi.national.subject_id" if target_cd != "D300"
+                         else "providers.ebsi.subject_id")
                 self.note(subject.slug,
                           f"subject.json 에 {where} 가 없어 "
                           f"{', '.join(t.exam_id for t in group[:4])} … 를 조회하지 못했다. "
@@ -334,13 +352,12 @@ class EbsiProvider(SourceProvider):
             years = sorted({t.calendar_year for t in group})
             months = sorted({m for t in group for m in MONTH_HINTS.get(t.exam, [])})
 
-            # 학평 전용 ID 가 낡아 0건이 나오는 경우가 있다. 실측(2025-09, 세계지리): subject.json 의
-            # national.subject_id 50618 은 0건, 상위 142 는 정상 조회됐다. 지금 EBSi 고3 목록은
-            # 수능·모평과 학평이 같은 과목ID 를 쓴다. 그래서 0건이면 상위 ID 로 한 번 더 시도하고,
-            # 성공하면 subject.json 이 낡았다는 사실을 리포트로 알린다.
+            # override(고1·고2 목록용 ID)로 0건이면 상위 ID 로 한 번 더 시도하는 안전핀.
+            # 두 목록이 언젠가 다시 합쳐지거나 override 가 낡았을 때를 대비한 것이지,
+            # 지금 구조상 정상 경로는 아니다 — 그래서 성공하면 원인을 단정하지 말고 사실만 알린다.
             candidates_id = [subject_id]
             base_id = str((subject.provider("ebsi") or {}).get("subject_id") or "").strip()
-            if national and base_id and base_id != subject_id:
+            if target_cd != "D300" and base_id and base_id != subject_id:
                 candidates_id.append(base_id)
             blocks: list = []
             used_id = subject_id
@@ -351,10 +368,11 @@ class EbsiProvider(SourceProvider):
                 if blocks:
                     if idx:
                         self.note(subject.slug,
-                                  f"학평 전용 subject_id {candidates_id[0]} 로는 0건이라 "
-                                  f"상위 subject_id {sid} 로 다시 찾았다. "
-                                  f"subject.json 의 providers.ebsi.national 이 낡았을 수 있다.",
-                                  "warn")
+                                  f"{target_cd} 목록에서 providers.ebsi.national.subject_id "
+                                  f"{candidates_id[0]} 로는 0건이라 상위 subject_id {sid} 로 다시 찾았다. "
+                                  f"두 값 중 어느 쪽이 맞는지는 "
+                                  f"`gw download --probe --area {subject.area} --grade "
+                                  f"{group[0].grade or 3}` 로 확인하라.", "warn")
                     break
             if not blocks:
                 # 0건은 '그 회차가 없다'일 수도, '과목ID 가 틀렸다'일 수도 있다. 둘을 구별할 방법이

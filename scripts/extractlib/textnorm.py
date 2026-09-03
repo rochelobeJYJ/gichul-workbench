@@ -38,13 +38,82 @@ PUA_REPLACEMENTS = {
     "\ue046": "-", "\ue053": "+", "\ue047": "=", "\ue04f": ":", "\ue06d": "/",
 }
 
+# ── 수식 폰트(HyhwpEQ · HancomEQN)의 사설 영역 배치 ────────────────────────
+# 문제지·해설지의 수식은 본문 폰트가 아니라 한글 워드프로세서의 수식 전용 폰트로
+# 조판된다. 그 글자들은 표준 코드포인트가 없어 ToUnicode 가 U+E0xx 로 돌려주고,
+# 위 숫자표에 없는 것은 normalize_text 가 **조용히 지운다**. 지구과학에서는 수식이
+# 적어(2024 수능 문제지 미매핑 18자) 눈에 띄지 않았지만 화학·물리는 다르다 —
+# 화학Ⅰ 2024 수능 문제지는 PUA 582자 중 199자가 미매핑이었고, 그 결과
+#   'Al(s)' → 'Al()',  'x/y' → '/',  'Y>Z' → 'YZ',  't₂' → '2'
+# 처럼 **문장이 멀쩡해 보이면서 알맹이만 빠진** 전사가 items 에 들어갔다.
+#
+# 아래 네 블록은 알파벳 순으로 연속 배열돼 있다. 실제 문제지에서 글리프를 렌더해
+# 눈으로 읽어 확인한 자리는
+#   대문자 A(E000) B(E001) E(E004) G(E006) K(E00A) M(E00C) N(E00D) P(E00F)
+#          S(E012) V(E015)                                     … 10자
+#   소문자 a(E0E5)~z(E0FE) 중 f·j·o·u 를 뺀                     … 22자
+#   그리스 Δ(E088) Ω(E09C) / δ(E0A0) θ(E0A4) π(E0AC) ρ(E0AD) φ(E0B1) … 7자
+# 이고, 전부 '블록 시작 + 알파벳 순서' 와 정확히 맞았다(어긋난 것 0). 두 폰트
+# (HyhwpEQ·HancomEQN)가 같은 코드포인트에서 같은 글자를 냈고 2024·2025 두 학년도,
+# 화학·생명과학·지구과학 문서가 모두 일치했다.
+# **확인하지 못한 칸(f·j·o·u 와 관찰되지 않은 대문자·그리스 문자)은 연속성으로
+# 채운 추정이다.** 어긋난 것이 나오면 그 칸만 예외로 빼면 된다.
+_GREEK_UPPER = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ"
+_GREEK_LOWER = "αβγδεζηθικλμνξοπρστυφχψω"
+_ASCII_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+_ASCII_LOWER = "abcdefghijklmnopqrstuvwxyz"
+
+
+def _eq_block(start: int, letters: str) -> dict[str, str]:
+    """사설 영역 연속 블록 하나를 매핑표로 편다."""
+    return {chr(start + index): letter for index, letter in enumerate(letters)}
+
+
+EQFONT_REPLACEMENTS = {
+    **_eq_block(0xE000, _ASCII_UPPER),
+    **_eq_block(0xE085, _GREEK_UPPER),
+    **_eq_block(0xE09D, _GREEK_LOWER),
+    **_eq_block(0xE0E5, _ASCII_LOWER),
+    # 괄호·연산기호. 전부 문맥에서 확인했다 —
+    #   '(s)는' 'H(aq)'(E044/E045), 'X⁺'(E048), '|pH-pOH|은'(E04D/E101),
+    #   '(g/mL)'(E054), '노도<1'(E055), 'Y>Z'(E056), '√10'(E05C).
+    # E054 와 이미 있던 E06D 가 둘 다 '/' 인 것은 크기 변형이 따로 배정돼 있어서다.
+    "\ue044": "(", "\ue045": ")", "\ue048": "+", "\ue04d": "|",
+    "\ue054": "/", "\ue055": "<", "\ue056": ">", "\ue05c": "√",
+    "\ue101": "|",
+    # 블록 밖에 따로 있는 넷. 전부 지구과학Ⅱ 19회차 해설·문제지에서 남아 있던
+    # 미매핑 글자를 문맥으로 확인한 것이다 —
+    #   'E,P,S' 't1,t2,t3'(E052),  '직선 l을 그린다'(E0BB),
+    #   '2vΩsinφ의 관계가 성립'(E0C2 — φ 의 다른 자형이다. 표준형 φ 는 E0B1),
+    #   'sin60°' 'cos60°' '(θ′-θ)≥0°'(E0C8).
+    # E0C8 이 지워지던 것이 GLYPH_SMELLS 의 '각도 기호 누락(90N 꼴)' 이 잡으려던
+    # 손상의 원인 가운데 하나다 — 이제 도(°)가 지워지지 않는다.
+    "\ue052": ",", "\ue0bb": "l", "\ue0c2": "φ", "\ue0c8": "°",
+}
+
 # 첫가끝 자모 → 호환 자모. NFKC 가 이 방향으로는 정규화해 주지 않는다.
 JAMO_REPLACEMENTS = {
     "ᄀ": "ㄱ", "ᄂ": "ㄴ", "ᄃ": "ㄷ", "ᄅ": "ㄹ", "ᄆ": "ㅁ",
     "ᄇ": "ㅂ", "ᄉ": "ㅅ", "ᄋ": "ㅇ",
 }
 
-CHAR_REPLACEMENTS = {**PUA_REPLACEMENTS, **JAMO_REPLACEMENTS}
+CHAR_REPLACEMENTS = {**PUA_REPLACEMENTS, **EQFONT_REPLACEMENTS, **JAMO_REPLACEMENTS}
+
+PUA_RANGE = (0xE000, 0xF8FF)
+
+
+def unmapped_pua(text: str) -> dict[str, int]:
+    """매핑표에 없어서 **지워질** 사설 영역 글자와 그 개수.
+
+    normalize_text 가 이것들을 조용히 버리기 때문에, 새 과목·새 판형에서 처음 보는
+    수식 폰트를 만났을 때 리포트에 드러낼 수 있도록 원문(정규화 전)에서 세어 둔다.
+    """
+    counts: dict[str, int] = {}
+    low, high = PUA_RANGE
+    for char in text or "":
+        if low <= ord(char) <= high and char not in CHAR_REPLACEMENTS:
+            counts[char] = counts.get(char, 0) + 1
+    return counts
 
 
 def normalize_text(text: str) -> str:
@@ -86,6 +155,34 @@ def compact(text: str) -> str:
 def squash(text: str) -> str:
     """공백을 전부 제거. 과목명 대조처럼 띄어쓰기가 회차마다 다른 곳에 쓴다."""
     return re.sub(r"\s+", "", text or "")
+
+
+# 가운뎃점은 **코드포인트가 한 종류가 아니다.** 같은 '사회·문화' 를 회차마다 다른
+# 글자로 찍는다(실측):
+#   ·  U+00B7   subject.json 의 별칭이 쓰는 표준형
+#   ･  U+FF65   2024·2025 수능 사회·문화 문제지 머리글 (NFKC 로 ・ U+30FB 가 된다)
+#   ․  U+2024   2024학년도 수능 사회탐구 정답표 '( 사회․문화 ) 과목'
+#               — NFKC 가 이것을 마침표 '.' 로 눕힌다
+# 마지막 것 때문에 정답표에서 과목 구간을 못 찾아 정답 3중 대조가 2축으로 주저앉았다
+# (2024 수능 사회·문화). 과목명 대조에서는 구분자를 전부 지우고 비교한다.
+NAME_SEPARATORS = re.compile(r"[\s.,·∙•・･‧⋅‐‑–—\-_()\[\]（）]")
+
+
+def fold_name(text: str) -> str:
+    """과목명 대조 전용 정규화 — NFKC 로 눕히고 구분자를 지우고 대소문자를 눕힌다.
+
+    **NFKC 를 먼저 하는 것이 핵심이다.** 대조의 한쪽(문제지 텍스트)은 normalize_text 가
+    이미 NFKC 를 거쳤는데 다른 한쪽(subject.json 의 label·aliases)은 원문 그대로다.
+    casefold 를 먼저 하면 로마숫자 'Ⅰ'(U+2160) 이 'ⅰ'(U+2170) 로 눕고 문제지 쪽은
+    NFKC 로 이미 'I'→'i' 라서 **둘이 영영 안 만난다.**
+
+    실측(물리학Ⅰ 2024 수능): 쪽 꼬리글 '과학탐구영역(물리학I)' 이 이 불일치 때문에
+    걸러지지 않고 6번 문항 블록 끝에 남았다. 이름에 로마숫자가 있는 과목(물리학Ⅰ·
+    화학Ⅰ·지구과학Ⅱ …)이 전부 해당한다. PITFALLS 3-5 가 "과목명 비교 전에 반드시
+    정규화한다"고 적어 둔 바로 그 사고다.
+    """
+    folded = unicodedata.normalize("NFKC", text or "")
+    return NAME_SEPARATORS.sub("", folded).casefold()
 
 
 def hangul_ratio(text: str) -> float:
