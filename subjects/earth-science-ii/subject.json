@@ -1,0 +1,43 @@
+{
+  "slug": "earth-science-ii",
+  "label": "지구과학Ⅱ",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "지구과학Ⅱ",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "155",
+      "form_field": "sFormPartSci",
+      "area_order": "6"
+    },
+    "kice": {
+      "area": "과학탐구",
+      "aliases": [
+        "지구과학II",
+        "지구과학ii",
+        "지구 과학 II",
+        "지구 과학 ii",
+        "지구과학Ⅱ",
+        "지구과학2",
+        "지구과학 2",
+        "지구 과학 2"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": [
+      "12지구"
+    ],
+    "2022": [
+      "12지시",
+      "12행우"
+    ]
+  },
+  "notes": "레퍼런스 구현. 19회차 380문항 전사·매핑 완료. 2025 수능은 텍스트 레이어가 없어 vision 모드."
+}

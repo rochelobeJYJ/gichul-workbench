@@ -1,0 +1,15 @@
+{
+  "slug": "새-과목-슬러그",
+  "label": "과목명",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {"2015": "2015개정 과목명 또는 null", "2022": "2022개정 과목명 또는 null"},
+  "providers": {
+    "ebsi": {"family": "kice", "subject_id": "", "form_field": "sFormPartSci", "area_order": "6"},
+    "kice": {"area": "과학탐구", "aliases": []}
+  },
+  "standard_prefixes": {"2015": [], "2022": []},
+  "notes": "subject_id 를 모르면 `gw download --probe` 로 실측한다. docs/NEW_SUBJECT.md 참조."
+}

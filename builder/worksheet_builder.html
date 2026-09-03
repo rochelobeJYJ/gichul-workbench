@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>기출 문항집 제작기</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#fff; --line:#dfe3e8; --ink:#1b1f24; --dim:#6b7280;
+    --accent:#2563eb; --accent-soft:#eff4ff; --warn:#b45309;
+    --preview-w:640px;   /* 후보 목록의 문항 이미지 최대 가로폭 */
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.55 "Malgun Gothic","맑은 고딕",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+  button{font:inherit;cursor:pointer}
+
+  /* ── 편집 화면 ───────────────────────────── */
+  #app{display:grid;grid-template-columns:330px 1fr;height:100vh}
+  aside{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:14px}
+  aside h1{font-size:15px;margin:0 0 12px}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .sidebtn{display:flex;gap:6px;margin-bottom:10px}
+  .sidebtn button{flex:1;padding:5px 8px;border:1px solid var(--line);background:#fff;border-radius:6px;font-size:12px}
+  .sidebtn button:disabled{opacity:.45;cursor:default}
+  .tabs button{flex:1 1 45%;min-width:0;padding:7px 6px;border:1px solid var(--line);background:#fff;border-radius:7px;font-size:13px}
+  .tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .unit{margin:14px 0 6px;font-size:12px;color:var(--dim);font-weight:700}
+  .std{display:flex;gap:8px;align-items:flex-start;padding:7px 8px;border-radius:7px;cursor:pointer;position:relative;user-select:none}
+  .std:hover{background:var(--accent-soft)}
+  .std.on{background:var(--accent-soft);outline:1px solid var(--accent)}
+  .std input{margin-top:3px;pointer-events:none}
+  .std .code{font-weight:700;font-size:12.5px}
+  .std .txt{font-size:11.5px;color:var(--dim);display:block;margin-top:2px}
+  .std .cnt{margin-left:auto;font-size:11px;background:#eef1f5;border-radius:10px;padding:1px 7px;color:var(--dim);white-space:nowrap}
+  .std .cnt.zero{background:#fdecec;color:#b91c1c}
+  .std .only{display:none;position:absolute;right:6px;top:6px;font-size:10.5px;padding:2px 7px;
+             border:1px solid var(--accent);color:var(--accent);background:#fff;border-radius:11px}
+  .std:hover .only{display:block}
+  .std:hover .cnt{visibility:hidden}
+
+  main{overflow:auto;padding:16px 20px 60px}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .bar .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .bar .row+.row{margin-top:8px}
+  .bar button{padding:6px 11px;border:1px solid var(--line);background:#fff;border-radius:7px;font-size:12.5px}
+  .bar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+  .bar label{font-size:12.5px;display:inline-flex;gap:5px;align-items:center;color:#374151}
+  .bar select,.bar input[type=text]{font:inherit;font-size:12.5px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;background:#fff}
+  .count{font-size:12.5px;color:var(--dim);margin-left:auto}
+  .filter{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);
+          border-radius:8px;padding:8px 11px;margin-top:8px}
+  .filter .grp{display:flex;gap:6px;align-items:center}
+  .filter .lb{font-size:11.5px;color:var(--dim);font-weight:700}
+  .filter input[type=range]{width:132px;accent-color:var(--accent)}
+  .filter .rng{font-size:12px;font-weight:700;min-width:96px;text-align:center;color:#1d4ed8}
+  .chip{font-size:12px;padding:3px 10px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--dim)}
+  .chip.on{background:var(--accent-soft);border-color:var(--accent);color:#1d4ed8;font-weight:700}
+  .filter .hit{margin-left:auto;font-size:11.5px;color:var(--dim)}
+  .sep{width:1px;height:20px;background:var(--line)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:9px;margin-bottom:12px;overflow:hidden;scroll-margin-top:110px}
+  .card.off{opacity:.45}
+  .card.flash{animation:flash 1.4s ease-out}
+  @keyframes flash{0%{box-shadow:0 0 0 3px #93c5fd}100%{box-shadow:0 0 0 0 rgba(147,197,253,0)}}
+  .chead{display:flex;gap:9px;align-items:center;padding:8px 11px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .chead .lab{font-weight:700;font-size:13px}
+  .tag{font-size:11px;border-radius:9px;padding:1px 7px;border:1px solid var(--line);color:var(--dim)}
+  .tag.s1{background:#eef6ff;border-color:#bfdbfe;color:#1d4ed8}
+  .tag.s2{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}
+  .tag.ans{background:#fff7ed;border-color:#fed7aa;color:#c2410c;font-weight:700}
+  .tag.part{background:#fefce8;border-color:#fde68a;color:var(--warn)}
+  .chead .topic{font-size:11.5px;color:var(--dim);margin-left:auto}
+  .cbody{padding:10px 11px;background:#fbfbfc}
+  .cbody img{width:100%;max-width:min(100%,var(--preview-w));display:block;cursor:zoom-in;
+             border:1px solid #eceff3;background:#fff}
+  .empty{padding:40px;text-align:center;color:var(--dim)}
+
+  /* ── 라이트박스 ──────────────────────────── */
+  #lb{position:fixed;inset:0;background:rgba(15,18,22,.88);display:none;z-index:50;overflow:auto;padding:24px}
+  #lb.on{display:block}
+  #lb img{display:block;margin:0 auto;background:#fff;max-width:none}
+  #lb .close{position:fixed;top:14px;right:18px;color:#fff;font-size:26px;background:none;border:none}
+  #lb .zoom{position:fixed;top:14px;left:18px;display:flex;gap:6px}
+  #lb .zoom button{padding:5px 11px;border-radius:6px;border:1px solid #4b5563;background:#1f2937;color:#fff}
+
+  /* ── 문항집(인쇄) ───────────────────────── */
+  #print{display:none;background:#fff}
+  body.printing{background:#fff}
+  body.printing #app{display:none}
+  body.printing #print{display:block}
+  .pbar{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:9px 14px;display:flex;gap:8px;align-items:center;z-index:9}
+  .pbar button{padding:6px 12px;border:1px solid var(--line);border-radius:7px;background:#fff}
+  .pbar button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+  .paper{width:210mm;height:297mm;margin:14px auto;padding:12mm;background:#fff;
+         box-shadow:0 1px 6px rgba(0,0,0,.15);overflow:hidden;position:relative}
+  .ptitle{text-align:center;font-size:17px;font-weight:800;margin:0 0 3mm}
+  .psub{text-align:center;font-size:10.5px;color:#4b5563;margin:0 0 5mm;padding-bottom:3mm;border-bottom:1.5px solid #111;line-height:1.5}
+  .psub .meta{display:block;font-size:9.5px;color:var(--dim);margin-top:1mm}
+  .sheet{display:flex;gap:9mm;align-items:flex-start}
+  .col{flex:1 1 0;min-width:0;display:flex;flex-direction:column}
+  .pageno{position:absolute;bottom:6mm;left:0;right:0;text-align:center;font-size:9.5px;color:var(--dim)}
+  #measure{position:absolute;left:-99999px;top:0;visibility:hidden}
+  .pq .h{display:flex;gap:6px;align-items:baseline;font-size:10.5px;margin-bottom:1.5mm;color:#374151}
+  .pq .h .no{font-weight:800;font-size:12px;color:#111}
+  .pq .h .ex{color:var(--dim)}
+  .pq .h .an{margin-left:auto;font-weight:800;color:#c2410c}
+  .pq img{width:100%;height:auto;display:block}
+  .akey h3{font-size:11.5px;margin:0 0 2mm;padding-top:2mm;border-top:1.5px solid #111}
+  .akey table{border-collapse:collapse;font-size:10px;width:100%;table-layout:fixed}
+  .akey th,.akey td{border:1px solid #999;padding:1.5px 2px;text-align:center;overflow:hidden}
+  .akey th{background:#f2f4f7}
+  .akey th.rh{width:12mm;font-size:9px}
+
+  @media print{
+    /* margin:0 이라야 브라우저가 머리글·바닥글(URL·날짜)을 넣을 자리가 없어진다.
+       여백은 .paper 의 padding 으로 직접 준다. */
+    @page{size:A4;margin:0}
+    html,body{background:#fff}
+    /* 허브 내비(hub-nav.js가 body.prepend로 넣는다) 등 문항집 밖 요소는 전부 제외 */
+    body > *{display:none !important}
+    body > #print{display:block !important}
+    .pbar{display:none !important}
+    .paper{width:210mm;height:297mm;margin:0;padding:12mm;box-shadow:none;overflow:hidden;
+           break-after:page;page-break-after:always}
+    .paper:last-child{break-after:auto;page-break-after:auto}
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <aside>
+    <h1>기출 문항집 제작기<span style="display:block;font-size:11px;color:var(--dim);font-weight:400;margin-top:2px">2022개정 성취기준 / 2015개정 단원 어느 쪽으로든 고를 수 있습니다</span></h1>
+    <div class="tabs" id="tabs"></div>
+    <div class="sidebtn">
+      <button id="clearBtn" onclick="clearStds()">성취기준 전체 해제</button>
+    </div>
+    <div id="tree"></div>
+  </aside>
+
+  <main>
+    <div class="bar">
+      <div class="row">
+        <button onclick="selAll(true)">전체 선택</button>
+        <button onclick="selAll(false)">전체 해제</button>
+        <button onclick="selInvert()">선택 반전</button>
+        <div class="sep"></div>
+        <label><input type="checkbox" id="optAnsInline" checked onchange="render()"> 문항 위 정답</label>
+        <label><input type="checkbox" id="optAnsTable" checked> 끝에 정답표</label>
+        <label><input type="checkbox" id="optCodes" checked> 성취기준 코드 표기</label>
+        <label><input type="checkbox" id="optMeta"> 단원·성취기준 설명</label>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="filter">
+        <span class="lb">기간</span>
+        <span class="rng" id="fromLab"></span>
+        <input type="range" id="fromIdx" min="0" value="0" oninput="onRange(0)">
+        <input type="range" id="toIdx" min="0" oninput="onRange(1)">
+        <span class="rng" id="toLab"></span>
+        <div class="grp"><span class="lb">시험</span><span id="kindChips"></span></div>
+        <div class="grp"><span class="lb">과목</span><span id="subjChips"></span></div>
+        <button onclick="resetFilter()">초기화</button>
+        <span class="hit" id="filterHit"></span>
+      </div>
+      <div class="row">
+        <label>제목 <input type="text" id="title" size="28" placeholder="문항집 제목"></label>
+        <label>정렬
+          <select id="order" onchange="render()">
+            <option value="1" selected>과거 → 최신</option>
+            <option value="-1">최신 → 과거</option>
+          </select>
+        </label>
+        <label>페이지당
+          <select id="perPage">
+            <option value="2">4문항 (한 단에 최대 2문항)</option>
+            <option value="3" selected>6문항 (한 단에 최대 3문항)</option>
+          </select>
+        </label>
+        <div class="sep"></div>
+        <button onclick="saveSet()">저장</button>
+        <select id="slots" onchange="loadSet(this.value)"><option value="">불러오기…</option></select>
+        <button onclick="delSet()">삭제</button>
+        <div class="sep"></div>
+        <button class="primary" onclick="makeSheet()">문항집 만들기 →</button>
+      </div>
+    </div>
+    <div id="list"><div class="empty">왼쪽에서 성취기준을 고르세요. 여러 개를 고르면 함께 담깁니다.</div></div>
+  </main>
+</div>
+
+<div id="lb" onclick="if(event.target.id==='lb')closeLb()">
+  <div class="zoom">
+    <button onclick="zoom(-1)">− 축소</button>
+    <button onclick="zoom(0)">원본</button>
+    <button onclick="zoom(1)">+ 확대</button>
+  </div>
+  <button class="close" onclick="closeLb()">×</button>
+  <img id="lbimg" alt="">
+</div>
+
+<div id="print">
+  <div class="pbar">
+    <button onclick="backToEdit()">← 편집으로</button>
+    <button class="primary" onclick="window.print()">인쇄 / PDF 저장</button>
+    <span style="font-size:12px;color:#6b7280">저장 이름 <b id="fnHint"></b> · 인쇄 대화상자에서 <b>배율 100%</b>, <b>여백 없음</b> 권장</span>
+  </div>
+  <div id="pages"></div>
+</div>
+<div id="measure"></div>
+
+<script>
+const DATA = /*__DATA__*/null;
+let tab = 0;
+const picked = new Set();          // 선택된 성취기준 코드
+const off = new Set();             // 체크 해제된 문항 key
+let lbScale = 1;
+
+const stdsOf = (s) => s.units.flatMap(u => u.standards);
+const findStd = (code) => DATA.subjects.flatMap(stdsOf).find(x => x.code === code);
+
+// 성취기준 코드 -> {과목, 단원, 문장}
+const META = {};
+DATA.subjects.forEach(s => s.units.forEach(u => u.standards.forEach(st => {
+  META[st.code] = { subject: s.name, unit: u.unit, text: st.text };
+})));
+
+// ── 회차 필터 ─────────────────────────────
+const KIND_RANK = { '6월모평': 0, '9월모평': 1, '수능': 2 };
+const KIND_LABEL = { '6월모평': '6월', '9월모평': '9월', '수능': '수능' };
+const ALL_Q = DATA.subjects.flatMap(s => s.units).flatMap(u => u.standards).flatMap(s => s.questions);
+// 실제로 존재하는 회차만 시간순으로 늘어놓는다(예: 2027은 6월모평뿐)
+const EXAMS = [...new Map(ALL_Q.map(q => [`${q.year}_${q.exam}`, q])).values()]
+  .sort((a, b) => a.year - b.year || KIND_RANK[a.exam] - KIND_RANK[b.exam])
+  .map(q => ({ key: `${q.year}_${q.exam}`, year: q.year, exam: q.exam,
+               label: `${q.year} ${KIND_LABEL[q.exam]}` }));
+const EXAM_POS = new Map(EXAMS.map((e, i) => [e.key, i]));
+const KINDS = [...new Set(EXAMS.map(e => e.exam))].sort((a, b) => KIND_RANK[a] - KIND_RANK[b]);
+const SUBJECTS = [...new Set(ALL_Q.map(q => q.subject))].sort((x, y) => x.endsWith('Ⅰ') ? -1 : 1);
+const F = { from: 0, to: EXAMS.length - 1, kinds: new Set(KINDS), subjects: new Set(SUBJECTS) };
+
+const passFilter = (q) => {
+  const i = EXAM_POS.get(`${q.year}_${q.exam}`);
+  return i >= F.from && i <= F.to && F.kinds.has(q.exam) && F.subjects.has(q.subject);
+};
+
+function onRange(which){
+  const a = document.getElementById('fromIdx'), b = document.getElementById('toIdx');
+  F.from = +a.value; F.to = +b.value;
+  if (F.from > F.to) {                       // 두 손잡이가 교차하면 민 쪽을 따라간다
+    if (which === 0) { F.to = F.from; b.value = F.to; }
+    else { F.from = F.to; a.value = F.from; }
+  }
+  drawFilter(); drawTree(); render();
+}
+function toggleKind(k){ F.kinds.has(k) ? (F.kinds.size > 1 && F.kinds.delete(k)) : F.kinds.add(k);
+  drawFilter(); drawTree(); render(); }
+function toggleSubj(s){ F.subjects.has(s) ? (F.subjects.size > 1 && F.subjects.delete(s)) : F.subjects.add(s);
+  drawFilter(); drawTree(); render(); }
+function resetFilter(){
+  F.from = 0; F.to = EXAMS.length - 1;
+  F.kinds = new Set(KINDS); F.subjects = new Set(SUBJECTS);
+  drawFilter(); drawTree(); render();
+}
+function drawFilter(){
+  const a = document.getElementById('fromIdx'), b = document.getElementById('toIdx');
+  a.max = b.max = EXAMS.length - 1; a.value = F.from; b.value = F.to;
+  document.getElementById('fromLab').textContent = EXAMS[F.from].label;
+  document.getElementById('toLab').textContent = EXAMS[F.to].label;
+  document.getElementById('kindChips').innerHTML = KINDS.map(k =>
+    `<button class="chip ${F.kinds.has(k) ? 'on' : ''}" onclick="toggleKind('${k}')">${KIND_LABEL[k]}</button>`).join(' ');
+  document.getElementById('subjChips').innerHTML = SUBJECTS.map(s =>
+    `<button class="chip ${F.subjects.has(s) ? 'on' : ''}" onclick="toggleSubj('${s}')">${s.endsWith('Ⅰ') ? '지Ⅰ' : '지Ⅱ'}</button>`).join(' ');
+  const kept = EXAMS.filter((e, i) => i >= F.from && i <= F.to && F.kinds.has(e.exam)).length;
+  const full = F.from === 0 && F.to === EXAMS.length - 1 &&
+               F.kinds.size === KINDS.length && F.subjects.size === SUBJECTS.length;
+  document.getElementById('filterHit').textContent = full ? '전체 회차' : `회차 ${kept}/${EXAMS.length}개`;
+}
+
+// 데이터 정렬(지Ⅰ→지Ⅱ, 각 과목 안에서 과거→현재) 순서를 전역 순위로 굳혀 둔다
+const RANK = new Map();
+DATA.subjects.flatMap(stdsOf).flatMap(s => s.questions)
+  .forEach(q => { if (!RANK.has(q.key)) RANK.set(q.key, RANK.size); });
+
+function currentQuestions(){
+  const seen = new Set(), out = [];
+  for (const code of picked) {
+    const std = findStd(code);
+    if (!std) continue;
+    for (const q of std.questions)
+      if (!seen.has(q.key) && passFilter(q)) { seen.add(q.key); out.push(q); }
+  }
+  const dir = +(document.getElementById('order')?.value || 1);
+  const si = (q) => q.subject.endsWith('Ⅰ') ? 0 : 1;   // 지Ⅰ 블록은 항상 앞
+  out.sort((a, b) => si(a) - si(b) || (RANK.get(a.key) - RANK.get(b.key)) * dir);
+  return out;
+}
+const chosen = () => currentQuestions().filter(q => !off.has(q.key));
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ── 사이드바 ─────────────────────────────── */
+function drawTabs(){
+  document.getElementById('tabs').innerHTML = DATA.subjects.map((s, i) =>
+    `<button class="${i===tab?'on':''}" onclick="tab=${i};drawTree()">${s.name}</button>`).join('');
+}
+function drawTree(){
+  drawTabs();
+  const btn = document.getElementById('clearBtn');
+  if (btn) { btn.disabled = !picked.size;
+    btn.textContent = picked.size ? `성취기준 전체 해제 (${picked.size})` : '성취기준 전체 해제'; }
+  document.getElementById('tree').innerHTML = DATA.subjects[tab].units.map(u => `
+    <div class="unit">${u.unit}</div>
+    ${u.standards.map(st => {
+      const n = st.questions.filter(passFilter).length;
+      return `<div class="std ${picked.has(st.code)?'on':''}" onclick="toggleStd('${st.code}')">
+        <input type="checkbox" ${picked.has(st.code)?'checked':''} tabindex="-1">
+        <span><span class="code">${st.code}</span><span class="txt">${esc(st.text||'')}</span></span>
+        <span class="cnt ${n?'':'zero'}">${n}</span>
+        <button class="only" onclick="event.stopPropagation();onlyStd('${st.code}')">이것만</button>
+      </div>`;
+    }).join('')}`).join('');
+}
+
+// 행 어디를 눌러도 누적 토글. 추가할 때는 방금 담긴 문항으로 스크롤한다.
+function toggleStd(code){
+  const before = new Set(currentQuestions().map(q => q.key));
+  picked.has(code) ? picked.delete(code) : picked.add(code);
+  drawTree(); render();
+  const added = currentQuestions().find(q => !before.has(q.key));
+  if (added) revealCard(added.key);
+}
+function clearStds(){ picked.clear(); off.clear(); drawTree(); render(); }
+function onlyStd(code){
+  picked.clear(); picked.add(code); drawTree(); render();
+  const first = currentQuestions()[0];
+  if (first) revealCard(first.key);
+}
+function revealCard(key){
+  requestAnimationFrame(() => {
+    const el = document.querySelector(`.card[data-key="${CSS.escape(key)}"]`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.add('flash');
+    setTimeout(() => el.classList.remove('flash'), 1500);
+  });
+}
+
+function selAll(on){ currentQuestions().forEach(q => on ? off.delete(q.key) : off.add(q.key)); render(); }
+function selInvert(){ currentQuestions().forEach(q => off.has(q.key) ? off.delete(q.key) : off.add(q.key)); render(); }
+function toggleQ(key){ off.has(key) ? off.delete(key) : off.add(key); render(); }
+
+function render(){
+  const qs = currentQuestions();
+  const inline = document.getElementById('optAnsInline').checked;
+  document.getElementById('count').textContent =
+    qs.length ? `선택 ${chosen().length} / 후보 ${qs.length}문항` : '';
+  document.getElementById('title').placeholder = picked.size ? autoTitle() : '문항집 제목';
+  document.getElementById('list').innerHTML = qs.length ? qs.map(q => `
+    <div class="card ${off.has(q.key)?'off':''}" data-key="${q.key}">
+      <div class="chead">
+        <input type="checkbox" ${off.has(q.key)?'':'checked'} onchange="toggleQ('${q.key}')">
+        <span class="tag ${q.subject.endsWith('Ⅰ')?'s1':'s2'}">${q.short}</span>
+        <span class="lab">${esc(q.label)}</span>
+        <span class="tag">${q.points}점</span>
+        ${inline && q.answer ? `<span class="tag ans">정답 ${q.answer}</span>` : ''}
+        ${q.fit==='부분' ? '<span class="tag part">부분 대응</span>' : ''}
+        <span class="topic">${esc(q.topic)}</span>
+      </div>
+      <div class="cbody"><img src="${q.img}" alt="${esc(q.label)}" loading="lazy" onclick="openLb(this.src)"></div>
+    </div>`).join('')
+    : '<div class="empty">왼쪽에서 성취기준을 고르세요. 여러 개를 고르면 함께 담깁니다.</div>';
+}
+
+/* ── 라이트박스 ───────────────────────────── */
+function openLb(src){ lbScale = 1; const i = document.getElementById('lbimg');
+  i.src = src; i.style.width = ''; document.getElementById('lb').classList.add('on'); }
+function closeLb(){ document.getElementById('lb').classList.remove('on'); }
+function zoom(d){ const i = document.getElementById('lbimg');
+  if (d === 0) { lbScale = 1; i.style.width = ''; return; }
+  lbScale = Math.min(4, Math.max(.4, lbScale + d * .25));
+  i.style.width = (i.naturalWidth * lbScale) + 'px'; }
+addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
+/* ── 문항집 조판 ──────────────────────────── */
+// A4 210×297, 상하좌우 12mm 여백, 단 간격 9mm
+const MM = 96 / 25.4, PAGE_H = 273, COL_W = (210 - 24 - 9) / 2;
+const GAP_MIN = 5, GAP_MAX = 26, KEY_CHUNK = 10;
+
+const qHtml = (q, i, inline, clamp) => `
+  <div class="pq">
+    <div class="h">
+      <span class="no">${i + 1}.</span>
+      <span class="ex">${q.short} ${esc(q.label)}</span>
+      <span class="ex">[${q.points}점]</span>
+      ${inline && q.answer ? `<span class="an">정답 ${q.answer}</span>` : ''}
+    </div>
+    <img src="${q.img}" alt=""${clamp ? ` style="height:${clamp}mm;width:auto"` : ''}>
+  </div>`;
+
+// 정답표는 단 안쪽에 들어가야 하므로 10문항씩 끊어 여러 블록으로 만든다.
+const keyChunks = (qs) => {
+  const out = [];
+  for (let s = 0; s < qs.length; s += KEY_CHUNK) {
+    const part = qs.slice(s, s + KEY_CHUNK);
+    out.push(`<div class="pq akey">
+      ${s === 0 ? '<h3>정답</h3>' : ''}
+      <table>
+        <tr><th class="rh">번호</th>${part.map((_, j) => `<th>${s + j + 1}</th>`).join('')}</tr>
+        <tr><th class="rh">정답</th>${part.map(q => `<td>${q.answer || '-'}</td>`).join('')}</tr>
+        <tr><th class="rh">배점</th>${part.map(q => `<td>${q.points || '-'}</td>`).join('')}</tr>
+      </table></div>`);
+  }
+  return out;
+};
+
+const waitImgs = (root) => Promise.all([...root.querySelectorAll('img')].map(
+  i => i.complete && i.naturalWidth ? null : new Promise(r => { i.onload = i.onerror = r; })));
+
+// 제목을 비워 두면 선택한 성취기준의 과목·단원으로 만들어 준다.
+function autoTitle(){
+  const ms = [...picked].map(c => META[c]).filter(Boolean);
+  if (!ms.length) return '문항집';
+  const subs = [...new Set(ms.map(m => m.subject))];
+  const units = [...new Set(ms.map(m => m.unit))];
+  const head = subs.join(' · ');
+  if (units.length === 1) return `${head} ${units[0]}`;
+  if (units.length <= 3) return `${head} ${units.join(', ')}`;
+  return `${head} 종합`;
+}
+
+function headHtml(qs, title, withMeta, withCodes){
+  const codes = [...picked];
+  const meta = withMeta ? codes.map(c => META[c]
+    ? `<span class="meta">${esc(META[c].subject)} · ${esc(META[c].unit)}<br>${
+        withCodes ? `[${c}] ` : ''}${esc(META[c].text)}</span>`
+    : '').join('') : '';
+  const lead = [withCodes ? esc(codes.join(' · ')) : '',
+                `총 ${qs.length}문항`,
+                `배점 합 ${qs.reduce((s, q) => s + (q.points || 0), 0)}점`]
+               .filter(Boolean).join(' &nbsp;|&nbsp; ');
+  return `<h2 class="ptitle">${esc(title)}</h2>
+    <p class="psub">${lead}${meta}</p>`;
+}
+
+async function makeSheet(){
+  const qs = chosen();
+  if (!qs.length) { alert('선택된 문항이 없습니다.'); return; }
+  const btn = document.querySelector('.bar button.primary');
+  const label = btn.textContent; btn.textContent = '배치 계산 중…'; btn.disabled = true;
+
+  const inline = document.getElementById('optAnsInline').checked;
+  const withTable = document.getElementById('optAnsTable').checked;
+  const withMeta = document.getElementById('optMeta').checked;
+  const withCodes = document.getElementById('optCodes').checked;
+  const maxPerCol = +document.getElementById('perPage').value;
+  const title = document.getElementById('title').value.trim() || autoTitle();
+  const head = headHtml(qs, title, withMeta, withCodes);
+  const meas = document.getElementById('measure');
+
+  // 1) 실제 단 너비로 그려서 높이를 잰다. 이미지 비율이 제각각이라 재보지 않으면 페이지가 넘치거나 빈다.
+  const blocks = (clamps) => qs.map((q, i) => qHtml(q, i, inline, clamps && clamps[i]))
+    .concat(withTable ? keyChunks(qs) : []);
+  const measure = async (clamps) => {
+    meas.innerHTML = `<div style="width:${COL_W}mm">${blocks(clamps).join('')}</div>
+                      <div style="width:${210 - 24}mm">${head}</div>`;
+    await waitImgs(meas);
+    return {
+      hs: [...meas.firstElementChild.children].map(e => e.getBoundingClientRect().height / MM),
+      headH: meas.lastElementChild.getBoundingClientRect().height / MM,
+    };
+  };
+  let { hs, headH } = await measure(null);
+  const broken = [...meas.querySelectorAll('img')].filter(i => !i.naturalWidth).length;
+  if (broken) alert(`이미지 ${broken}개를 불러오지 못했습니다. 이 HTML을 폴더 밖으로 옮기면 그림 경로가 끊깁니다.`);
+
+  // 한 문항이 페이지보다 큰 경우에만 그 문항의 이미지를 줄인다(그 외에는 단 폭 그대로).
+  let clamps = null;
+  if (hs.some((h, i) => i < qs.length && h > PAGE_H)) {
+    clamps = qs.map((_, i) => {
+      if (hs[i] <= PAGE_H) return 0;
+      const img = meas.firstElementChild.children[i].querySelector('img');
+      return img.getBoundingClientRect().height / MM - (hs[i] - PAGE_H) - 2;
+    });
+    ({ hs, headH } = await measure(clamps));
+  }
+  meas.innerHTML = '';
+
+  // 2) 단 → 페이지 순서로 채운다. 높이가 넘치거나 한 단의 문항 수 상한에 닿으면 다음 단으로.
+  const items = blocks(clamps);
+  const pages = [];
+  let page = { cols: [[], []], used: [0, 0] }, col = 0;
+  const capOf = () => PAGE_H - (pages.length === 0 ? headH : 0);
+  items.forEach((_, i) => {
+    const isKey = i >= qs.length;
+    const full = page.cols[col].length &&
+      (page.used[col] + GAP_MIN + hs[i] > capOf() ||
+       (!isKey && page.cols[col].filter(x => x < qs.length).length >= maxPerCol));
+    if (full) {
+      if (col === 0) col = 1;
+      else { pages.push(page); page = { cols: [[], []], used: [0, 0] }; col = 0; }
+    }
+    page.cols[col].push(i);
+    page.used[col] += hs[i] + (page.cols[col].length > 1 ? GAP_MIN : 0);
+  });
+  pages.push(page);
+
+  // 3) 단마다 남는 아래 여백을 문항 사이로 나눠 준다.
+  const gapOf = (pi, ci) => {
+    const n = pages[pi].cols[ci].length;
+    if (n < 2) return GAP_MIN;
+    const cap = PAGE_H - (pi === 0 ? headH : 0);
+    const extra = (cap - pages[pi].used[ci]) / (n - 1);
+    return Math.min(GAP_MAX, GAP_MIN + Math.max(0, extra));
+  };
+
+  document.getElementById('pages').innerHTML = pages.map((pg, pi) => `
+    <div class="paper">
+      ${pi === 0 ? head : ''}
+      <div class="sheet">
+        ${[0, 1].map(ci => `<div class="col" style="row-gap:${gapOf(pi, ci).toFixed(1)}mm">
+            ${pg.cols[ci].map(i => items[i]).join('')}</div>`).join('')}
+      </div>
+      <div class="pageno">${pi + 1} / ${pages.length}</div>
+    </div>`).join('');
+
+  await waitImgs(document.getElementById('pages'));
+  document.title = sheetFileName(title, qs);
+  document.getElementById('fnHint').textContent = document.title + '.pdf';
+  btn.textContent = label; btn.disabled = false;
+  document.body.classList.add('printing');
+  scrollTo(0, 0);
+}
+// 브라우저는 'PDF로 저장' 파일명을 document.title 에서 가져온다.
+const SAFE = (s) => s.replace(/[\/:*?"<>|]/g, ' ').replace(/\s+/g, ' ').trim();
+function sheetFileName(title, qs){
+  const d = new Date();
+  const ymd = String(d.getFullYear()).slice(2) +
+    String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+  const withAns = document.getElementById('optAnsInline').checked ||
+                  document.getElementById('optAnsTable').checked;
+  return SAFE(`${title}_${qs.length}문항${withAns ? '_정답' : ''}_${ymd}`);
+}
+
+const PAGE_TITLE = document.title;
+function backToEdit(){ document.body.classList.remove('printing'); document.title = PAGE_TITLE; }
+
+/* ── 문항집 저장/불러오기 (브라우저 로컬) ─────────── */
+const STORE = 'worksheet.sets.v1';
+const readSets = () => { try { return JSON.parse(localStorage.getItem(STORE) || '{}'); }
+                         catch { return {}; } };
+const writeSets = (s) => { try { localStorage.setItem(STORE, JSON.stringify(s)); return true; }
+                           catch { alert('브라우저 저장 공간에 쓸 수 없습니다(사생활 보호 모드일 수 있습니다).'); return false; } };
+const opt = (id) => document.getElementById(id);
+
+function drawSlots(sel){
+  const sets = readSets();
+  const names = Object.keys(sets).sort();
+  opt('slots').innerHTML = '<option value="">불러오기…</option>' +
+    names.map(n => `<option value="${esc(n)}"${n === sel ? ' selected' : ''}>${esc(n)} (${sets[n].off !== undefined ? (sets[n].picked || []).length : 0}개 기준)</option>`).join('');
+}
+
+function saveSet(){
+  if (!picked.size) { alert('선택된 성취기준이 없습니다.'); return; }
+  const prev = opt('slots').value;
+  const name = (prompt('저장할 이름', prev || autoTitle()) || '').trim();
+  if (!name) return;
+  const sets = readSets();
+  if (sets[name] && !confirm(`"${name}" 을(를) 덮어쓸까요?`)) return;
+  sets[name] = {
+    tab, picked: [...picked], off: [...off],
+    filter: { from: F.from, to: F.to, kinds: [...F.kinds], subjects: [...F.subjects] },
+    opts: ['optAnsInline', 'optAnsTable', 'optCodes', 'optMeta'].map(id => opt(id).checked),
+    order: opt('order').value, perPage: opt('perPage').value,
+    title: opt('title').value, savedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+  };
+  if (writeSets(sets)) { drawSlots(name); alert(`"${name}" 저장했습니다.`); }
+}
+
+function loadSet(name){
+  if (!name) return;
+  const s = readSets()[name];
+  if (!s) return;
+  tab = s.tab || 0;
+  picked.clear(); (s.picked || []).forEach(c => picked.add(c));
+  off.clear(); (s.off || []).forEach(k => off.add(k));
+  if (s.filter) {
+    F.from = s.filter.from; F.to = s.filter.to;
+    F.kinds = new Set(s.filter.kinds); F.subjects = new Set(s.filter.subjects);
+  }
+  (s.opts || []).forEach((v, i) => {
+    opt(['optAnsInline', 'optAnsTable', 'optCodes', 'optMeta'][i]).checked = v; });
+  if (s.order) opt('order').value = s.order;
+  if (s.perPage) opt('perPage').value = s.perPage;
+  opt('title').value = s.title || '';
+  drawFilter(); drawTree(); render();
+}
+
+function delSet(){
+  const name = opt('slots').value;
+  if (!name) { alert('삭제할 항목을 목록에서 고르세요.'); return; }
+  if (!confirm(`"${name}" 을(를) 지울까요?`)) return;
+  const sets = readSets(); delete sets[name];
+  if (writeSets(sets)) drawSlots();
+}
+
+drawFilter(); drawTree(); render(); drawSlots();
+</script>
+</body>
+</html>

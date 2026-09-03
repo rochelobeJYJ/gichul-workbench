@@ -1,0 +1,11 @@
+# 저작물은 절대 커밋되지 않는다 (docs/CONTRACT.md 0절)
+workspace/
+curriculum/pdf/
+*.pdf
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
