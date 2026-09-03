@@ -1,0 +1,42 @@
+{
+  "slug": "chemistry-i",
+  "label": "화학Ⅰ",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "화학Ⅰ",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "156",
+      "form_field": "sFormPartSci",
+      "area_order": "6",
+      "national": {
+        "family": "national",
+        "subject_id": "17042",
+        "form_field": "sFormPartSci",
+        "area_order": "6"
+      }
+    },
+    "kice": {
+      "area": "과학탐구",
+      "aliases": [
+        "화학I",
+        "화학i",
+        "화학 i",
+        "화학 I",
+        "화학1",
+        "화학 1"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12화학Ⅰ"],
+    "2022": ["12물에", "12반응"]
+  },
+  "notes": "ebsi.subject_id(156)는 KICE_SUBJECTS 출처, ebsi.national.subject_id(17042)는 NATIONAL_2015_SUBJECTS 출처(학평도 화학Ⅰ 시행). standard_prefixes.2015 는 [별책9] 과학과 교육과정(2015).pdf 의 [12화학Ⅰ01-01] 로 확인. 2022개정에서 화학Ⅰ/Ⅱ 구분이 사라지고 일반선택 '화학'(12화학) + 진로선택 '물질과 에너지'(12물에)·'화학 반응의 세계'(12반응)로 재편 — 지구과학 레퍼런스 관행대로 진로선택 2개만 standard_prefixes.2022 에 담고 curriculum.2022 는 null."
+}

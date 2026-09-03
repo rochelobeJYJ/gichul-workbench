@@ -1,0 +1,40 @@
+{
+  "slug": "politics-law",
+  "label": "정치와 법",
+  "area": "사회탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "정치와 법",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "",
+      "form_field": "sFormPartSoc",
+      "area_order": "5",
+      "national": {
+        "family": "national",
+        "subject_id": "140109",
+        "form_field": "sFormPartSoc",
+        "area_order": "5"
+      }
+    },
+    "kice": {
+      "area": "사회탐구",
+      "aliases": [
+        "정치와법",
+        "정치와 법",
+        "법과정치",
+        "법과 정치"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12정법"],
+    "2022": ["12정치", "12법사"]
+  },
+  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 어디에도 없다 — gw download --probe 로 실측 필요. ebsi.national.subject_id(140109)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. kice.aliases 의 '법과정치/법과 정치'는 D:/codex_work/programs/kice_down/main.py OLD_SUBJECT_FILTERS 의 옛 과목명 오기 방어값(2014년 이전 명칭이 '법과 정치'였음) — 손실 없이 그대로 옮김. standard_prefixes.2015(12정법)는 별책7_사회과 교육과정(제2018-162호).pdf 의 [12정법01-01] 로 확인. 2022개정에서 '정치와 법' 한 과목이 진로선택 '정치'(12정치)와 '법과 사회'(12법사) 두 과목으로 분리됨([별책7] 사회과 교육과정.pdf 에서 확인) — 단일 대응 과목이 없어 curriculum.2022 는 null, standard_prefixes.2022 에 두 접두사를 모두 담음."
+}

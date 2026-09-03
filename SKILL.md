@@ -42,7 +42,7 @@ python scripts/gw.py download --subject $S --years 2020-2026 --exams 수능,6월
 python scripts/gw.py detect   --subject $S
 python scripts/gw.py crop     --subject $S
 python scripts/gw.py extract  --subject $S
-python scripts/gw.py classify --subject $S
+python scripts/gw.py classify --subject $S        # 키워드 자동 + 애매한 것은 큐로
 python scripts/gw.py map      --subject $S --revision 2022
 python scripts/gw.py validate --subject $S
 python scripts/gw.py build    --subject $S
@@ -59,6 +59,22 @@ python scripts/gw.py build    --subject $S
 판정 기준은 하나다 — **그 성취기준이 다루는 대상(명사)이 문항에 나오는가.**
 학습 활동의 동사가 일치하는지는 묻지 마라. 이걸 잘못해서 성취기준 9개가 0문항이 된 적이 있다.
 결과를 파일로 써서 `classify --apply <파일>` 로 반영한다.
+
+**분류기는 쓸수록 정확해진다.** 판정을 반영한 뒤 이 순환을 돌려라.
+
+```bash
+python scripts/gw.py classify --subject $S --apply <판정결과>
+python scripts/gw.py classify --subject $S --learn        # 판정된 문항에서 사전 학습
+python scripts/gw.py classify --subject $S --calibrate    # 자기 정확도 측정
+python scripts/gw.py classify --subject $S               # 새 임계값으로 재분류
+```
+
+실측(지구과학Ⅱ, 학습에 안 쓴 80문항으로 채점): 성취기준 정확도 0.40 → 0.89,
+단원 정확도 0.74 → 0.95. 자동확정이 불가에서 31%로 열렸다.
+
+**`auto=0, queued=전부` 는 버그가 아니다.** 보정되지 않은 과목의 정상 동작이다.
+보정 없이 자동확정하면 틀린 성취기준이 items 에 박힌다. 사용자에게 그렇게 설명하고
+위 순환을 권해라. 라벨 30~50건이면 사전이 눈에 띄게 좋아진다.
 
 **3. 예외 처리.** 리포트의 `attention` 에 뜬 것들. `docs/PITFALLS.md` 에 대부분 답이 있다.
 

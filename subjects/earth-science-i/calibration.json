@@ -1,0 +1,220 @@
+{
+  "step": "calibrate",
+  "slug": "earth-science-i",
+  "calibrated_at": "2026-09-03T19:39:42",
+  "target_accuracy": 0.85,
+  "contract_floor": 0.35,
+  "gap_min": 0.15,
+  "measured_on": {
+    "items": 240,
+    "exams": [
+      "2021_6월모평",
+      "2021_수능",
+      "2022_9월모평",
+      "2022_수능",
+      "2023_6월모평",
+      "2023_수능",
+      "2024_9월모평",
+      "2024_수능",
+      "2025_6월모평",
+      "2025_9월모평",
+      "2026_6월모평",
+      "2026_9월모평"
+    ]
+  },
+  "revisions": {
+    "2015": {
+      "gold_count": 240,
+      "gold_sources": {
+        "items(by=manual)": 240
+      },
+      "evaluated_on": "holdout",
+      "holdout_count": 81,
+      "used_in_training": 159,
+      "keywords": {
+        "codes": 26,
+        "curriculum_terms": 206,
+        "learned_terms": 350
+      },
+      "overall": {
+        "n": 81,
+        "standard_accuracy": 0.8272,
+        "standard_accuracy_lo95": 0.7305,
+        "unit_accuracy": 0.9259,
+        "top3_accuracy": 0.9259
+      },
+      "overall_all_gold": {
+        "n": 240,
+        "standard_accuracy": 0.8667,
+        "standard_accuracy_lo95": 0.8178,
+        "unit_accuracy": 0.9583,
+        "top3_accuracy": 0.9583
+      },
+      "curve": [
+        {
+          "threshold": 0.2,
+          "auto": 51,
+          "auto_rate": 0.6296,
+          "standard_accuracy": 0.9804,
+          "accuracy_lo95": 0.897,
+          "unit_accuracy": 1.0,
+          "queued": 30,
+          "queued_top3_accuracy": 0.8
+        },
+        {
+          "threshold": 0.25,
+          "auto": 51,
+          "auto_rate": 0.6296,
+          "standard_accuracy": 0.9804,
+          "accuracy_lo95": 0.897,
+          "unit_accuracy": 1.0,
+          "queued": 30,
+          "queued_top3_accuracy": 0.8
+        },
+        {
+          "threshold": 0.3,
+          "auto": 49,
+          "auto_rate": 0.6049,
+          "standard_accuracy": 0.9796,
+          "accuracy_lo95": 0.8931,
+          "unit_accuracy": 1.0,
+          "queued": 32,
+          "queued_top3_accuracy": 0.8125
+        },
+        {
+          "threshold": 0.35,
+          "auto": 42,
+          "auto_rate": 0.5185,
+          "standard_accuracy": 0.9762,
+          "accuracy_lo95": 0.8768,
+          "unit_accuracy": 1.0,
+          "queued": 39,
+          "queued_top3_accuracy": 0.8462
+        },
+        {
+          "threshold": 0.4,
+          "auto": 33,
+          "auto_rate": 0.4074,
+          "standard_accuracy": 0.9697,
+          "accuracy_lo95": 0.8468,
+          "unit_accuracy": 1.0,
+          "queued": 48,
+          "queued_top3_accuracy": 0.875
+        },
+        {
+          "threshold": 0.45,
+          "auto": 27,
+          "auto_rate": 0.3333,
+          "standard_accuracy": 1.0,
+          "accuracy_lo95": 0.8754,
+          "unit_accuracy": 1.0,
+          "queued": 54,
+          "queued_top3_accuracy": 0.8889
+        },
+        {
+          "threshold": 0.5,
+          "auto": 18,
+          "auto_rate": 0.2222,
+          "standard_accuracy": 1.0,
+          "accuracy_lo95": 0.8241,
+          "unit_accuracy": 1.0,
+          "queued": 63,
+          "queued_top3_accuracy": 0.9048
+        },
+        {
+          "threshold": 0.55,
+          "auto": 12,
+          "auto_rate": 0.1481,
+          "standard_accuracy": 1.0,
+          "accuracy_lo95": 0.7575,
+          "unit_accuracy": 1.0,
+          "queued": 69,
+          "queued_top3_accuracy": 0.913
+        },
+        {
+          "threshold": 0.6,
+          "auto": 6,
+          "auto_rate": 0.0741,
+          "standard_accuracy": 1.0,
+          "accuracy_lo95": 0.6097,
+          "unit_accuracy": 1.0,
+          "queued": 75,
+          "queued_top3_accuracy": 0.92
+        },
+        {
+          "threshold": 0.65,
+          "auto": 4,
+          "auto_rate": 0.0494,
+          "standard_accuracy": 1.0,
+          "accuracy_lo95": 0.5101,
+          "unit_accuracy": 1.0,
+          "queued": 77,
+          "queued_top3_accuracy": 0.9221
+        },
+        {
+          "threshold": 0.7,
+          "auto": 1,
+          "auto_rate": 0.0123,
+          "standard_accuracy": 1.0,
+          "accuracy_lo95": 0.2065,
+          "unit_accuracy": 1.0,
+          "queued": 80,
+          "queued_top3_accuracy": 0.925
+        },
+        {
+          "threshold": 0.75,
+          "auto": 1,
+          "auto_rate": 0.0123,
+          "standard_accuracy": 1.0,
+          "accuracy_lo95": 0.2065,
+          "unit_accuracy": 1.0,
+          "queued": 80,
+          "queued_top3_accuracy": 0.925
+        },
+        {
+          "threshold": 0.8,
+          "auto": 0,
+          "auto_rate": 0.0,
+          "standard_accuracy": null,
+          "accuracy_lo95": null,
+          "unit_accuracy": null,
+          "queued": 81,
+          "queued_top3_accuracy": 0.9259
+        },
+        {
+          "threshold": 0.85,
+          "auto": 0,
+          "auto_rate": 0.0,
+          "standard_accuracy": null,
+          "accuracy_lo95": null,
+          "unit_accuracy": null,
+          "queued": 81,
+          "queued_top3_accuracy": 0.9259
+        },
+        {
+          "threshold": 0.9,
+          "auto": 0,
+          "auto_rate": 0.0,
+          "standard_accuracy": null,
+          "accuracy_lo95": null,
+          "unit_accuracy": null,
+          "queued": 81,
+          "queued_top3_accuracy": 0.9259
+        }
+      ],
+      "recommended": {
+        "threshold": 0.35,
+        "auto": 42,
+        "auto_rate": 0.5185,
+        "standard_accuracy": 0.9762,
+        "accuracy_lo95": 0.8768,
+        "unit_accuracy": 1.0,
+        "queued": 39,
+        "queued_top3_accuracy": 0.8462
+      },
+      "auto_confirm": true,
+      "note": ""
+    }
+  },
+  "generated_by": "gw classify --learn/--calibrate · 원본 PDF 12회차 240문항을 격리 작업공간에서 detect→crop→extract→map(mapping.json 사람 라벨 주입) 뒤 측정. 학습 8회차 160문항 / 채점 홀드아웃 4회차 80문항. 측정은 임시 슬러그로 돌렸고 이 파일에서는 slug 만 실제 과목으로 바로잡았다."
+}

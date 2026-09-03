@@ -112,7 +112,8 @@ output/                         최종 산출물 (HTML 문항집 등)
   "text": {"stem": "...", "boxed": "...", "choices": ["...", "...", "...", "...", "..."]},
   "extraction_mode": "direct",
   "classification": {
-    "2015": {"standard": "12지구03-02", "unit": "…", "confidence": 0.82, "by": "keyword"},
+    "2015": {"standard": "12지과Ⅱ03-02", "unit": "…", "confidence": 0.867, "by": "keyword",
+             "ext": {"score": 0.94, "calibrated_at": "2026-09-03T18:40:00"}},
     "2022": {"standard": "12지시02-01", "unit": "…", "confidence": null, "by": "llm"}
   },
   "status": "verified",
@@ -123,6 +124,11 @@ output/                         최종 산출물 (HTML 문항집 등)
 - `extraction_mode` : `direct` | `ocr` | `vision`. 텍스트 레이어가 없는 회차는 `vision`.
 - `status` : `scaffold` (자동 생성만) | `verified` (검수 통과).
 - `classification.*.by` : `keyword` | `llm` | `manual`.
+- `classification.*.confidence` : **원점수가 아니라 실측 정확도의 95% 하한**(Wilson).
+  보정(`classify --calibrate`) 곡선에서 읽어온다. 보정 전이면 `null` 이다.
+  원점수는 `ext.score` 에 따로 둔다.
+  이유: 초안 사전이 **틀린 답에 0.96 을 붙이는** 사고가 실제로 있었다. 점수를 신뢰도로
+  쓰면 LLM 이 검토를 건너뛴다. 하한은 정의상 1.0 이 될 수 없고 표본이 늘면 점추정에 수렴한다.
 - `text` 가 비어 있어도(`vision`) 파이프라인은 끝까지 돌아야 한다. 크롭 이미지가 본체다.
 - **계약에 없는 필드는 `ext` 아래에 넣는다.** 최상위에 마음대로 키를 늘리면 검증기가 무엇을
   검사해야 하는지 알 수 없게 된다. 예: `ext.answer_check`(정답 3중 대조의 축별 원본값),
@@ -196,7 +202,29 @@ python scripts/gw.py <command> --subject <slug> [옵션]
 `classify_queue.json` 은 LLM 이 한 번에 읽을 수 있도록 문항당 **본문 400자 + 후보 성취기준 3개**만 담는다.
 LLM 은 판정 결과를 `classify_result.json` 으로 되돌려주고, `gw.py classify --apply` 가 그것을 `items/` 에 반영한다.
 
-큐에 들어가는 조건: 최고점수 < 0.35, 또는 1·2위 점수 차 < 0.15, 또는 매칭 0건.
+큐에 들어가는 조건: 최고점수 < 임계값, 또는 1·2위 점수 차 < 0.15, 또는 매칭 0건.
+
+**임계값은 고정값이 아니라 보정에서 나온다.**
+
+- `subjects/<slug>/calibration.json` 이 없으면 **자동확정을 하지 않는다.** 전부 큐로 보내고
+  `attention` 에 warn 을 남긴다. 보정되지 않은 사전의 점수는 신뢰할 근거가 없다.
+- 있으면 그 권장 임계값을 쓴다. 단 **0.35 아래로는 내려가지 않는다**(계약 하한).
+- 권장 임계값은 "목표 정확도(0.85)를 표본 10건 이상으로 지키는 가장 낮은 임계값"이다.
+  그런 임계값이 없으면 보정 결과는 `auto_confirm: false` 이고 자동확정은 계속 꺼진다.
+- 표본 하한 10은 타협 대상이 아니다. 5건으로 두었더니 `5/5 = 정확도 1.00` 이 나와
+  임계값 0.90 을 권했는데, 5/5 의 95% 하한은 0.57 이다. 보정기가 보정하려던 바로 그
+  사고를 되풀이할 뻔했다.
+
+### 사전은 라벨된 문항에서 학습한다
+
+`classify --learn` 이 `by` 가 `manual`·`llm` 인 문항에서 변별력 있는 용어를 뽑아
+`keywords.json` 의 `learned` 칸에 넣는다(`curriculum` 칸은 교육과정 초안 몫).
+
+실측(지구과학Ⅱ, 학습 8회차 / 채점 4회차 홀드아웃 80문항):
+성취기준 정확도 0.400 → 0.888, 단원 정확도 0.738 → 0.950, top-3 0.500 → 0.913.
+
+**학습에 쓴 문항으로 채점하면 안 된다.** `--learn` 이 `_meta.learned_from` 에 학습 qid 를
+남기고 `--calibrate` 가 그것을 빼고 채점한다. 홀드아웃이 20건 미만이면 임계값을 권하지 않는다.
 
 ## 8. 검증 불변식
 

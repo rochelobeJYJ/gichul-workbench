@@ -1,0 +1,36 @@
+{
+  "slug": "chemistry-ii",
+  "label": "화학Ⅱ",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "화학Ⅱ",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "157",
+      "form_field": "sFormPartSci",
+      "area_order": "6"
+    },
+    "kice": {
+      "area": "과학탐구",
+      "aliases": [
+        "화학II",
+        "화학ii",
+        "화학 ii",
+        "화학 II",
+        "화학2",
+        "화학 2"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12화학Ⅱ"],
+    "2022": ["12물에", "12반응"]
+  },
+  "notes": "ebsi.subject_id(157)는 KICE_SUBJECTS 출처. 학평은 화학Ⅱ 를 시행하지 않아 ebsi.national 생략. standard_prefixes.2015 는 [12화학Ⅱ01-01] 로 확인. 2022 대응은 화학Ⅰ과 동일하게 진로선택 2과목(12물에·12반응) 공유."
+}

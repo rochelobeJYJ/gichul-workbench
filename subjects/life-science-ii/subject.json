@@ -1,0 +1,43 @@
+{
+  "slug": "life-science-ii",
+  "label": "생명과학Ⅱ",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "생명과학Ⅱ",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "159",
+      "form_field": "sFormPartSci",
+      "area_order": "6"
+    },
+    "kice": {
+      "area": "과학탐구",
+      "aliases": [
+        "생명과학II",
+        "생명과학ii",
+        "생명 과학 ii",
+        "생명 과학 II",
+        "생물II",
+        "생물ii",
+        "생물 II",
+        "생물 ii",
+        "생명과학2",
+        "생명과학 2",
+        "생명 과학 2",
+        "생물2",
+        "생물 2"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12생과Ⅱ"],
+    "2022": ["12세포", "12유전"]
+  },
+  "notes": "ebsi.subject_id(159)는 KICE_SUBJECTS 출처. 학평은 생명과학Ⅱ 를 시행하지 않아 ebsi.national 생략. standard_prefixes.2015 는 [12생과Ⅱ01-01] 로 확인. 2022 대응은 생명과학Ⅰ과 동일하게 진로선택 2과목(12세포·12유전) 공유."
+}

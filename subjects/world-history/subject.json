@@ -1,0 +1,38 @@
+{
+  "slug": "world-history",
+  "label": "세계사",
+  "area": "사회탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "세계사",
+    "2022": "세계사"
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "",
+      "form_field": "sFormPartSoc",
+      "area_order": "5",
+      "national": {
+        "family": "national",
+        "subject_id": "50617",
+        "form_field": "sFormPartSoc",
+        "area_order": "5"
+      }
+    },
+    "kice": {
+      "area": "사회탐구",
+      "aliases": [
+        "세계사",
+        "세계 사"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12세사"],
+    "2022": ["12세사"]
+  },
+  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 어디에도 없다 — gw download --probe 로 실측 필요. ebsi.national.subject_id(50617)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015/2022 모두 '12세사' — 별책7_사회과 교육과정(제2018-162호).pdf 와 [별책7] 사회과 교육과정.pdf 양쪽에서 [12세사01-01] 로 확인. '세계사'는 2015→2022 개정에도 과목명·접두사가 그대로 유지된 드문 경우(일반선택 지위 유지)라 curriculum.2022 를 채워둠."
+}

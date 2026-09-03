@@ -1,0 +1,38 @@
+{
+  "slug": "korean-geography",
+  "label": "한국지리",
+  "area": "사회탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "한국지리",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "141",
+      "form_field": "sFormPartSoc",
+      "area_order": "5",
+      "national": {
+        "family": "national",
+        "subject_id": "17029",
+        "form_field": "sFormPartSoc",
+        "area_order": "5"
+      }
+    },
+    "kice": {
+      "area": "사회탐구",
+      "aliases": [
+        "한국지리",
+        "한국 지리"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": [],
+    "2022": []
+  },
+  "notes": "[주의] 이 파일은 download 모듈 작업 중 실수로 덮어써져 재구성되었다. standard_prefixes 와 curriculum, notes 의 교육과정 근거는 과목 등록 담당이 다시 채워야 한다. ebsi.subject_id(141)는 `gw download --probe --area 사회탐구 --year 2024 --exam 수능` 으로 실측한 값이고, 2024학년도 수능에서 문제·정답·해설 세 종류가 모두 조회되며 실제 다운로드까지 확인했다. ebsi.national.subject_id(17029)는 학평 계열, NATIONAL_2015_SUBJECTS 출처."
+}

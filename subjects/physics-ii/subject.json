@@ -1,0 +1,40 @@
+{
+  "slug": "physics-ii",
+  "label": "물리학Ⅱ",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "물리학Ⅱ",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "140116",
+      "form_field": "sFormPartSci",
+      "area_order": "6"
+    },
+    "kice": {
+      "area": "과학탐구",
+      "aliases": [
+        "물리학II",
+        "물리학ii",
+        "물리ii",
+        "물리II",
+        "물리 ii",
+        "물리 II",
+        "물리학2",
+        "물리학 2",
+        "물리2",
+        "물리 2"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12물리Ⅱ"],
+    "2022": ["12역학", "12전자"]
+  },
+  "notes": "ebsi.subject_id(140116)는 KICE_SUBJECTS(수능·모평) 출처. 학평(전국연합)은 과학탐구Ⅱ 과목을 시행하지 않으므로 NATIONAL_2015_SUBJECTS 에 물리학Ⅱ 항목이 없음 — ebsi.national 생략(빈 값으로 채워넣지 않음). standard_prefixes.2015 는 [별책9] 과학과 교육과정(2015).pdf 의 [12물리Ⅱ01-01] 로 확인. 2022개정 대응은 물리학Ⅰ과 동일하게 진로선택 2과목(12역학·12전자)을 공유 — 지구과학Ⅰ/Ⅱ가 2022 코드셋을 공유하는 것과 같은 방식."
+}

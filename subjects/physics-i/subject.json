@@ -1,0 +1,46 @@
+{
+  "slug": "physics-i",
+  "label": "물리학Ⅰ",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "물리학Ⅰ",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "140115",
+      "form_field": "sFormPartSci",
+      "area_order": "6",
+      "national": {
+        "family": "national",
+        "subject_id": "140113",
+        "form_field": "sFormPartSci",
+        "area_order": "6"
+      }
+    },
+    "kice": {
+      "area": "과학탐구",
+      "aliases": [
+        "물리학I",
+        "물리학i",
+        "물리i",
+        "물리I",
+        "물리 i",
+        "물리 I",
+        "물리학1",
+        "물리학 1",
+        "물리1",
+        "물리 1"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12물리Ⅰ"],
+    "2022": ["12역학", "12전자"]
+  },
+  "notes": "ebsi.subject_id(140115)는 KICE_SUBJECTS(수능·모평) 출처, exam-source-downloader/scripts/download_exam_sources.py. ebsi.national.subject_id(140113)는 학평 계열, NATIONAL_2015_SUBJECTS 출처 — 학평도 물리학Ⅰ은 시행하므로 존재. standard_prefixes.2015 는 curriculum/pdf/[별책9] 과학과 교육과정(2015).pdf 에서 [12물리Ⅰ01-01] 형태로 직접 확인함. 2022개정에서는 '물리학Ⅰ/Ⅱ' 구분이 사라지고 일반선택 '물리학'(12물리, curriculum/pdf/[별책9] 과학과 교육과정(2022).pdf) + 진로선택 '역학과 에너지'(12역학)·'전자기와 양자'(12전자)로 재편됨. earth-science-i/ii 가 2015 단일 과목명을 2022 진로선택 코드 2개로 매핑한 관행(curriculum.2022=null, standard_prefixes.2022 에 진로선택만)을 그대로 따름 — 일반선택 '물리학'(12물리)은 제외."
+}

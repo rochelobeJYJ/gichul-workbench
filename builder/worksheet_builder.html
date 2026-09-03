@@ -8,13 +8,25 @@
     --bg:#f6f7f9; --panel:#fff; --line:#dfe3e8; --ink:#1b1f24; --dim:#6b7280;
     --accent:#2563eb; --accent-soft:#eff4ff; --warn:#b45309;
     --preview-w:640px;   /* 후보 목록의 문항 이미지 최대 가로폭 */
+    --noticeH:26px; --attrH:20px;   /* 저작권 안내줄·출처 표기줄 높이(둘 다 인쇄에서는 숨김) */
   }
   *{box-sizing:border-box}
   body{margin:0;font:14px/1.55 "Malgun Gothic","맑은 고딕",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
   button{font:inherit;cursor:pointer}
 
+  /* ── 저작권 안내 / 출처 표기 ─────────────────
+     둘 다 body 의 직속 자식이라 아래 @media print 의
+     body>*{display:none!important} 규칙에 자동으로 걸려 인쇄에는 절대 안 남는다.
+     (편집 화면에서만 보이면 되고, #print 안에 넣을 이유가 없어서 이렇게 뒀다) */
+  #notice{height:var(--noticeH);line-height:var(--noticeH);padding:0 14px;font-size:11px;
+          color:#92400e;background:#fffbeb;border-bottom:1px solid #fde68a;
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #attribution{position:fixed;left:0;right:10px;bottom:0;height:var(--attrH);line-height:var(--attrH);
+          font-size:10px;color:#9aa1ac;text-align:right;z-index:4;pointer-events:none}
+  #attribution a{color:#9aa1ac;pointer-events:auto}
+
   /* ── 편집 화면 ───────────────────────────── */
-  #app{display:grid;grid-template-columns:330px 1fr;height:100vh}
+  #app{display:grid;grid-template-columns:330px 1fr;height:calc(100vh - var(--noticeH))}
   aside{background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:14px}
   aside h1{font-size:15px;margin:0 0 12px}
   .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
@@ -64,8 +76,13 @@
   .chead{display:flex;gap:9px;align-items:center;padding:8px 11px;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .chead .lab{font-weight:700;font-size:13px}
   .tag{font-size:11px;border-radius:9px;padding:1px 7px;border:1px solid var(--line);color:var(--dim)}
+  /* 과목이 몇 개가 오든 색이 모자라지 않도록 6개를 돌려 쓴다(원래는 지Ⅰ/지Ⅱ 2개뿐이라 s1/s2만 있었다) */
   .tag.s1{background:#eef6ff;border-color:#bfdbfe;color:#1d4ed8}
   .tag.s2{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}
+  .tag.s3{background:#faf5ff;border-color:#e9d5ff;color:#7e22ce}
+  .tag.s4{background:#fdf2f8;border-color:#fbcfe8;color:#be185d}
+  .tag.s5{background:#f0f9ff;border-color:#bae6fd;color:#0369a1}
+  .tag.s6{background:#f7f7f8;border-color:#d1d5db;color:#4b5563}
   .tag.ans{background:#fff7ed;border-color:#fed7aa;color:#c2410c;font-weight:700}
   .tag.part{background:#fefce8;border-color:#fde68a;color:var(--warn)}
   .chead .topic{font-size:11.5px;color:var(--dim);margin-left:auto}
@@ -127,9 +144,12 @@
 </head>
 <body>
 
+<!-- 인쇄 제외 · 편집 화면 상단 한 줄 저작권 안내. body 직속 자식이라 print 시 자동 숨김(위 CSS 주석 참조) -->
+<div id="notice">생성된 문항집은 수업 목적 범위에서만 사용하세요. 원저작권은 한국교육과정평가원(KICE)·EBS에 있습니다.</div>
+
 <div id="app">
   <aside>
-    <h1>기출 문항집 제작기<span style="display:block;font-size:11px;color:var(--dim);font-weight:400;margin-top:2px">2022개정 성취기준 / 2015개정 단원 어느 쪽으로든 고를 수 있습니다</span></h1>
+    <h1>기출 문항집 제작기<span style="display:block;font-size:11px;color:var(--dim);font-weight:400;margin-top:2px">왼쪽 탭에서 단원·성취기준을 고르면 문항이 함께 담깁니다</span></h1>
     <div class="tabs" id="tabs"></div>
     <div class="sidebtn">
       <button id="clearBtn" onclick="clearStds()">성취기준 전체 해제</button>
@@ -206,6 +226,8 @@
   <div id="pages"></div>
 </div>
 <div id="measure"></div>
+<!-- 인쇄 제외 · 출처 표기. body 직속 자식이라 print 시 자동 숨김(위 CSS 주석 참조). 내용은 build.py 가 DATA.meta 로 채운다 -->
+<footer id="attribution"></footer>
 
 <script>
 const DATA = /*__DATA__*/null;
@@ -224,21 +246,30 @@ DATA.subjects.forEach(s => s.units.forEach(u => u.standards.forEach(st => {
 })));
 
 // ── 회차 필터 ─────────────────────────────
-const KIND_RANK = { '6월모평': 0, '9월모평': 1, '수능': 2 };
-const KIND_LABEL = { '6월모평': '6월', '9월모평': '9월', '수능': '수능' };
+// 시험 종류의 순서·약칭은 대한민국 수능 체계 자체가 고정 어휘라(scripts/common/ids.py 의
+// EXAM_ALIASES·exam_sort_key 와 동일 어휘) 여기 하드코딩해도 CONTRACT 0절의 "과목 하드코딩 금지"에
+// 걸리지 않는다 — 과목이 아니라 "시험 일정"이라서 그렇다. 새 과목이 와도 이 표는 안 바뀐다.
+const KIND_RANK = { '3월학평': 0, '4월학평': 1, '6월모평': 2, '7월학평': 3, '9월모평': 4, '10월학평': 5, '수능': 6 };
+const KIND_LABEL = { '3월학평': '3월', '4월학평': '4월', '6월모평': '6월', '7월학평': '7월', '9월모평': '9월', '10월학평': '10월', '수능': '수능' };
 const ALL_Q = DATA.subjects.flatMap(s => s.units).flatMap(u => u.standards).flatMap(s => s.questions);
+// 학평은 같은 달에 학년별(고1/고2/고3) 시험이 따로 있어서 학년까지 키에 넣어야 회차가 안 섞인다.
+const examKey = (q) => `${q.year}_${q.grade || ''}_${q.exam}`;
 // 실제로 존재하는 회차만 시간순으로 늘어놓는다(예: 2027은 6월모평뿐)
-const EXAMS = [...new Map(ALL_Q.map(q => [`${q.year}_${q.exam}`, q])).values()]
-  .sort((a, b) => a.year - b.year || KIND_RANK[a.exam] - KIND_RANK[b.exam])
-  .map(q => ({ key: `${q.year}_${q.exam}`, year: q.year, exam: q.exam,
-               label: `${q.year} ${KIND_LABEL[q.exam]}` }));
+const EXAMS = [...new Map(ALL_Q.map(q => [examKey(q), q])).values()]
+  .sort((a, b) => a.year - b.year || KIND_RANK[a.exam] - KIND_RANK[b.exam] || (a.grade || 0) - (b.grade || 0))
+  .map(q => ({ key: examKey(q), year: q.year, exam: q.exam, grade: q.grade,
+               label: `${q.year}${q.grade ? ' 고' + q.grade : ''} ${KIND_LABEL[q.exam]}` }));
 const EXAM_POS = new Map(EXAMS.map((e, i) => [e.key, i]));
 const KINDS = [...new Set(EXAMS.map(e => e.exam))].sort((a, b) => KIND_RANK[a] - KIND_RANK[b]);
-const SUBJECTS = [...new Set(ALL_Q.map(q => q.subject))].sort((x, y) => x.endsWith('Ⅰ') ? -1 : 1);
+// 과목 표시 순서는 --subject 로 지정한 순서를 그대로 따른다(build.py 가 DATA.subjectOrder 로 넘겨준다).
+// 예전엔 "'Ⅰ'로 끝나는 과목이 항상 먼저"였는데, 지구과학 전용 가정이라 다른 과목 조합에서 깨진다.
+const subjectRank = (name) => { const i = (DATA.subjectOrder || []).indexOf(name); return i === -1 ? 999 : i; };
+const SUBJECTS = [...new Set(ALL_Q.map(q => q.subject))].sort((x, y) => subjectRank(x) - subjectRank(y));
+const SHORT = new Map(ALL_Q.map(q => [q.subject, q.short]));  // 필터 칩에 쓸 과목 약칭
 const F = { from: 0, to: EXAMS.length - 1, kinds: new Set(KINDS), subjects: new Set(SUBJECTS) };
 
 const passFilter = (q) => {
-  const i = EXAM_POS.get(`${q.year}_${q.exam}`);
+  const i = EXAM_POS.get(examKey(q));
   return i >= F.from && i <= F.to && F.kinds.has(q.exam) && F.subjects.has(q.subject);
 };
 
@@ -268,14 +299,14 @@ function drawFilter(){
   document.getElementById('kindChips').innerHTML = KINDS.map(k =>
     `<button class="chip ${F.kinds.has(k) ? 'on' : ''}" onclick="toggleKind('${k}')">${KIND_LABEL[k]}</button>`).join(' ');
   document.getElementById('subjChips').innerHTML = SUBJECTS.map(s =>
-    `<button class="chip ${F.subjects.has(s) ? 'on' : ''}" onclick="toggleSubj('${s}')">${s.endsWith('Ⅰ') ? '지Ⅰ' : '지Ⅱ'}</button>`).join(' ');
+    `<button class="chip ${F.subjects.has(s) ? 'on' : ''}" onclick="toggleSubj('${s}')">${esc(SHORT.get(s) || s)}</button>`).join(' ');
   const kept = EXAMS.filter((e, i) => i >= F.from && i <= F.to && F.kinds.has(e.exam)).length;
   const full = F.from === 0 && F.to === EXAMS.length - 1 &&
                F.kinds.size === KINDS.length && F.subjects.size === SUBJECTS.length;
   document.getElementById('filterHit').textContent = full ? '전체 회차' : `회차 ${kept}/${EXAMS.length}개`;
 }
 
-// 데이터 정렬(지Ⅰ→지Ⅱ, 각 과목 안에서 과거→현재) 순서를 전역 순위로 굳혀 둔다
+// 데이터 정렬(--subject 로 지정한 과목 순서 → 각 과목 안에서는 과거→현재) 순서를 전역 순위로 굳혀 둔다
 const RANK = new Map();
 DATA.subjects.flatMap(stdsOf).flatMap(s => s.questions)
   .forEach(q => { if (!RANK.has(q.key)) RANK.set(q.key, RANK.size); });
@@ -289,7 +320,7 @@ function currentQuestions(){
       if (!seen.has(q.key) && passFilter(q)) { seen.add(q.key); out.push(q); }
   }
   const dir = +(document.getElementById('order')?.value || 1);
-  const si = (q) => q.subject.endsWith('Ⅰ') ? 0 : 1;   // 지Ⅰ 블록은 항상 앞
+  const si = (q) => subjectRank(q.subject);   // 과목 블록은 --subject 순서 그대로, 항상 뒤섞이지 않는다
   out.sort((a, b) => si(a) - si(b) || (RANK.get(a.key) - RANK.get(b.key)) * dir);
   return out;
 }
@@ -357,7 +388,7 @@ function render(){
     <div class="card ${off.has(q.key)?'off':''}" data-key="${q.key}">
       <div class="chead">
         <input type="checkbox" ${off.has(q.key)?'':'checked'} onchange="toggleQ('${q.key}')">
-        <span class="tag ${q.subject.endsWith('Ⅰ')?'s1':'s2'}">${q.short}</span>
+        <span class="tag s${(subjectRank(q.subject) % 6) + 1}">${esc(q.short)}</span>
         <span class="lab">${esc(q.label)}</span>
         <span class="tag">${q.points}점</span>
         ${inline && q.answer ? `<span class="tag ans">정답 ${q.answer}</span>` : ''}
@@ -600,6 +631,16 @@ function delSet(){
   const sets = readSets(); delete sets[name];
   if (writeSets(sets)) drawSlots();
 }
+
+/* ── 출처 표기(편집 화면에만, build.py 가 채운 DATA.meta 를 그대로 읽는다) ─── */
+(function drawAttribution(){
+  const el = document.getElementById('attribution');
+  const m = DATA.meta || {};
+  if (!el || !m.repo) return;
+  const name = m.remote ? `<a href="${esc(m.remote)}" target="_blank" rel="noopener">${esc(m.repo)}</a>` : esc(m.repo);
+  const rest = [m.version, m.builtAt].filter(Boolean).map(esc).join(' · ');
+  el.innerHTML = rest ? `${name} · ${rest}` : name;
+})();
 
 drawFilter(); drawTree(); render(); drawSlots();
 </script>

@@ -1,0 +1,49 @@
+{
+  "slug": "life-science-i",
+  "label": "생명과학Ⅰ",
+  "area": "과학탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "생명과학Ⅰ",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "158",
+      "form_field": "sFormPartSci",
+      "area_order": "6",
+      "national": {
+        "family": "national",
+        "subject_id": "17043",
+        "form_field": "sFormPartSci",
+        "area_order": "6"
+      }
+    },
+    "kice": {
+      "area": "과학탐구",
+      "aliases": [
+        "생명과학I",
+        "생명과학i",
+        "생명 과학 i",
+        "생명 과학 I",
+        "생물I",
+        "생물i",
+        "생물 I",
+        "생물 i",
+        "생명과학1",
+        "생명과학 1",
+        "생명 과학 1",
+        "생물1",
+        "생물 1"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12생과Ⅰ"],
+    "2022": ["12세포", "12유전"]
+  },
+  "notes": "ebsi.subject_id(158)는 KICE_SUBJECTS 출처, ebsi.national.subject_id(17043)는 NATIONAL_2015_SUBJECTS 출처(학평도 생명과학Ⅰ 시행). standard_prefixes.2015 는 [별책9] 과학과 교육과정(2015).pdf 의 [12생과Ⅰ01-01] 로 확인 — 과목명은 '생명과학'이지만 코드 접두사는 '생과'로 축약됨에 주의(추측이 아니라 PDF 원문 확인). 2022개정에서 일반선택 '생명과학'(12생과) + 진로선택 '세포와 물질대사'(12세포)·'생물의 유전'(12유전)으로 재편 — 진로선택 2개만 standard_prefixes.2022 에 담음(지구과학 레퍼런스 관행)."
+}

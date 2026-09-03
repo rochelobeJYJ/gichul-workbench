@@ -1,0 +1,38 @@
+{
+  "slug": "world-geography",
+  "label": "세계지리",
+  "area": "사회탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "세계지리",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "",
+      "form_field": "sFormPartSoc",
+      "area_order": "5",
+      "national": {
+        "family": "national",
+        "subject_id": "50618",
+        "form_field": "sFormPartSoc",
+        "area_order": "5"
+      }
+    },
+    "kice": {
+      "area": "사회탐구",
+      "aliases": [
+        "세계지리",
+        "세계 지리"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12세지"],
+    "2022": ["12세지"]
+  },
+  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 어디에도 없다 — gw download --probe 로 실측 필요. ebsi.national.subject_id(50618)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015(12세지)는 별책7_사회과 교육과정(제2018-162호).pdf 의 [12세지01-01] 로 확인. 2022개정에서 '세계지리'는 사라지고 일반선택 '세계시민과 지리'로 개편되었는데, 그 코드 접두사가 우연히 동일한 '12세지'([별책7] 사회과 교육과정.pdf 에서 확인) — 접두사가 같다고 과목이 같은 게 아니므로 curriculum.2022 는 null 로 두고 여기 남긴다. LLM 분류 단계에서 이 우연한 접두사 일치로 혼동하지 않도록 주의."
+}

@@ -1,0 +1,38 @@
+{
+  "slug": "east-asian-history",
+  "label": "동아시아사",
+  "area": "사회탐구",
+  "layout": "tamgu-1q1block",
+  "question_count": 20,
+  "points_total": 50,
+  "curriculum": {
+    "2015": "동아시아사",
+    "2022": null
+  },
+  "providers": {
+    "ebsi": {
+      "family": "kice",
+      "subject_id": "",
+      "form_field": "sFormPartSoc",
+      "area_order": "5",
+      "national": {
+        "family": "national",
+        "subject_id": "50613",
+        "form_field": "sFormPartSoc",
+        "area_order": "5"
+      }
+    },
+    "kice": {
+      "area": "사회탐구",
+      "aliases": [
+        "동아시아사",
+        "동아시아 사"
+      ]
+    }
+  },
+  "standard_prefixes": {
+    "2015": ["12동사"],
+    "2022": ["12동역"]
+  },
+  "notes": "KICE(수능·모평) 계열 ebsi.subject_id 는 어디에도 없다 — gw download --probe 로 실측 필요. ebsi.national.subject_id(50613)는 학평 계열, NATIONAL_2015_SUBJECTS 출처. standard_prefixes.2015(12동사)는 별책7_사회과 교육과정(제2018-162호).pdf 의 [12동사01-01] 로 확인. 2022개정에서 '동아시아사'는 사라지고 진로선택 '동아시아 역사 기행'(12동역, [별책7] 사회과 교육과정.pdf 에서 확인)으로 재편 — 과목명이 바뀌어 curriculum.2022 는 null."
+}
