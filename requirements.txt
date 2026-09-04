@@ -1,7 +1,18 @@
-PyMuPDF>=1.23.0
-pdfplumber>=0.10.0
-Pillow>=10.0.0
-numpy>=1.24.0
-requests>=2.28.0
-beautifulsoup4>=4.12.0
-openpyxl>=3.1.0
+# 의존성 목록의 정본은 pyproject.toml 이다. 여기 다시 적지 마라 —
+# 같은 목록을 두 곳에 적으면 반드시 한쪽만 고쳐지는 날이 온다.
+#
+# 이 파일이 남아 있는 이유: 예전 안내(`pip install -r requirements.txt`)를 따라온
+# 사람이 "그런 파일 없다"에서 멈추지 않게 하려는 것이다.
+#
+# 권장 —  uv 가 파이썬까지 알아서 받아 온다. 아무것도 미리 깔 필요가 없다.
+#     uv run gw subjects
+#
+# uv 없이 pip 로 —  **저장소 폴더 안에서** 실행해야 한다. 아래 `-e .` 의 `.` 가
+# 현재 폴더를 가리키기 때문이다(pip 는 이 파일의 위치가 아니라 실행 위치를 본다).
+#     cd gichul-workbench
+#     python -m pip install -r requirements.txt
+#
+# `-e`(editable)인 이유: 이 저장소는 읽기 전용이 아니다. `classify --learn --install`
+# 이 subjects/<과목>/keywords.json 에 되쓰고, 갱신은 `git pull` 로 온다.
+# 사본을 만들어 두면 고친 것이 실행되는 것과 갈린다. pyproject.toml 머리말 참조.
+-e .
