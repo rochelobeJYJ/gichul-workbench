@@ -13,7 +13,15 @@ DATA 모양(템플릿이 그대로 기대한다):
       "subjectOrder": [문항 출처 과목 label, ...],   # --subject 순서. 탭(name/kind) 순서와는 별개다.
       "total": int,
       "meta": {"repo": str, "version": str, "remote": str, "builtAt": str},
+      "text": {key: "발문 <보기> 선택지"},   # 문항 검색용. 본문 없는 문항은 키 자체가 없다
+      "nbox": {key: [l, t, w, h]},          # items 의 number_box(이미지 크기 대비 0~1 비율)
+      "err":  {key: 0~100},                 # items 의 ext.error_rate(오답률 %)
     }
+
+부속 세 칸을 row 안이 아니라 **key -> 값 옆표**로 두는 이유: questions 배열은 성취기준마다
+같은 문항을 되풀이해 담는다(한 문항이 여러 성취기준에 걸린다). row 에 본문을 넣으면 그
+중복만큼 HTML 이 부푼다(레퍼런스 위키 실측: 문항 760개가 배정 1151건). 옆표면 문항당 한 벌이다.
+앱은 `DATA.text || {}` 로 읽어서, 빌드가 안 실어 주면 그 기능을 조용히 숨긴다.
 
 row 모양은 builder/worksheet_builder.html 의 qHtml()/render() 가 읽는 필드 그대로:
     key, subject, short, year, exam, grade, label, number, points, answer, topic, img
@@ -34,8 +42,10 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
+import manifest as mf
 from common import Space, Report, load_subject, BUILDER, REPO, CURRICULUM_STANDARDS
-from common.ids import split_qid
+from common.ids import split_qid, GRADE_BEARING
+from common.progress import Progress
 
 
 def _exam_of(qid: str) -> str:
@@ -55,13 +65,20 @@ PLACEHOLDER = "/*__DATA__*/null"
 # 다른 판형이 들어올 자리를 표로 남겨 둔다(docs/LAYOUTS.md 참조). 새 판형을 추가할 사람은
 # LAYOUT_ROW_BUILDERS 에 함수를 하나 등록하면 된다 — build() 본체는 손대지 않아도 된다.
 
-def _rows_tamgu_1q1block(subject, space: Space, only: set | None, report: Report) -> list[dict]:
-    """탐구 판형: 문항 하나 = 크롭 이미지 하나 = items/<qid>.json 하나. 가장 단순한 경우다."""
+def _rows_tamgu_1q1block(subject, space: Space, only: set | None, report: Report,
+                         bar: Progress | None = None) -> list[dict]:
+    """탐구 판형: 문항 하나 = 크롭 이미지 하나 = items/<qid>.json 하나. 가장 단순한 경우다.
+
+    `bar` 는 진행률(선택). 새 판형 전략을 등록할 때 받지 않아도 되게 기본값을 둔다 —
+    진행률 때문에 전략 함수를 못 쓰게 되면 본말이 전도된다.
+    """
     if not space.items.exists():
         report.note(subject.slug, "items/ 없음 — download/detect/crop/extract 를 먼저 실행한다", "warn")
         return []
     rows: list[dict] = []
-    for item_path in space.iter_items():
+    semantics: dict[str, str] = {}   # exam_id -> 'academic'|'calendar' (manifest 를 회차당 한 번만 읽는다)
+    item_paths = list(space.iter_items())
+    for item_path in (bar.wrap(item_paths) if bar is not None else item_paths):
         qid = item_path.stem
         # 형제 모듈(crop/extract/classify/validate)의 --only 는 qid 와 exam_id 를 모두 받는다.
         # 여기만 qid 전용이라 `--only 2024_수능` 이 0건으로 끝나고, 리포트는 엉뚱하게
@@ -80,9 +97,11 @@ def _rows_tamgu_1q1block(subject, space: Space, only: set | None, report: Report
         if not crop.exists():
             report.note(qid, "크롭 이미지 없음(crops/questions/) — 문항집에서 제외", "warn")
             continue
-        row = _make_row(subject, qid, item, f"assets/{subject.slug}/questions/{qid}.png")
+        row = _make_row(subject, qid, item, f"assets/{subject.slug}/questions/{qid}.png",
+                        _year_semantics(space, _exam_of(qid), semantics, report))
         row["_classification"] = item.get("classification") or {}
         row["_crop_src"] = crop
+        row["_extra"] = _extras(item)
         rows.append(row)
     return rows
 
@@ -106,7 +125,75 @@ def _get_row_builder(layout: str):
     )
 
 
-def _make_row(subject, qid: str, item: dict, img_rel: str) -> dict:
+def _year_semantics(space: Space, exam_id: str, cache: dict, report: Report) -> str:
+    """그 회차의 연도가 '학년도'인지 '달력연도'인지. manifest 가 유일한 출처다.
+
+    수능·모평은 학년도로 부른다 — `2025학년도 수능`. 학평(전국연합)은 달력연도다 —
+    `2025년 고3 7월학평`. 둘을 같은 말로 찍으면 학평 라벨이 통째로 한 해씩 어긋난 것처럼
+    읽힌다(실측 사고: `2025학년도 고3 7월학평 4번` 으로 나왔다).
+
+    manifest 에 `year_semantics` 가 있으면 **무조건 그 값**을 쓴다(download 가 목록에서
+    받아 적어 둔 값이라 우리 추론보다 앞선다). 없는 옛 manifest 를 위해서만 시험 종류로
+    되짚는데, 학평 목록은 common.ids.GRADE_BEARING 하나뿐이다 — 여기서 목록을 다시
+    적으면 시험 종류가 늘 때 조용히 갈라진다.
+    """
+    if exam_id in cache:
+        return cache[exam_id]
+    value = mf.load(space, exam_id).raw.get("year_semantics")
+    if value not in ("academic", "calendar"):
+        kind = exam_id.split("_")[-1]
+        value = "calendar" if kind in GRADE_BEARING else "academic"
+        report.bump("year_semantics_guessed")
+    cache[exam_id] = value
+    return value
+
+
+def _num_box(value):
+    """number_box 검사: 0~1 실수 4개가 아니면 받지 않는다.
+
+    모양이 틀린 값을 통과시키면 제작기가 이미지 엉뚱한 자리에 흰 상자를 덮어 놓고
+    아무 말도 안 한다 — CONTRACT 0절의 '조용한 기본값' 과 같은 종류의 사고다.
+    """
+    if not isinstance(value, (list, tuple)) or len(value) != 4:
+        return None
+    out = []
+    for v in value:
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not (0 <= v <= 1):
+            return None
+        out.append(float(v))
+    return out
+
+
+def _extras(item: dict) -> dict:
+    """행 밖에 옆표로 실을 값만 뽑는다. 없는 칸은 **키 자체를 안 만든다.**
+
+    본문은 발문 + <보기>(boxed) + 선택지만 이어 붙인다. 해설은 일부러 뺐다 — 해설까지
+    넣으면 '엘니뇨' 로 찾았을 때 엘니뇨가 답이 아닌 문항까지 다 걸려 검색이 못 쓰게 된다.
+    `vision` 회차나 `ext.choices_source == "image"` 문항은 여기서 자연히 빈 문자열이 되고,
+    앱이 '본문 없음 N개는 검색 대상 아님' 으로 화면에 알린다.
+    """
+    out: dict = {}
+    text = item.get("text") if isinstance(item.get("text"), dict) else {}
+    parts = [text.get("stem") or "", text.get("boxed") or ""]
+    choices = text.get("choices")
+    if isinstance(choices, list):
+        parts += [str(c) for c in choices if c]
+    joined = " ".join(p for p in parts if p).strip()
+    if joined:
+        out["text"] = " ".join(joined.split())
+
+    box = _num_box(item.get("number_box"))
+    if box is not None:
+        out["nbox"] = box
+
+    ext = item.get("ext") if isinstance(item.get("ext"), dict) else {}
+    rate = ext.get("error_rate")
+    if not isinstance(rate, bool) and isinstance(rate, (int, float)) and 0 <= rate <= 100:
+        out["err"] = float(rate)
+    return out
+
+
+def _make_row(subject, qid: str, item: dict, img_rel: str, semantics: str = "academic") -> dict:
     """items/<qid>.json 한 개 → 앱이 쓰는 문항 카드 row 하나.
 
     key 를 slug:qid 로 만드는 이유: qid 는 과목마다 20번까지 반복된다
@@ -127,7 +214,8 @@ def _make_row(subject, qid: str, item: dict, img_rel: str) -> dict:
         "year": year,
         "exam": kind,
         "grade": grade,
-        "label": f"{year}학년도{grade_txt} {kind} {number}번",
+        # 학평은 달력연도라 '학년도' 가 아니다(_year_semantics 참조).
+        "label": f"{year}{'년' if semantics == 'calendar' else '학년도'}{grade_txt} {kind} {number}번",
         "number": number,
         "points": item.get("points") or 0,
         "answer": item.get("answer_symbol") or "",
@@ -220,7 +308,7 @@ def _build_units(rows: list[dict], revision: str, std_texts: dict[str, str]) -> 
     return units
 
 
-def _sync_images(pairs, asset_root: Path) -> int:
+def _sync_images(pairs, asset_root: Path, bar: Progress | None = None) -> int:
     """crops/questions/<qid>.png 를 output 옆 assets/<slug>/questions/ 로 복사한다.
 
     ── 왜 복사인가(과제 지시의 "어느 쪽을 골랐는지 주석에 남겨라") ──
@@ -235,7 +323,7 @@ def _sync_images(pairs, asset_root: Path) -> int:
     """
     keep_by_slug: dict[str, set[str]] = defaultdict(set)
     copied = 0
-    for slug, qid, src in pairs:
+    for slug, qid, src in (bar.wrap(pairs) if bar is not None else pairs):
         dest_dir = asset_root / slug / "questions"
         dest = dest_dir / f"{qid}.png"
         keep_by_slug[slug].add(dest.name)
@@ -362,16 +450,24 @@ def run(args) -> int:
 
     # ── 과목별 row 조립 (판형 전략 표로 분기) ──
     rows_by_slug: dict[str, list[dict]] = {}
+    # 총량을 먼저 세어 둔다. 과목마다 set_total 로 늘리면 퍼센트가 뒤로 가서 더 헷갈린다.
+    scan_total = sum(len(list(_space(args, s.slug, many).items.glob("*.json")))
+                     for s in subjects)
+    bar = Progress(scan_total, "문항", label="build", args=args).open()
     try:
         for subject in subjects:
             space = _space(args, subject.slug, many)
             builder_fn = _get_row_builder(subject.layout)
-            rows_by_slug[subject.slug] = builder_fn(subject, space, only, report)
+            bar.detail(subject.slug if many else "")
+            rows_by_slug[subject.slug] = builder_fn(subject, space, only, report, bar)
     except NotImplementedError as exc:
         # note(ident, why, ...) 순서 — ident 는 짧게, why 에 긴 설명을 넣는다(다른 note 호출과 통일).
         report.note(f"{subject.slug}:layout", str(exc), "error")
         report.next = "docs/LAYOUTS.md 를 읽고 build.py 의 LAYOUT_ROW_BUILDERS 에 전략을 추가한다"
+        bar.close()
         return finish(False)
+    finally:
+        bar.close()   # 어느 갈래로 나가도 줄은 지운다(두 번 불러도 안전)
 
     included = sum(len(v) for v in rows_by_slug.values())
     if included == 0:
@@ -447,13 +543,31 @@ def run(args) -> int:
     used_keys = {q["key"] for e in subject_entries for u in e["units"]
                  for st in u["standards"] for q in st["questions"]}
 
+    # ── 부속 옆표: 실제로 탭에 걸린 문항 것만 싣는다 ──
+    # 분류가 안 돼 어느 탭에도 안 들어간 문항의 본문까지 싣는 건 순수한 낭비다.
+    texts, nboxes, errs = {}, {}, {}
+    for rows in rows_by_slug.values():
+        for r in rows:
+            if r["key"] not in used_keys:
+                continue
+            extra = r.get("_extra") or {}
+            if extra.get("text"):
+                texts[r["key"]] = extra["text"]
+            if extra.get("nbox"):
+                nboxes[r["key"]] = extra["nbox"]
+            if extra.get("err") is not None:
+                errs[r["key"]] = extra["err"]
+    payload["text"], payload["nbox"], payload["err"] = texts, nboxes, errs
+
     copied = 0
     if not args.dry_run:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         asset_root = out_path.parent / "assets"
         pairs = [(slug, r["key"].split(":", 1)[1], r["_crop_src"])
                  for slug, rows in rows_by_slug.items() for r in rows if r["key"] in used_keys]
-        copied = _sync_images(pairs, asset_root)
+        # 크롭 PNG 를 output/assets/ 로 복사하는 구간. 380장이면 수백 MB라 체감된다.
+        with Progress(len(pairs), "이미지", label="build", args=args) as copy_bar:
+            copied = _sync_images(pairs, asset_root, copy_bar)
         html = TEMPLATE.read_text(encoding="utf-8").replace(
             PLACEHOLDER, json.dumps(payload, ensure_ascii=False))
         out_path.write_text(html, encoding="utf-8")
@@ -471,6 +585,11 @@ def run(args) -> int:
         items_unclassified=unclassified,
         images_copied=copied,
         total_questions=payload["total"],
+        # 0 이면 그 기능이 화면에서 조용히 사라진다는 뜻이다. 사고가 아니라 '데이터가 아직
+        # 안 왔다' 이므로 리포트에서 바로 구별되게 세 칸을 따로 센다.
+        with_text=len(texts),
+        with_number_box=len(nboxes),
+        with_error_rate=len(errs),
     )
     report.next = None if not args.dry_run else (
         f"python scripts/gw.py build --subject {args.subject} --out \"{out_path}\"")

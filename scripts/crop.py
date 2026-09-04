@@ -7,8 +7,13 @@
 출력 : crops/questions/<qid>.png
        crops/materials/<qid>_m1.png
        crops/questions/_contact_sheet_<exam_id>.png   ← LLM 이 한 장으로 검수하는 대지
-       items/<qid>.json (source.page / source.rect 기록, 나머지 필드는 병합 보존)
+       items/<qid>.json (source.page / source.rect / number_box 기록, 나머지 필드는 병합 보존)
        reports/crop.json
+
+`number_box` 는 크롭 이미지 안에서 원래 문항 번호가 차지하던 자리를 이미지 크기 대비
+0~1 비율 [left, top, width, height] 로 적은 것이다(croplib/numbox.py). 학습지에서 번호를
+1, 2, 3… 으로 다시 매길 때 무엇을 덮어야 하는지가 여기에 있다. 이미 잘라 둔 크롭을
+그대로 두고 이 값만 채우려면 `--number-box-only` 를 쓴다.
 
 ## 세 가지 경로
 1. **direct**  텍스트 레이어가 있다 → 문항 번호 앵커로 자른다(croplib/tamgu.py).
@@ -33,15 +38,20 @@ from pathlib import Path
 import manifest as mf
 from common import Report, Space, load_subject
 from common.ids import make_qid, split_qid
-from croplib import imaging, materials as mat, qa, vision
+from common.progress import Progress, track
+from croplib import imaging, materials as mat, numbox, qa, vision
 from croplib.pdfdoc import Doc
-from croplib.tamgu import ExamPlan, QuestionPlan, Segment, plan_exam
+from croplib.tamgu import (ExamPlan, QuestionPlan, Segment, attach_number_boxes,
+                           plan_exam)
 
 import fitz
 
 MIN_CROP_H_PT = 48.0        # 이보다 낮은 크롭은 무언가 잘못된 것(원본 120px @ZOOM 2.5)
 DEFAULT_DPI = 300
 RECTS_FILENAME = "crop_rects.json"
+# --number-box-only 가 '그때 그 크롭을 그대로 재구성했다' 고 인정하는 크기 오차(px).
+# items 의 source.rect 반올림(소수 2자리) 때문에 1px 은 정상적으로 발생한다.
+SIZE_DRIFT_PX = 1
 # 대지(contact sheet) 한 장에 담는 칸 수. subject.question_count 와 우연히 같은 20 이지만
 # **전혀 다른 값**이다 — 사람이 한 화면에서 훑을 수 있는 칸 수일 뿐이라 과목이 45문항이면
 # 대지가 세 장으로 나뉜다. 이름을 붙여 둔 이유가 그것이다(예전엔 리터럴 20 이었다).
@@ -100,6 +110,8 @@ def register(parser) -> None:
     parser.add_argument("--quiet", action="store_true", help="stdout 에 리포트 경로만 남긴다")
     parser.add_argument("--no-materials", action="store_true", help="자료(그림) 크롭을 건너뛴다")
     parser.add_argument("--workspace", help="작업 공간 경로 직접 지정 (기본 workspace/<slug>)")
+    parser.add_argument("--number-box-only", action="store_true",
+                        help="크롭 PNG 를 다시 만들지 않고 items 의 number_box 만 채운다")
 
 
 # ══════════════════════════════════════════════════════════
@@ -197,7 +209,8 @@ def _write_rects_template(space: Space, exam_id: str, expected: int,
 
 def _merge_item(space: Space, qid: str, slug: str, exam_id: str, number: int,
                 pdf: Path, segments: list[Segment], crop_rel: str,
-                material_rels: list[str], mode: str) -> None:
+                material_rels: list[str], mode: str,
+                number_box: list[float] | None = None) -> None:
     """items/<qid>.json 병합. crop 이 소유한 필드만 덮어쓴다.
 
     extract 가 먼저 돌았을 수도 있으므로 text·answer·points·classification·status 는
@@ -233,6 +246,12 @@ def _merge_item(space: Space, qid: str, slug: str, exam_id: str, number: int,
     }
     data["crop"] = crop_rel
     data["materials"] = material_rels
+    # 번호 자리를 못 믿을 때는 **키를 지운다**(계약 0절: 조용한 기본값 금지).
+    # 예전 실행이 남긴 값을 그대로 두면, 앵커가 달라진 뒤에도 엉뚱한 자리를 덮는다.
+    if number_box:
+        data["number_box"] = number_box
+    else:
+        data.pop("number_box", None)
     if data.get("extraction_mode") in (None, "", "direct", "vision"):
         data["extraction_mode"] = mode
 
@@ -244,23 +263,35 @@ def _merge_item(space: Space, qid: str, slug: str, exam_id: str, number: int,
 # 회차 하나 처리
 # ══════════════════════════════════════════════════════════
 def _render_question(doc: Doc, segments: list[Segment], zoom: float):
-    """세그먼트를 렌더·정리해 (이미지, 여백, 제거된 세로선) 을 돌려준다."""
+    """세그먼트를 렌더·정리해 (이미지, 여백, 제거된 세로선, 첫 조각 배치) 를 돌려준다.
+
+    네 번째 값 `place` 는 첫 세그먼트의 PDF 좌표를 이 이미지의 픽셀로 옮기는 데 필요한
+    보정값 묶음이다(croplib/numbox.py). 문항 번호는 앵커가 된 첫 조각에만 있으므로
+    첫 조각 것만 만든다.
+    """
     imgs, strips = [], []
+    place = None
     for seg in segments:
-        im, removed = imaging.strip_edge_rules(
-            imaging.render_rect(doc.page(seg.page), seg.rect, zoom), zoom)
+        raw, origin = imaging.render_rect_at(doc.page(seg.page), seg.rect, zoom)
+        im, removed = imaging.strip_edge_rules(raw, zoom)
+        if place is None:
+            place = numbox.placement(seg.page, origin, removed)
         imgs.append(im)
         strips.extend(removed)
     merged = imaging.stitch(imgs)
+    if place is not None and len(imgs) > 1:
+        # stitch 는 조각을 캔버스 가운데에 붙인다. 첫 조각이 가장 넓지 않으면 x 가
+        # 그만큼 밀리므로 같은 식을 여기서 한 번 더 쓴다.
+        place.paste_x = (merged.width - imgs[0].width) // 2
     # 여백 측정은 트리밍 '전'에 해야 한다 — 트리밍 후에는 모든 변이 패딩값으로 같아져
     # '어느 변에서 잘렸는지'를 영영 알 수 없다.
     margins = imaging.content_margins(merged)
-    return merged, margins, strips
+    return merged, margins, strips, place
 
 
 def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
                plan_questions: list[QuestionPlan], mode: str, args, report: Report,
-               warn) -> list[dict]:
+               warn, bar: Progress | None = None) -> list[dict]:
     """계획대로 잘라 저장하고 대지용 셀 목록을 돌려준다.
 
     QA 가 error 를 낸 문항도 **파일은 남긴다.** 무엇이 잘못됐는지는 결국 그림을 봐야
@@ -272,7 +303,9 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
     has_text = doc.has_text_layer()
     cells: list[dict] = []
 
-    for qp in plan_questions:
+    # 진행률은 문항 단위로 오른다 — 사용자가 세는 단위가 그것이다('문항 137/380').
+    # 갈래가 여섯이라 갈래마다 advance() 를 심으면 하나만 놓쳐도 숫자가 어긋난다. 반복을 감싼다.
+    for qp in (bar.wrap(plan_questions) if bar is not None else plan_questions):
         qid = make_qid(exam_id, qp.number)
         out_png = space.question_png(qid)
         if only_qids and qid not in only_qids:
@@ -293,7 +326,7 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
             continue
 
         try:
-            img, margins, stripped = _render_question(doc, qp.segments, zoom)
+            img, margins, stripped, place = _render_question(doc, qp.segments, zoom)
         except Exception as exc:                      # noqa: BLE001
             warn(qid, f"렌더 실패: {exc}", "error")
             report.bump("failed")
@@ -327,11 +360,19 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
         if not args.no_materials and has_text:
             material_rels = _crop_materials(doc, space, qid, qp.segments, zoom, args, warn)
 
+        # 문항 번호가 최종 크롭 안에서 차지하는 자리. 트리밍 사각형을 먼저 받아
+        # 비율을 계산한 뒤 같은 사각형으로 자른다 — 저장되는 픽셀은 종전과 같다.
+        tbox = imaging.trim_box(img, zoom, imaging.QUESTION_PAD_PT)
+        number_box = numbox.ratio(qp.num_page, qp.num_rect, place, zoom, tbox)
+
         if not args.dry_run:
             out_png.parent.mkdir(parents=True, exist_ok=True)
-            imaging.trim(img, zoom, imaging.QUESTION_PAD_PT).save(out_png)
+            imaging.apply_box(img, tbox).save(out_png)
             _merge_item(space, qid, subject.slug, exam_id, qp.number, pdf,
-                        qp.segments, space.rel(out_png), material_rels, mode)
+                        qp.segments, space.rel(out_png), material_rels, mode,
+                        number_box)
+        if number_box is None:
+            report.bump("number_box_missing")
 
         report.bump("failed" if failed else "done")
         report.bump("materials", len(material_rels))
@@ -396,6 +437,103 @@ def _vision_exam(doc: Doc, space: Space, exam_id: str, expected: int, skipped: i
 
 
 # ══════════════════════════════════════════════════════════
+# number_box 만 다시 채우는 가벼운 길 (--number-box-only)
+# ══════════════════════════════════════════════════════════
+def _refill_number_boxes(space: Space, subject, args, report: Report, warn) -> int:
+    """크롭 PNG·자료·대지를 만들지 않고 items 의 `number_box` 만 채운다.
+
+    380문항 재크롭이 비싸서 두는 길이다. 그래도 PDF 는 다시 읽어야 한다 —
+    number_box 는 '최종 크롭 안에서의 비율'이고, 최종 크기는 트리밍과 가장자리
+    실선 제거를 거친 **픽셀**에서만 나오기 때문이다. 대신 PNG 인코딩·자료 판별·
+    대지 합성·items 의 다른 필드를 전부 건너뛴다(지구과학Ⅱ 20회차 실측 145s → 66s).
+
+    사각형은 계획을 다시 세우지 않고 **items 에 적힌 source.segments** 를 쓴다.
+    그 사이 앵커 알고리즘이 바뀌었어도 그때 실제로 렌더한 자리와 어긋나지 않는다.
+    재구성이 맞았는지는 '계산한 크기 == 기존 PNG 크기' 로 문항마다 확인한다 —
+    맞지 않으면(대개 --dpi 가 그때와 다르다) 값을 쓰지 않고 신고한다.
+    """
+    zoom = imaging.zoom_for(args.dpi)
+    sel_exams, sel_qids = _selected(args.only)
+    exams = [e for e in space.iter_exams() if not sel_exams or e in sel_exams]
+    filled = 0
+    # 회차당 2.5초라도 19회차면 1분이다 — 여기도 표시가 없으면 멈춘 줄 안다.
+    for exam_id in track(exams, "회차", label="crop", args=args, detail=str):
+        items = sorted(space.items.glob(f"{exam_id}_*.json"))
+        if sel_qids:
+            items = [p for p in items if p.stem in sel_qids]
+        if not items:
+            continue
+        pdf = _problem_pdf(space, exam_id)
+        if pdf is None:
+            warn(exam_id, "problem.pdf 가 없다 — number_box 를 계산할 수 없다", "error")
+            report.bump("skipped", len(items))
+            continue
+        try:
+            doc = Doc(pdf)
+        except Exception as exc:                      # noqa: BLE001
+            warn(exam_id, f"PDF 를 열 수 없다: {exc}", "error")
+            report.bump("skipped", len(items))
+            continue
+        try:
+            plans = [QuestionPlan(int(p.stem.rsplit("_", 1)[-1])) for p in items]
+            if attach_number_boxes(doc, plans, subject.question_count) == 0:
+                warn(exam_id, "번호 토큰을 찾을 수 없다(텍스트 레이어 없음) — number_box 없이 둔다",
+                     "info")
+                report.bump("skipped", len(items))
+                continue
+            for path, qp in zip(items, plans):
+                report.bump("checked")
+                data = json.loads(path.read_text(encoding="utf-8"))
+                raw_segs = numbox.segments_from_item(data)
+                png = space.root / str(data.get("crop") or "")
+                size = numbox.png_size(png) if data.get("crop") else None
+                if not raw_segs or size is None:
+                    warn(path.stem, "source.segments 나 크롭 PNG 가 없다 — 건너뛴다", "warn")
+                    report.bump("skipped")
+                    continue
+                segs = [Segment(pg, 0, fitz.Rect(*rc)) for pg, rc in raw_segs]
+                try:
+                    img, _margins, _strips, place = _render_question(doc, segs, zoom)
+                except Exception as exc:              # noqa: BLE001
+                    warn(path.stem, f"렌더 실패: {exc}", "error")
+                    report.bump("failed")
+                    continue
+                tbox = imaging.trim_box(img, zoom, imaging.QUESTION_PAD_PT)
+                dw = abs((tbox[2] - tbox[0]) - size[0])
+                dh = abs((tbox[3] - tbox[1]) - size[1])
+                if max(dw, dh) > SIZE_DRIFT_PX:
+                    warn(path.stem,
+                         f"재구성 크기가 기존 크롭과 다르다({tbox[2] - tbox[0]}x{tbox[3] - tbox[1]} "
+                         f"vs {size[0]}x{size[1]}) — --dpi 를 크롭 당시 값으로 맞춰라", "error")
+                    report.bump("failed")
+                    continue
+                if dw or dh:
+                    # items 의 source.rect 는 소수 2자리로 반올림돼 저장된다. 그 0.005pt 가
+                    # 픽셀 격자 경계에 걸리면 재구성이 1px 어긋난다(실측 380문항 중 1건).
+                    # 1px 은 상자 위치로 환산하면 0.07% 라 무시해도 되는 크기다.
+                    report.bump("size_drift")
+                box = numbox.ratio(qp.num_page, qp.num_rect, place, zoom, tbox)
+                if box is None:
+                    warn(path.stem, "번호 자리가 크롭 밖이거나 비율이 이상하다 — 키를 넣지 않는다",
+                         "warn")
+                    report.bump("number_box_missing")
+                    if data.pop("number_box", None) is not None and not args.dry_run:
+                        path.write_text(json.dumps(data, ensure_ascii=False, indent=2),
+                                        encoding="utf-8")
+                    continue
+                if data.get("number_box") != box:
+                    data["number_box"] = box
+                    if not args.dry_run:
+                        path.write_text(json.dumps(data, ensure_ascii=False, indent=2),
+                                        encoding="utf-8")
+                filled += 1
+                report.bump("number_box")
+        finally:
+            doc.close()
+    return filled
+
+
+# ══════════════════════════════════════════════════════════
 # 실행
 # ══════════════════════════════════════════════════════════
 def run(args) -> int:
@@ -415,6 +553,26 @@ def run(args) -> int:
 
     def warn(ident: str, why: str, severity: str = "warn") -> None:
         report.note(ident, why, severity)
+
+    if args.number_box_only:
+        # 크롭을 다시 만들지 않는 길. items 가 이미 있어야 하므로 판형 전략을 보지 않는다.
+        # question_count 는 번호 토큰 상한이라 여기서도 필요하다(계약 0절: 기본값 금지).
+        if not subject.question_count:
+            msg = (f"subjects/{subject.slug}/subject.json 에 question_count 가 없다 — "
+                   f"문항 번호 토큰의 상한을 세울 수 없다")
+            warn(subject.slug, msg, "error")
+            report.next = f"subjects/{subject.slug}/subject.json 에 question_count 를 채운다"
+            print(msg)
+            return report.finish()
+        report.count(number_box=0, checked=0, failed=0, skipped=0,
+                     number_box_missing=0, size_drift=0)
+        n = _refill_number_boxes(space, subject, args, report, warn)
+        report.artifact(space.rel(space.items))
+        report.next = (f"python scripts/gw.py build --subject {subject.slug}" if n
+                       else f"python scripts/gw.py crop --subject {subject.slug} --force")
+        report.extra["dpi"] = args.dpi
+        report.extra["dry_run"] = bool(args.dry_run)
+        return report.finish()
 
     planner = LAYOUT_STRATEGIES.get(subject.layout)
     if planner is None:
@@ -449,14 +607,23 @@ def run(args) -> int:
     # --only 로 문항을 콕 집었으면 기대치도 그 개수다. 회차 전체 수로 두면 done=1 이 실패처럼 보인다.
     per_exam = len(sel_qids) if sel_qids else expected_each
     report.count(expected=per_exam if sel_qids else expected_each * len(exams),
-                 done=0, failed=0, skipped=0, materials=0, exams=len(exams))
+                 done=0, failed=0, skipped=0, materials=0, exams=len(exams),
+                 number_box_missing=0)
     pending_vision: list[str] = []
 
+    # 380문항이면 몇 분이 걸린다. 표시가 없으면 멈춘 것과 구분되지 않는다.
+    # 세는 단위는 사용자가 세는 단위(문항)다. 총량은 **이 실행이 실제로 훑을 문항 수**이고
+    # 리포트의 expected 와 다를 수 있다 — `--only <qid>` 로 한 문항만 골라도 앵커 계획은
+    # 그 회차 전체를 훑기 때문이다. 리포트 숫자는 손대지 않는다(진행률은 표시일 뿐이다).
+    bar = Progress(expected_each * len(exams), "문항", label="crop", args=args).open()
+
     for exam_id in exams:
+        bar.detail(exam_id)
         pdf = _problem_pdf(space, exam_id)
         if pdf is None:
             warn(exam_id, "problem.pdf 가 없다", "error")
             report.bump("skipped", per_exam)
+            bar.advance(expected_each)
             continue
 
         try:
@@ -464,6 +631,7 @@ def run(args) -> int:
         except Exception as exc:                      # noqa: BLE001
             warn(exam_id, f"PDF 를 열 수 없다: {exc}", "error")
             report.bump("skipped", per_exam)
+            bar.advance(expected_each)
             continue
 
         try:
@@ -477,16 +645,21 @@ def run(args) -> int:
             if rects:
                 # 사람/LLM 이 지정한 사각형. 텍스트로 앵커를 못 찾는 회차의 정답 경로다.
                 questions = [QuestionPlan(n, segs) for n, segs in sorted(rects.items())]
+                # 사각형은 사람이 지정했어도 번호 토큰은 텍스트에서 찾을 수 있다.
+                attach_number_boxes(doc, questions, expected_each)
                 mode = "vision" if not has_text else "direct"
                 missing = [n for n in range(1, expected_each + 1) if n not in rects]
                 if missing:
                     warn(exam_id, f"{RECTS_FILENAME} 에 사각형이 없는 문항: {missing}", "error")
                 cells = _crop_exam(doc, space, subject, exam_id, pdf, questions, mode,
-                                   args, report, warn)
+                                   args, report, warn, bar)
             elif not has_text:
                 pending_vision.append(exam_id)
                 cells = _vision_exam(doc, space, exam_id, expected_each, per_exam,
                                      args, report, warn)
+                # vision 회차는 문항이 아니라 컬럼 단위로 렌더한다. 문항 진행률을 문항마다
+                # 올릴 방법이 없으니 회차가 끝난 자리에서 한 번에 올린다.
+                bar.advance(expected_each)
             else:
                 try:
                     plan = planner(doc, subject, exam_id)
@@ -497,6 +670,8 @@ def run(args) -> int:
                     report.next = (f"subjects/{subject.slug}/subject.json 의 layout 을 확인한다 — "
                                    f"crop 은 아직 tamgu-1q1block 만 처리한다 "
                                    f"(구현 안내는 scripts/crop.py 의 _plan_* 함수)")
+                    # 진행률 줄을 **먼저** 지운다. 순서가 바뀌면 안내문 위로 지우개가 지나간다.
+                    bar.close()
                     print(exc)
                     return report.finish()
                 if plan.missing:
@@ -506,7 +681,7 @@ def run(args) -> int:
                 if len(plan.columns) not in (1, 2, 3):
                     warn(exam_id, f"컬럼 {len(plan.columns)}개로 인식됐다 — 판형 확인 필요", "warn")
                 cells = _crop_exam(doc, space, subject, exam_id, pdf, plan.questions,
-                                   "direct", args, report, warn)
+                                   "direct", args, report, warn, bar)
 
             if cells and not args.dry_run:
                 for i in range(0, len(cells), CONTACT_SHEET_CELLS):
@@ -518,6 +693,7 @@ def run(args) -> int:
         finally:
             doc.close()
 
+    bar.close()   # 요약을 찍기 전에 진행률 줄을 지운다(stdout 과 겹치지 않게)
     report.artifact(space.rel(space.questions))
     report.artifact(space.rel(space.materials))
     failed = report.counts.get("failed", 0)

@@ -32,8 +32,9 @@ python scripts/bootstrap.py
 ## 공정
 
 ```
-download → detect → crop → extract → classify → map → validate → build
+download → detect → crop → extract → rates → classify → map → validate → build
 ```
+오래 걸리는 명령은 터미널에서 한 줄 진행률을 보여 준다. 로그로 남기거나 파이프로 넘기면 자동으로 조용해진다.
 
 ```bash
 S=earth-science-ii
@@ -42,6 +43,7 @@ python scripts/gw.py download --subject $S --years 2020-2026 --exams 수능,6월
 python scripts/gw.py detect   --subject $S
 python scripts/gw.py crop     --subject $S
 python scripts/gw.py extract  --subject $S
+python scripts/gw.py rates    --subject $S   # EBSi 오답률. extract 뒤에 돌린다 — 정답 대조가 번호 대응의 근거다
 python scripts/gw.py classify --subject $S        # 키워드 자동 + 애매한 것은 큐로
 python scripts/gw.py map      --subject $S --revision 2022
 python scripts/gw.py validate --subject $S
@@ -77,6 +79,19 @@ python scripts/gw.py classify --subject $S               # 새 임계값으로 �
 위 순환을 권해라. 라벨 30~50건이면 사전이 눈에 띄게 좋아진다.
 
 **3. 예외 처리.** 리포트의 `attention` 에 뜬 것들. `docs/PITFALLS.md` 에 대부분 답이 있다.
+
+## 문항집 제작기의 옵션
+
+`build` 가 만든 HTML 에는 다음이 있다. **전부 기본 꺼짐**이라 아무것도 안 건드리면 예전과 같은 결과가 나온다.
+
+- 문항 아래 풀이 공간(적게/보통/많이)
+- 머리말(모든 쪽)·이름날짜 칸(첫 쪽만)·꼬리말 — 인쇄면에만 나온다
+- 발문·보기·선택지 본문 검색 (해설은 제외한다. 넣으면 정답이 아닌 문항까지 다 걸린다)
+- 문항 번호를 1,2,3… 으로 덮어쓰기 — `items[].number_box` 가 있는 문항만
+- 오답률 필터·정렬 — `items[].ext.error_rate` 가 있을 때만 화면에 나온다
+
+`build` 리포트의 `with_text` / `with_number_box` / `with_error_rate` 가 0 이면
+고장이 아니라 **그 기능이 화면에서 숨는다**는 뜻이다.
 
 ## 새 과목
 

@@ -16,10 +16,15 @@
       "form_field": "sFormPartSoc",
       "area_order": "5",
       "national": {
-        "family": "national",
-        "subject_id": "17037",
-        "form_field": "sFormPartSoc",
-        "area_order": "5"
+        "2": {
+          "subject_id": "17037",
+          "form_field": "sFormPartSoc",
+          "area_order": "5"
+        },
+        "1": {
+          "absent": true,
+          "why": "고1 목록(D100)에는 통합사회 140072·통합과학 140073 뿐이고 탐구 선택과목 항목이 아예 없다 — 대응 과목이 존재하지 않는다 (2026-09-04 EBSi 목록 실측)"
+        }
       }
     },
     "kice": {

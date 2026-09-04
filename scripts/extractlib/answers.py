@@ -1018,6 +1018,141 @@ def parse_solution_markers(text: str, count: int) -> dict[int, int]:
 
 
 # --------------------------------------------------------------------------
+# 축 3 보조 — extract_words 의 **원문자가 살아 있는** 정답표
+# --------------------------------------------------------------------------
+#
+# ## 왜 layout 텍스트가 아니라 낱말 좌표인가
+#
+# 학평 해설지에서 pdfplumber 축이 통째로 죽어 있었다(정답 대조가 2축이 상한).
+# 원인은 두 겹이다.
+#   1. 학평 정답지는 PNG 라 extract_tables 경로를 아예 못 탄다.
+#   2. 대체 경로인 layout 텍스트가 2단 편집을 좌표대로 펴면서 **정답표와 해설 본문을
+#      같은 줄로 합쳐 버린다.** 실측된 줄(korean-geography 2025_고3_3월학평):
+#         `1 1 2 5 3 3 4 4 5 3 [오답풀이] ㄹ. 충남과 울산은 제조업 출하액이 비슷`
+#      정답표 다섯 칸 뒤에 오른쪽 단의 본문이 그대로 붙는다.
+#
+# 그런데 `page.extract_words()` 에는 **원문자 ①~⑤ 가 살아 있다.** layout 텍스트는
+# normalize_text 의 NFKC 를 거치며 ①→`1` 로 눕지만, 낱말 단위로 꺼내면 눕기 전이다.
+#
+# ## 이 경로의 진짜 이점 — 배점이 정답 자리에 들어앉을 수 없다
+#
+# PITFALLS 4-2 의 사고는 `[번호|정답|배점]` 격자에서 정답 칸이 비면 번호·배점만 남아
+# **20/20 꽉 찬 '정답=배점' 표**가 만들어진 것이었다. 값이 전부 맨 숫자라 무엇이
+# 정답이고 무엇이 배점인지 구조적으로 알 수 없었기 때문이다.
+# 원문자를 요구하면 그 혼동이 **원리적으로 불가능해진다** — 배점 `3` 은 절대 `③` 이
+# 아니다. 그래서 이 파서는 '번호 뒤에 원문자' 라는 모양만 인정하고, 하나라도
+# 안 맞으면 부분 결과를 돌려주지 않는다.
+#
+# ## 자기검증
+#
+# 번호가 1..count 를 **순서대로 빠짐없이** 덮는 구간만 인정한다. 이 모듈이 이미 쓰는
+# 관용구다(parse_number_answer_tokens / parse_paired_number_table).
+# 잡토큰 건너뛰기를 허용해야 하는 이유는 실측이다 — 쪽번호 `1` 이 10③ 과 11① 사이에
+# 낀다. 다만 **후보 토큰(맨 숫자·원문자)만 남긴 뒤** 훑기 때문에 건너뛸 잡토큰 자체가
+# 거의 없다. 한 칸이면 충분했다.
+
+# 후보로 남길 낱말: 한두 자리 맨 숫자, 원문자 하나, 또는 둘이 붙은 것('7④').
+# 해설 본문의 '10.' '17개' 같은 것은 여기서 걸러진다.
+WORD_CANDIDATE_RE = re.compile(rf"^(?:\d{{1,2}}|[{CHOICE_SYMBOLS}]|\d{{1,2}}[{CHOICE_SYMBOLS}])$")
+NUMBER_CIRCLED_RE = re.compile(rf"^(\d{{1,2}})([{CHOICE_SYMBOLS}])$")
+
+# 정답표는 언제나 문서 맨 앞에 있다. 해설지는 회차당 7~50쪽이고 본문에도 원문자가
+# 널려 있으므로, 앞쪽만 보는 것이 비용이자 안전장치다.
+WORD_SCAN_PAGES = 8
+
+
+def word_candidates(page) -> list[str]:
+    """한 페이지의 낱말을 (top, x0) 로 정렬해 후보 토큰만 남긴다.
+
+    정렬 기준이 (top, x0) 인 이유: 정답표는 가로로 `1 ① 2 ⑤ …` 읽히는 판형이고,
+    2단 편집이라도 왼쪽 단(정답표)이 x0 가 작아 같은 줄에서 먼저 온다.
+    top 을 반올림하는 것은 같은 줄인데 소수점이 미세하게 갈리는 경우를 묶기 위함이다.
+    """
+    words = sorted(page.extract_words(),
+                   key=lambda w: (round(float(w.get("top", 0.0)), 1), float(w.get("x0", 0.0))))
+    out: list[str] = []
+    for word in words:
+        token = squash(str(word.get("text", "")))
+        if not token:
+            continue
+        if WORD_CANDIDATE_RE.match(token) or token in INVALID_TOKENS:
+            out.append(token)
+    return out
+
+
+def scan_number_circled(tokens: list[str], count: int, max_skip: int = 1) -> dict[int, int]:
+    """'번호 + 원문자' 쌍이 1..count 를 정확히 덮는 구간만 인정한다.
+
+    부분 결과는 돌려주지 않는다. 조각난 정답표는 정보가 아니라 잡음이고,
+    한 축을 오염시키면 교차검증의 다수결까지 함께 무너진다.
+    """
+    for start in range(len(tokens)):
+        found: dict[int, int] = {}
+        index, expect, skips = start, 1, 0
+        while expect <= count and index < len(tokens):
+            token = tokens[index]
+            glued = NUMBER_CIRCLED_RE.match(token)
+            if glued and int(glued.group(1)) == expect:
+                found[expect] = answer_to_int(glued.group(2))
+                expect += 1
+                index += 1
+                continue
+            # 번호와 정답이 따로 떨어진 판형. **원문자만** 정답으로 받는다 —
+            # 맨 숫자를 받으면 배점이 정답 자리에 들어앉는 사고가 되살아난다.
+            if (re.fullmatch(r"\d{1,2}", token) and int(token) == expect
+                    and index + 1 < len(tokens)):
+                nxt = tokens[index + 1]
+                if nxt in CHOICE_SYMBOLS:
+                    found[expect] = answer_to_int(nxt)
+                    expect += 1
+                    index += 2
+                    continue
+                if squash(nxt) in INVALID_TOKENS:      # 전항 정답 처리된 출제 오류 문항
+                    found[expect] = ANSWER_NONE
+                    expect += 1
+                    index += 2
+                    continue
+            if skips < max_skip:                        # 쪽번호 같은 잡토큰 한 칸
+                skips += 1
+                index += 1
+                continue
+            break
+        if len(found) == count:
+            return found
+    return {}
+
+
+def read_circled_word_table(path, aliases: list[str], count: int) -> tuple[dict[int, int], str]:
+    """PDF 앞쪽 페이지에서 원문자 정답표를 찾는다. 반환 (정답표, 출처설명).
+
+    여러 과목이 한 정답표에 들어 있으면 **우리 과목 머리글이 있는 페이지만** 본다.
+    이 검사가 없으면 통짜 정답표(평가원 과탐 8과목)에서 첫 과목의 표를 우리 정답으로
+    읽는다 — 실제로 겪은 사고이고 축 하나가 통째로 오염된다(sources.read_pdf_page_tables
+    주석 참조).
+    """
+    import pdfplumber
+
+    with pdfplumber.open(path) as pdf:
+        pages = pdf.pages[:WORD_SCAN_PAGES]
+        texts = []
+        for page in pages:
+            try:
+                texts.append(page.extract_text() or "")
+            except Exception:                          # 페이지 하나가 문서를 막지 않는다
+                texts.append("")
+        labelled = any(SUBJECT_SECTION_RE.search(t) for t in texts)
+        for index, page in enumerate(pages):
+            if labelled:
+                section, how = select_subject_section(texts[index], aliases)
+                if not (section.strip() and how.startswith("section:")):
+                    continue
+            found = scan_number_circled(word_candidates(page), count)
+            if found:
+                return found, f"{Path(path).name}(extract_words/p{index + 1})"
+    return {}, ""
+
+
+# --------------------------------------------------------------------------
 # 축 3 — pdfplumber
 # --------------------------------------------------------------------------
 
@@ -1027,8 +1162,15 @@ def read_pdfplumber(answer_path, answer_layers, solution_layers,
 
     fitz 가 실패하는 자리에서 pdfplumber 가 성공하고, 그 반대도 있다.
       - 괘선이 있는 평가원 정답표: extract_tables 가 셀 단위로 정확히 준다.
+      - 원문자가 살아 있는 정답표: extract_words 가 ①~⑤ 를 눕히지 않고 준다.
       - 칼럼분리형 해설 정답표: layout 모드가 좌표대로 펴 주어 인라인형이 된다.
         (fitz 는 이 판형을 세로로 토해내서 별도 파서가 필요했다.)
+
+    순서에는 이유가 있다. extract_tables 는 셀 경계가 있어 칸을 헷갈릴 수 없고
+    **배점까지** 주는 유일한 경로라 맨 앞이다. 그다음이 extract_words 인데,
+    이것이 대체하는 것은 맨 뒤의 layout 경로다 — layout 은 2단을 펴면서 정답표와
+    본문을 한 줄로 합치고, NFKC 가 ①을 `1` 로 눕혀 정답과 배점을 구조적으로
+    구분할 수 없게 만든다(위 절 참조).
     """
     reading = Reading(source="pdfplumber")
 
@@ -1064,6 +1206,29 @@ def read_pdfplumber(answer_path, answer_layers, solution_layers,
                 reading.reason = "정답표 PDF 에서 우리 과목 페이지를 찾지 못했다"
         except Exception as exc:
             reading.reason = f"표 추출 실패: {exc}"
+
+    # 원문자가 살아 있는 정답표. 정답지·해설지 순으로 본다(정답지가 더 짧고 확실하다).
+    # 실패는 조용히 다음 경로로 넘긴다 — 이 경로가 없어도 되던 회차의 판정을 바꾸지 않는다.
+    seen_paths: set[str] = set()
+    for candidate in (answer_path,
+                      getattr(answer_layers, "path", None),
+                      getattr(solution_layers, "path", None)):
+        if candidate is None or Path(candidate).suffix.lower() != ".pdf":
+            continue
+        key = str(Path(candidate).resolve())
+        if key in seen_paths:          # answer_path 와 answer_layers.path 는 보통 같은 파일이다
+            continue
+        seen_paths.add(key)
+        try:
+            found, origin = read_circled_word_table(candidate, aliases, count)
+        except Exception as exc:                        # 파일 하나가 축 전체를 막지 않는다
+            reading.reason = reading.reason or f"낱말 정답표 읽기 실패: {exc}"
+            continue
+        if found:
+            reading.answers = found
+            reading.origin = origin
+            reading.reason = ""
+            return reading
 
     for layers in (answer_layers, solution_layers):
         if layers is None or not layers.plumber.strip():

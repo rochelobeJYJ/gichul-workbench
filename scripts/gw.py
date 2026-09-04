@@ -29,6 +29,7 @@ COMMANDS = {
     "detect": ("detect", "메타데이터 인식 + 문제지↔정답 짝짓기"),
     "crop": ("crop", "문항·자료 크롭"),
     "extract": ("extract", "본문·정답·배점 추출"),
+    "rates": ("rates", "EBSi 문항별 오답률 수집 (items 의 ext.error_rate)"),
     "classify": ("classify", "키워드 1차 분류 + LLM 큐"),
     "map": ("mapping", "성취기준 매핑 적용"),
     "build": ("build", "문항집 제작기 HTML 생성"),

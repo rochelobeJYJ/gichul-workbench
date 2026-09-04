@@ -14,7 +14,17 @@
       "family": "kice",
       "subject_id": "140116",
       "form_field": "sFormPartSci",
-      "area_order": "6"
+      "area_order": "6",
+      "national": {
+        "2": {
+          "absent": true,
+          "why": "고2 목록(D200)에는 Ⅱ 과목 항목이 없다. 고2가 치르는 탐구는 Ⅰ 과목뿐이다 (2026-09-04 EBSi 목록 실측)"
+        },
+        "1": {
+          "absent": true,
+          "why": "고1 목록(D100)에는 통합사회 140072·통합과학 140073 뿐이고 탐구 선택과목 항목이 아예 없다 — 대응 과목이 존재하지 않는다 (2026-09-04 EBSi 목록 실측)"
+        }
+      }
     },
     "kice": {
       "area": "과학탐구",

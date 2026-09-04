@@ -145,9 +145,21 @@ def strip_edge_rules(img: Image.Image, zoom: float) -> tuple[Image.Image, list]:
 # ══════════════════════════════════════════════════════════
 # 렌더 · 합성 · 트리밍
 # ══════════════════════════════════════════════════════════
-def render_rect(page, rect: fitz.Rect, zoom: float) -> Image.Image:
+def render_rect_at(page, rect: fitz.Rect, zoom: float) -> tuple[Image.Image, tuple[int, int]]:
+    """렌더 이미지와 그 좌상단의 **픽셀 원점**. `px = pdf_x * zoom - origin_x` 로 쓴다.
+
+    원점을 따로 돌려주는 이유: 클립 사각형은 픽셀 격자에 맞춰 바깥으로 반올림되므로
+    `rect.x0 * zoom` 이 이미지의 0px 가 아니다(실측 2024 수능 2쪽 clip.x0=88.3 →
+    367.92px 인데 픽스맵 원점은 367). 문항 번호 자리(`number_box`)처럼 크롭 안의
+    좌표를 되짚는 계산에서 이 1px 미만의 어긋남을 무시하면 사각형이 조금씩 밀린다.
+    """
     pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), clip=rect, alpha=False)
-    return Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
+    img = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
+    return img, (pix.x, pix.y)
+
+
+def render_rect(page, rect: fitz.Rect, zoom: float) -> Image.Image:
+    return render_rect_at(page, rect, zoom)[0]
 
 
 def stitch(imgs: list[Image.Image]) -> Image.Image:
@@ -181,6 +193,31 @@ def content_margins(img: Image.Image, threshold: int = TRIM_THRESHOLD) -> dict[s
     }
 
 
+def trim_box(img: Image.Image, zoom: float, pad_pt: float) -> tuple[int, int, int, int]:
+    """`trim()` 이 잘라낼 사각형 (x0, y0, x1, y1). 잘라낼 것이 없으면 이미지 전체.
+
+    계산과 실제 자르기를 나눈 이유: `number_box` 는 **최종 크롭 안에서의 비율**이라
+    트리밍이 어디를 얼마나 잘랐는지를 알아야 한다. 결과 이미지만 받아서는 되짚을 수
+    없어, 부르는 쪽이 사각형을 먼저 받아 쓰고 그 다음 자르게 했다.
+    """
+    pad = int(round(pad_pt * zoom))
+    mask = np.asarray(img.convert("L")) < TRIM_THRESHOLD
+    if not mask.any():
+        return (0, 0, img.width, img.height)
+    ys, xs = np.where(mask)
+    return (max(0, int(xs.min()) - pad),
+            max(0, int(ys.min()) - pad),
+            min(img.width, int(xs.max()) + 1 + pad),
+            min(img.height, int(ys.max()) + 1 + pad))
+
+
+def apply_box(img: Image.Image, box: tuple[int, int, int, int]) -> Image.Image:
+    """`trim_box()` 결과를 적용한다. 전체 사각형이면 원본을 그대로 돌려준다."""
+    if box == (0, 0, img.width, img.height):
+        return img
+    return img.crop(box)
+
+
 def trim(img: Image.Image, zoom: float, pad_pt: float) -> Image.Image:
     """흰 여백을 잘라내고 균일 패딩만 남긴다(4면 동일).
 
@@ -189,16 +226,7 @@ def trim(img: Image.Image, zoom: float, pad_pt: float) -> Image.Image:
     span 으로 잡히지 않는 요소가 잘려 나가는데, 이미지에서는 실제로 찍힌 픽셀만
     보므로 그런 사고가 없다.
     """
-    pad = int(round(pad_pt * zoom))
-    mask = np.asarray(img.convert("L")) < TRIM_THRESHOLD
-    if not mask.any():
-        return img
-    ys, xs = np.where(mask)
-    x0 = max(0, int(xs.min()) - pad)
-    y0 = max(0, int(ys.min()) - pad)
-    x1 = min(img.width, int(xs.max()) + 1 + pad)
-    y1 = min(img.height, int(ys.max()) + 1 + pad)
-    return img.crop((x0, y0, x1, y1))
+    return apply_box(img, trim_box(img, zoom, pad_pt))
 
 
 def is_blank(img: Image.Image) -> bool:

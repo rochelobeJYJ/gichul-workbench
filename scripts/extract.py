@@ -21,6 +21,7 @@ import time
 
 from common import Report, Space, load_subject
 from common.ids import make_qid, split_qid
+from common.progress import Progress
 from extractlib import answers as ax
 from extractlib import sources as src
 from extractlib.layouts import get_strategy
@@ -414,7 +415,12 @@ def run(args) -> int:
     axes_used: dict[str, int] = {}
     uncropped: set[str] = set()
 
-    for exam_id in exam_ids:
+    # 회차 하나를 읽는 데 PDF 세 권(문제·정답·해설)을 파싱한다. 19회차면 수십 초라
+    # 표시가 없으면 멈춘 것처럼 보인다. 세는 단위는 회차 — 문항 단위로 세면 숫자가
+    # 회차 파싱이 끝날 때마다 20씩 튀어서 오히려 진행 상황을 가린다.
+    bar = Progress(len(exam_ids), "회차", label="extract", args=args).open()
+    for exam_id in bar.wrap(exam_ids):
+        bar.detail(exam_id)
         try:
             result = _read_exam(space, subject, strategy, exam_id, use_ocr=not args.no_ocr)
         except Exception as exc:  # noqa: BLE001 — 회차 하나가 전체를 막지 않는다
@@ -455,6 +461,7 @@ def run(args) -> int:
                 path.write_text(json.dumps(merged, ensure_ascii=False, indent=2),
                                 encoding="utf-8")
 
+    bar.close()   # 요약을 찍기 전에 진행률 줄을 지운다
     for exam_id in sorted(uncropped):
         report.note(exam_id, "crop 이 안 돌아 items 에 crop/source/materials 가 없다 "
                              "— 본문·정답은 채워졌지만 크롭 이미지가 빠진 반쪽 상태다", "warn")

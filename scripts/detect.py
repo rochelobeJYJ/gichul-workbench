@@ -38,6 +38,7 @@ from pathlib import Path
 import manifest as mf
 from common import Report, Space, load_subject
 from common.ids import GRADE_BEARING, make_exam_id, normalize_exam
+from common.progress import track
 
 # ── 스캔 대상 확장자 ─────────────────────────────────────────────────────
 # 정답만 스캔 이미지로 오는 실전 사례가 흔해 CONTRACT 1절이 answer.png 를 허용한다.
@@ -374,7 +375,8 @@ def group_hits(hits: list[Hit], report: Report) -> list[ExamGroup]:
 # ── --input 모드: 복사해 넣기 ────────────────────────────────────────────
 
 def _run_from_input(input_dir: Path, subject, space: Space, report: Report,
-                     only: set[str] | None, dry_run: bool, force: bool) -> None:
+                     only: set[str] | None, dry_run: bool, force: bool,
+                     quiet: bool = False) -> None:
     if not input_dir.exists():
         report.note("--input", f"폴더가 없다: {input_dir}", "error")
         report.count(found=0, groups=0, done=0)
@@ -384,7 +386,10 @@ def _run_from_input(input_dir: Path, subject, space: Space, report: Report,
     aliases = subject_aliases(subject)
     report.count(found=len(files))
 
-    hits = [detect_hit(p, aliases) for p in files]
+    # 파일 하나하나를 열어 표지 텍스트까지 본다(PDF 면 첫 쪽 렌더). 수백 개면 오래 걸린다.
+    hits = [detect_hit(p, aliases)
+            for p in track(files, "파일", label="detect", quiet=quiet,
+                           detail=lambda x: x.name)]
     _demote_bulk_image_exports(hits)
     _apply_solution_inheritance(hits)
 
@@ -410,7 +415,7 @@ def _run_from_input(input_dir: Path, subject, space: Space, report: Report,
         groups = [g for g in groups if g.exam_id in only]
 
     done = 0
-    for g in groups:
+    for g in track(groups, "회차", label="detect", quiet=quiet, detail=lambda x: x.exam_id):
         for h, why in g.dropped:
             report.note(g.exam_id, why, "warn")
 
@@ -499,7 +504,8 @@ def _split_exam_id(exam_id: str) -> Signature | None:
     return None
 
 
-def _run_refresh(subject, space: Space, report: Report, only: set[str] | None, dry_run: bool) -> None:
+def _run_refresh(subject, space: Space, report: Report, only: set[str] | None,
+                 dry_run: bool, quiet: bool = False) -> None:
     if not space.sources.exists():
         report.note("sources", "sources/ 가 비어 있다. --input 으로 먼저 채워라", "warn")
         report.count(found=0, groups=0, done=0)
@@ -511,7 +517,8 @@ def _run_refresh(subject, space: Space, report: Report, only: set[str] | None, d
     report.count(found=len(exam_dirs))
 
     done = 0
-    for d in exam_dirs:
+    # 회차마다 PDF 를 열어 쪽수를 센다 — 19회차면 눈에 띄게 걸린다.
+    for d in track(exam_dirs, "회차", label="detect", quiet=quiet, detail=lambda p: p.name):
         sig = _split_exam_id(d.name)
         if sig is None:
             report.note(d.name, "폴더 이름이 exam_id 형식이 아니다 (예: 2024_수능)", "warn")
@@ -598,9 +605,11 @@ def run(args) -> int:
 
     if args.input:
         _run_from_input(Path(args.input), subject, space, report,
-                         only=only, dry_run=args.dry_run, force=args.force)
+                         only=only, dry_run=args.dry_run, force=args.force,
+                         quiet=bool(getattr(args, "quiet", False)))
     else:
-        _run_refresh(subject, space, report, only=only, dry_run=args.dry_run)
+        _run_refresh(subject, space, report, only=only, dry_run=args.dry_run,
+                     quiet=bool(getattr(args, "quiet", False)))
 
     done = report.counts.get("done", 0)
     if done > 0:

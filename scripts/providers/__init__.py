@@ -78,6 +78,36 @@ class Candidate:
         return out
 
 
+@dataclass
+class RateSheet:
+    """한 회차의 **문항별 오답률 표** 하나.
+
+    파일이 아니라 표라서 Candidate 와 따로 둔다 — 받는 것도 바이트가 아니라 행 목록이고,
+    저장 위치도 sources/ 가 아니라 items/<qid>.json 의 ext 다.
+
+    `coverage` 를 필드로 둔 이유: EBSi 는 **오답률 상위 15문항만** 공개한다(실측).
+    20문항 과목이면 다섯 문항은 값이 없는 것이 정상이다. 이 사실을 표에 실어 보내지
+    않으면 받는 쪽이 "왜 다섯 개가 빠졌지"를 매번 다시 조사한다.
+    """
+
+    provider: str
+    exam_id: str
+    url: str = ""
+    title: str = ""                  # 목록에 적혀 있던 원문 제목. 오탐 추적의 유일한 증거다.
+    sitting_date: str | None = None
+    coverage: str = ""               # 'top15' 처럼 '전 문항을 덮지 않는다'는 사실
+    rows: list = field(default_factory=list)   # [{number, error_rate, points, answer, choices}]
+    extra: dict = field(default_factory=dict)
+    reason: str = ""                 # rows 가 비었을 때 왜 비었는지
+
+    def evidence(self) -> dict:
+        """items 에 남길 출처. 숫자만 남기면 나중에 어디서 왔는지 재현할 수 없다."""
+        out = {"provider": self.provider, "url": self.url,
+               "record_title": self.title, "coverage": self.coverage}
+        out.update({k: v for k, v in self.extra.items() if not k.startswith("_")})
+        return {k: v for k, v in out.items() if v not in (None, "")}
+
+
 class SourceProvider:
     """프로바이더 인터페이스. 구현체는 name / kinds 를 채우고 discover·fetch 를 덮어쓴다."""
 
@@ -107,6 +137,16 @@ class SourceProvider:
     def probe(self, area: str, year: int | None = None,
               exam: str | None = None, grade: int | None = None) -> list[dict]:
         raise NotImplementedError(f"{self.name} 프로바이더는 --probe 를 지원하지 않는다")
+
+    # --- 오답률 -----------------------------------------------------------
+    # discover/fetch 와 같은 이유로 둘로 나눈다: --dry-run 이 "어느 회차의 표가 실제로
+    # 존재하는가"까지는 확인하되 표 본문은 받지 않아야 계획을 검증할 수 있다.
+
+    def discover_rates(self, subject, targets: list[ExamTarget]) -> list[RateSheet]:
+        raise NotImplementedError(f"{self.name} 프로바이더는 오답률을 제공하지 않는다")
+
+    def fetch_rates(self, sheet: RateSheet) -> RateSheet:
+        raise NotImplementedError(f"{self.name} 프로바이더는 오답률을 제공하지 않는다")
 
 
 # --------------------------------------------------------------------------- HTTP
@@ -316,7 +356,8 @@ def provider_chain(kind: str, exam: str, requested: str = "auto") -> list[str]:
 
 
 __all__ = [
-    "KINDS", "ACADEMIC_YEAR_EXAMS", "ExamTarget", "Candidate", "SourceProvider", "Http",
+    "KINDS", "ACADEMIC_YEAR_EXAMS", "ExamTarget", "Candidate", "RateSheet",
+    "SourceProvider", "Http",
     "verify_bytes", "detect_extension", "extension_from_url", "decode_response",
     "clean_html", "normalize_roman", "normalize_name", "match_any_alias", "safe_component",
     "get_provider", "provider_chain", "PROVIDER_NAMES",

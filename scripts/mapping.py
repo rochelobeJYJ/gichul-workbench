@@ -22,6 +22,7 @@ from pathlib import Path
 
 from common import Report, Space, load_subject, all_subjects
 from common.ids import split_qid, exam_sort_key
+from common.progress import track
 
 # fit(직접/부분/불가) → 정성 등급. 숫자 0~1로 억지로 눌러 담지 않는다 —
 # 사람이 원문을 읽고 내린 정성적 판단(직접/부분)을 소수점으로 흉내 내면 오히려 정밀해 보이는 거짓말이 된다.
@@ -118,7 +119,7 @@ def _do_import(subject, args, report, revision) -> None:
     items: dict[str, dict] = {}
     subject_names = set()
     per_exam_seen: dict[str, set] = collections.defaultdict(set)  # 과목 안에서만 중복 검사 — PITFALLS 4-4
-    for f in files:
+    for f in track(files, "파일", label="map", args=args, detail=lambda p: p.name):
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
@@ -366,7 +367,9 @@ def _do_apply(subject, args, report, revision, space: Space) -> None:
     missing_by_exam: dict[str, int] = collections.defaultdict(int)
     exam_total: dict[str, int] = collections.defaultdict(int)
 
-    for qid, entry in mapping_items.items():
+    # 문항마다 items/<qid>.json 을 읽고 다시 쓴다. 380문항이면 눈에 띄게 걸린다.
+    for qid, entry in track(mapping_items.items(), "문항", total=len(mapping_items),
+                            label="map", args=args, detail=lambda kv: kv[0]):
         try:
             exam_id, _num = split_qid(qid)
         except ValueError:
@@ -458,7 +461,9 @@ def _do_report_gaps(subject, args, report, revision) -> None:
     #  그걸 확인하려면 애초에 지Ⅰ·Ⅱ를 합쳐서 세어야 했다.)
     used = collections.Counter()
     contributors = []
-    for other in all_subjects():
+    # 등록된 과목 전부의 mapping.json 을 연다(17과목). 짧아도 조용히 멈춘 것처럼 보이지 않게 센다.
+    for other in track(list(all_subjects()), "과목", label="map", args=args,
+                       detail=lambda s: s.slug):
         other_mapping = other.mapping()
         if not other_mapping or other_mapping.get("target_revision") != revision:
             continue

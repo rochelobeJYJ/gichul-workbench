@@ -82,6 +82,12 @@ class Segment:
 class QuestionPlan:
     number: int
     segments: list[Segment] = field(default_factory=list)
+    # 문항 번호 토큰이 PDF 위에서 차지하는 자리. 학습지에서 번호를 1,2,3… 으로 다시
+    # 매기려면 크롭 이미지 안의 어디를 덮어야 하는지 알아야 해서 남긴다.
+    # 크롭 단계가 이것을 크롭 사각형 대비 비율(`items.number_box`)로 환산한다.
+    # 못 찾았으면 None 이다 — 계약 0절대로 그럴듯한 자리를 지어내지 않는다.
+    num_page: int | None = None
+    num_rect: tuple[float, float, float, float] | None = None
 
 
 @dataclass
@@ -97,12 +103,18 @@ class ExamPlan:
 # ══════════════════════════════════════════════════════════
 # 문항 번호 앵커 / 컬럼
 # ══════════════════════════════════════════════════════════
-def number_tokens(doc: Doc, max_number: int, loose: bool = False) -> list[tuple[int, float, float, int]]:
-    """[(page_idx, x, y, n)] — 'n.' 형태 워드.
+def number_tokens(doc: Doc, max_number: int,
+                  loose: bool = False) -> list[tuple[int, float, float, int, tuple | None]]:
+    """[(page_idx, x, y, n, bbox)] — 'n.' 형태 워드. bbox 는 PDF 좌표 (x0,y0,x1,y1).
 
     strict 는 워드 하나가 통째로 'n.' 인 것만 인정한다. 번호와 발문이 한 워드로
     붙어 나오는 판형(제목 줄이 따로 있는 조판)을 위해 loose 재시도를 둔다.
     loose 는 오탐(본문 속 '3.5' 같은 것)이 늘어나므로 strict 가 실패했을 때만 쓴다.
+
+    **loose 토큰의 bbox 는 None 이다.** 워드 전체가 'n.발문…' 이라 워드 사각형은
+    번호가 아니라 문장 첫 덩어리의 자리다. 글자 수 비례로 앞부분을 떼어 내는 근사는
+    한글·숫자 폭이 달라 조용히 틀리므로(계약 0절), 자리를 모른다고 말하는 쪽을 택했다.
+    앵커 자체는 종전대로 loose 로도 찾는다 — 크롭은 되고 번호 자리만 비는 것이다.
     """
     pat = _NUM_LOOSE if loose else _NUM_STRICT
     out = []
@@ -110,7 +122,8 @@ def number_tokens(doc: Doc, max_number: int, loose: bool = False) -> list[tuple[
         for w in doc.words(pidx):
             m = pat.match(w[4])
             if m and 1 <= int(m.group(1)) <= max_number:
-                out.append((pidx, w[0], w[1], int(m.group(1))))
+                box = None if loose else (w[0], w[1], w[2], w[3])
+                out.append((pidx, w[0], w[1], int(m.group(1)), box))
     return out
 
 
@@ -307,10 +320,14 @@ def seg_bottom(doc: Doc, pidx: int, next_in_same: float | None,
 
 
 def segments_for(doc: Doc, cols: list[float], rules: list[tuple[float, float]],
-                 anchor: tuple[int, int, float], nxt: tuple[int, int, float] | None,
+                 anchor: tuple, nxt: tuple | None,
                  tabs: dict[int, list[tuple[float, float]]] | None = None) -> list[Segment]:
-    """앵커(page,col,y)부터 다음 앵커 직전까지의 세그먼트 목록."""
-    apage, acol, ay = anchor
+    """앵커(page,col,y,…)부터 다음 앵커 직전까지의 세그먼트 목록.
+
+    앵커 튜플의 4번째 자리(번호 토큰 bbox)는 여기서 쓰지 않는다 — 잘라내지 말고
+    앞 세 개만 받아 둔다.
+    """
+    apage, acol, ay = anchor[0], anchor[1], anchor[2]
     tabs = tabs or {}
     out: list[Segment] = []
     pidx, col = apage, acol
@@ -373,24 +390,53 @@ def plan_exam(doc: Doc, expected: int) -> ExamPlan:
     questions = []
     for i, (n, key) in enumerate(ordered):
         nxt = ordered[i + 1][1] if i + 1 < len(ordered) else None
-        questions.append(QuestionPlan(n, segments_for(doc, cols, rules, key, nxt, tabs)))
+        questions.append(QuestionPlan(n, segments_for(doc, cols, rules, key, nxt, tabs),
+                                      num_page=key[0], num_rect=key[3]))
     questions.sort(key=lambda q: q.number)
     return ExamPlan(cols, rules, tabs, questions, missing, duplicated)
 
 
-def _anchors(tokens, cols) -> dict[int, tuple[int, int, float]]:
-    """번호 → (page, col, y). 같은 번호가 여러 번 나오면 읽기 순서상 첫 것을 쓴다."""
+def attach_number_boxes(doc: Doc, questions: list[QuestionPlan], max_number: int) -> int:
+    """밖에서 만든 계획(crop_rects.json 경로)에도 번호 토큰 자리를 채운다. 채운 개수.
+
+    사각형을 사람이 지정한 회차라도 텍스트 레이어가 살아 있으면 번호 토큰은 찾을 수
+    있다. 텍스트가 없는 회차(2025 수능 지구과학Ⅱ처럼 글자가 전부 벡터)는 0을 돌려주고
+    아무것도 채우지 않는다 — 없는 것을 지어내지 않는다.
+    """
+    if not doc.has_text_layer():
+        return 0
+    tokens = number_tokens(doc, max_number)
+    found = _anchors(tokens, detect_columns(tokens))
+    filled = 0
+    for qp in questions:
+        a = found.get(qp.number)
+        if a is None or a[3] is None or qp.num_rect is not None:
+            continue
+        qp.num_page, qp.num_rect = a[0], a[3]
+        filled += 1
+    return filled
+
+
+def _anchors(tokens, cols) -> dict[int, tuple[int, int, float, tuple | None]]:
+    """번호 → (page, col, y, bbox). 같은 번호가 여러 번 나오면 읽기 순서상 첫 것을 쓴다.
+
+    bbox 는 그 앵커가 된 번호 토큰의 PDF 좌표 사각형이다(loose 토큰이면 None).
+    앵커 y 만 남기고 x·폭·높이를 버리면 크롭 안에서 번호가 어디 있었는지 되짚을 수
+    없어, 학습지 번호 다시 매기기가 원리적으로 불가능해진다.
+    """
     if not cols:
         return {}
-    best: dict[int, tuple[int, int, float]] = {}
-    for pidx, x, y, n in sorted(tokens, key=lambda t: (t[0], nearest_col(cols, t[1]), t[2])):
+    best: dict[int, tuple[int, int, float, tuple | None]] = {}
+    for t in sorted(tokens, key=lambda t: (t[0], nearest_col(cols, t[1]), t[2])):
+        pidx, x, y, n, box = t
         if n not in best:
-            best[n] = (pidx, nearest_col(cols, x), y)
+            best[n] = (pidx, nearest_col(cols, x), y, box)
     return best
 
 
 def _duplicated(tokens, expected: int) -> list[int]:
     seen: dict[int, int] = {}
-    for _p, _x, _y, n in tokens:
+    for t in tokens:
+        n = t[3]
         seen[n] = seen.get(n, 0) + 1
     return sorted(n for n, c in seen.items() if c > 1 and n <= expected)

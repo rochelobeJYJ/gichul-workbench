@@ -25,6 +25,7 @@ from pathlib import Path
 
 import keywordsio  # keywords.json 읽기·쓰기는 전부 이 모듈을 통한다
 from common import CURRICULUM_PDF, CURRICULUM_STANDARDS, Report, Space, SUBJECTS, load_subject
+from common.progress import Progress, track
 
 # ---------------------------------------------------------------------------
 # 0. 문자 정규화
@@ -177,7 +178,7 @@ class Line:
     wrapped: bool = False  # 낱말 한가운데서 줄이 바뀌었다
 
 
-def read_lines(doc) -> list[Line]:
+def read_lines(doc, bar=None) -> list[Line]:
     """PDF 전체를 (쪽, y, 텍스트) 줄 목록으로 편다.
 
     `wrapped` 가 이 함수의 핵심이다. 한국어 조판은 낱말 한가운데서도 줄을 바꾸는데
@@ -187,7 +188,8 @@ def read_lines(doc) -> list[Line]:
     (별책9 2022 p.238 [12지시01-02] 에서 처음 발견한 문제다.)
     """
     out: list[Line] = []
-    for i in range(doc.page_count):
+    # 2215쪽짜리 별책이 있다. 쪽은 사용자가 세는 단위라 그대로 센다('쪽 12/28').
+    for i in (bar.wrap(range(doc.page_count)) if bar is not None else range(doc.page_count)):
         page = doc[i]
         h = page.rect.height or 1.0
         for block in page.get_text("dict")["blocks"]:
@@ -386,7 +388,8 @@ def _fingerprint(path: Path) -> str:
     return h.hexdigest()[:12]
 
 
-def ocr_document(path: Path, cache_dir: Path, zoom: float = OCR_ZOOM) -> list[dict]:
+def ocr_document(path: Path, cache_dir: Path, zoom: float = OCR_ZOOM,
+                 quiet: bool = False) -> list[dict]:
     """PDF 전체를 OCR 해 쪽별 줄 목록을 돌려준다. 결과는 캐시한다.
 
     86쪽에 60초가 든다(실측). 초안 만들기 단계에서 같은 PDF 를 다시 읽으므로
@@ -412,6 +415,8 @@ def ocr_document(path: Path, cache_dir: Path, zoom: float = OCR_ZOOM) -> list[di
     try:
         total = doc.page_count
         pages: list[dict] = []
+        # 86쪽에 60초다(실측). 25쪽씩 끊어 돌므로 진행률도 그 덩어리 단위로 오른다.
+        ocr_bar = Progress(total, "쪽", label="standards OCR", quiet=quiet).open()
         for lo in range(0, total, OCR_CHUNK_PAGES):
             hi = min(lo + OCR_CHUNK_PAGES, total)
             part = fitz.open()
@@ -425,6 +430,8 @@ def ocr_document(path: Path, cache_dir: Path, zoom: float = OCR_ZOOM) -> list[di
                 pages.extend(ocr_pages(tmp, zoom=zoom, timeout=1800))
             finally:
                 tmp.unlink(missing_ok=True)
+            ocr_bar.advance(hi - lo)
+        ocr_bar.close()
     finally:
         doc.close()
     cache.write_text(json.dumps({"pdf": path.name, "zoom": zoom, "pages": pages},
@@ -626,13 +633,13 @@ def _lines_from_ocr_only(page: dict, page_no: int) -> list[Line]:
 
 
 def read_lines_ocr(doc, path: Path, cache_dir: Path,
-                   zoom: float = OCR_ZOOM) -> tuple[list[Line], dict]:
+                   zoom: float = OCR_ZOOM, quiet: bool = False) -> tuple[list[Line], dict]:
     """못 쓰는 텍스트 레이어를 OCR 로 우회해 줄 스트림을 만든다.
 
     돌려주는 stats 는 리포트에 그대로 실린다. **사용자가 결과를 얼마나 믿을지 판단할
     근거**라서, 몇 줄을 무엇으로 읽었는지 숫자로 남긴다.
     """
-    pages = ocr_document(path, cache_dir, zoom)
+    pages = ocr_document(path, cache_dir, zoom, quiet=quiet)
     rows_by_page = _layer_rows(doc)
     n_rows = sum(len(r) for r in rows_by_page)
     n_ocr_lines = sum(len(p.get("lines") or []) for p in pages)
@@ -1047,12 +1054,14 @@ class ParsedDoc:
 
 def parse_pdf(path: Path, area_fallback: str = "미분류", *,
               ocr_cache: Path | None = None, force_ocr: bool = False,
-              allow_ocr: bool = True) -> ParsedDoc:
+              allow_ocr: bool = True, quiet: bool = False) -> ParsedDoc:
     import fitz  # 지연 임포트 — 다른 명령은 PyMuPDF 없이도 떠야 한다.
 
     doc = fitz.open(path)
     try:
-        lines = read_lines(doc)
+        # 쪽 진행률은 문서 진행률 안쪽 막대로 같은 줄에 함께 그려진다(common/progress.py).
+        with Progress(doc.page_count, "쪽", quiet=quiet) as page_bar:
+            lines = read_lines(doc, page_bar)
         # 텍스트 레이어를 쓸 수 있는지 **먼저** 본다. 못 쓰는 문서를 그대로 파싱하면
         # '서식을 판정할 수 없다'며 통째로 건너뛴다 — 실제로 2015 도덕과 별책6 이 그랬다.
         health = diagnose_layer(lines, doc.page_count)
@@ -1068,7 +1077,7 @@ def parse_pdf(path: Path, area_fallback: str = "미분류", *,
 
                 cache = ocr_cache or default_ocr_cache()
                 try:
-                    lines, stats = read_lines_ocr(doc, path, cache)
+                    lines, stats = read_lines_ocr(doc, path, cache, quiet=quiet)
                     mode = stats.get("mode", "ocr")
                     note = (path.name,
                             f"{lead}({why}). 모드 {mode} — {stats.get('detail', '')}. "
@@ -1504,11 +1513,13 @@ def cmd_build(args, rep: Report, quiet: bool = False) -> int:
 
     ocr_cache = _ocr_cache_dir(args)
     by_rev: dict[str, list[ParsedDoc]] = {}
-    for path in pdfs:
+    for path in track(pdfs, "문서", label="standards", quiet=quiet,
+                      detail=lambda p: p.name):
         try:
             doc = parse_pdf(path, ocr_cache=ocr_cache,
                             force_ocr=bool(getattr(args, "force_ocr", False)),
-                            allow_ocr=not getattr(args, "no_ocr", False))
+                            allow_ocr=not getattr(args, "no_ocr", False),
+                            quiet=quiet)
         except NotImplementedError as exc:
             rep.note(path.name, str(exc).splitlines()[0], "warn")
             rep.bump("pdf_skipped")
@@ -1659,7 +1670,8 @@ def cmd_draft_keywords(args, rep: Report, quiet: bool = False) -> int:
             rep.note(f"{args.subject}:{rev}", f"{rev} 개정에 대응되는 과목이 없다", "info")
             continue
         for name, entry in entries:
-            vocab, learning, comm = _materials_for(entry, rep, _ocr_cache_dir(args))
+            vocab, learning, comm = _materials_for(entry, rep, _ocr_cache_dir(args),
+                                                  quiet=quiet)
             flat = {t for terms in vocab.values() for t in terms}
             flat |= {t for terms in learning.values() for t in terms}
             for unit in entry["units"]:
@@ -1757,7 +1769,8 @@ _MATERIAL_CACHE: dict[str, "ParsedDoc"] = {}
 
 
 def _materials_for(entry: dict, rep: Report,
-                   ocr_cache: Path | None = None) -> tuple[dict[int, list[str]],
+                   ocr_cache: Path | None = None,
+                   quiet: bool = False) -> tuple[dict[int, list[str]],
                                                            dict[int, list[str]], dict[str, str]]:
     """초안 재료(단원별 통제 어휘·성취기준 해설)를 원본 PDF 에서 다시 긁는다.
 
@@ -1770,7 +1783,7 @@ def _materials_for(entry: dict, rep: Report,
     if not path.exists():
         rep.note(entry["source_pdf"], "원본 PDF 가 없어 통제 어휘 없이 초안을 만든다", "warn")
         return {}, {}, {}
-    doc = _MATERIAL_CACHE.get(path.name) or parse_pdf(path, ocr_cache=ocr_cache)
+    doc = _MATERIAL_CACHE.get(path.name) or parse_pdf(path, ocr_cache=ocr_cache, quiet=quiet)
     _MATERIAL_CACHE[path.name] = doc
     if doc.notes:
         for ident, why, severity in doc.notes:

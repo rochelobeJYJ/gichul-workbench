@@ -134,6 +134,7 @@ import keywordsio  # keywords.json 읽기·쓰기는 전부 이 모듈을 통한
 from common import Space, Report, load_subject
 from common.ids import split_qid
 from common.paths import CURRICULUM_STANDARDS
+from common.progress import track
 
 # --- 큐 판정 임계값. docs/CONTRACT.md 7절에서 이미 못박은 값이라 여기서
 #     새로 정하지 않는다. 아래 점수 계산을 이 값들이 뜻있게 작동하도록
@@ -802,7 +803,9 @@ def _classify(args) -> int:
     queue_items: list[dict] = []
     blank_excerpts: set[str] = set()
 
-    for stem, item in items_cache.items():
+    # 문항마다 사전 전체와 점수를 맞춰 본다. 380문항 × 개정 2벌이면 체감된다.
+    for stem, item in track(items_cache.items(), "문항", total=len(items_cache),
+                            label="classify", args=args, detail=lambda kv: kv[0]):
         if not _selected(stem, only):
             continue
         fields = _extract_fields(item)
@@ -985,7 +988,10 @@ def _learn(args) -> int:
             report.note(rev, f"{rev}: 라벨 {len(gold)}건뿐이다(권장 최소 {LEARN_MIN_ITEMS}건). "
                              f"배운 용어가 우연일 수 있다 — 큐를 더 판정한 뒤 다시 돌려라", "warn")
 
-        docs = {q: _terms_of(_item_text(items[q])) for q in gold}
+        # 문항마다 본문을 통째로 토큰화한다 — 라벨이 수백 건이면 눈에 띄게 걸린다.
+        docs = {q: _terms_of(_item_text(items[q]))
+                for q in track(list(gold), "문항", label="classify --learn",
+                               args=args, detail=str)}
         docs = {q: t for q, t in docs.items() if t}   # 본문 없는 vision 문항은 배울 게 없다
         skipped_blank = len(gold) - len(docs)
         if skipped_blank:
@@ -1125,7 +1131,10 @@ def _calibrate(args) -> int:
 
         def measure(subset: dict[str, str]) -> tuple[dict, list[dict]]:
             rows = []
-            for qid, truth in subset.items():
+            # 채점은 문항마다 사전 전체를 다시 훑는다. 임계값 곡선까지 돌면 오래 걸린다.
+            for qid, truth in track(subset.items(), "문항", total=len(subset),
+                                    label="classify --calibrate", args=args,
+                                    detail=lambda kv: kv[0]):
                 scores, matched = _score_item(_extract_fields(items[qid]), candidates, idf, weights)
                 rows.append((truth, _rank(scores), matched))
             n = len(rows)

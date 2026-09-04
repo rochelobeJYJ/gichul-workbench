@@ -19,13 +19,21 @@ from pathlib import Path
 
 from common import Report, Space, load_subject, make_exam_id, normalize_exam
 from common.ids import GRADE_BEARING
+from common.progress import Progress, track
 from providers import (KINDS, Candidate, ExamTarget, Http, PROVIDER_NAMES,
                        get_provider, provider_chain, verify_bytes)
 
 # 회차 이름이 가리키는 '예정' 시행월. 실제 시행일이 여기서 벗어나면 리포트로 알린다.
 # (2021학년도 수능 12월, 2023학년도 9월모평 8월 — 목록이 시행일 기준이라 생기는 함정이다.)
+#
+# 학평은 이 어긋남이 예외가 아니라 상시다. EBSi 제목의 달과 실제 시행일이 자주 다르다 —
+# 실측: 2025 고3 '5월 학평(경기)' 는 2025-04-30 시행, 2023 고2 '11월 학평(경기)' 는
+# 2023-12-19 시행, 2025 고2 '10월 학평(경기)' 파일은 /20251014/ 경로에 있다.
+# 그래서 이 표는 **거르는 기준이 아니라 알림 기준**이다. 회차 판정은 제목이 한다
+# (providers/ebsi.py:classify_exam). 여기서 월로 걸렀다가 회차를 통째로 놓친 적이 있다.
 NOMINAL_MONTH = {"수능": 11, "6월모평": 6, "9월모평": 9,
-                 "3월학평": 3, "4월학평": 4, "7월학평": 7, "10월학평": 10}
+                 "3월학평": 3, "4월학평": 4, "5월학평": 5, "6월학평": 6,
+                 "7월학평": 7, "9월학평": 9, "10월학평": 10, "11월학평": 11}
 
 
 # --------------------------------------------------------------------------- 판형 전략
@@ -137,7 +145,9 @@ def register(parser) -> None:
     parser.add_argument("--subject", help="과목 슬러그 (--probe 일 때만 생략 가능)")
     parser.add_argument("--years", help="'2020-2026' 또는 '2024,2025'. 수능·모평은 학년도, 학평은 달력연도")
     parser.add_argument("--exams", default="수능,6월모평,9월모평",
-                        help="쉼표 구분. 수능/6월모평/9월모평/3월학평/4월학평/7월학평/10월학평")
+                        help="쉼표 구분. 수능/6월모평/9월모평 (고3) · "
+                             "3월학평/4월학평/5월학평/7월학평/10월학평 (고3 학평) · "
+                             "3월학평/6월학평/9월학평/10월학평/11월학평 (고1·고2 학평)")
     parser.add_argument("--kinds", default="problem,answer,solution",
                         help=f"쉼표 구분. {', '.join(KINDS)}")
     parser.add_argument("--grade", type=int, choices=[1, 2, 3],
@@ -314,7 +324,9 @@ def _run_download(args, http: Http) -> int:
                 need.setdefault(name, set()).add(kind)
 
     found: dict[tuple[str, str], list[Candidate]] = {}
-    for name, want_kinds in need.items():
+    # 목록 조회는 프로바이더마다 페이지를 끝까지 넘긴다(EBSi 는 15행/쪽). 네트워크라 더 느리다.
+    for name, want_kinds in track(need.items(), "프로바이더", total=len(need),
+                                  label="download", args=args, detail=lambda kv: kv[0]):
         try:
             provider = get_provider(name, http)
         except Exception as exc:
@@ -360,11 +372,14 @@ def _run_download(args, http: Http) -> int:
               "skipped": 0, "missing": 0, "planned": 0}
     touched: list[str] = []
 
+    # 받는 단위는 (회차 × 종류) 파일 하나다 — 회차만 세면 한 회차 안에서 세 번 멈춘 것처럼 보인다.
+    bar = Progress(len(targets) * len(kinds), "파일", label="download", args=args).open()
     for target in targets:
         out_dir = space.source_dir(target.exam_id)
         manifest = load_manifest(space.manifest(target.exam_id))
         files = dict(manifest.get("files") or {})
-        for kind in kinds:
+        for kind in bar.wrap(kinds):
+            bar.detail(f"{target.exam_id} {kind}")
             chain = chains[(target.exam_id, kind)]
             cands = found.get((target.exam_id, kind), [])
             if not cands:
@@ -402,6 +417,7 @@ def _run_download(args, http: Http) -> int:
         _write_manifest(space, target, subject, files, kinds, args.dry_run)
         touched.append(space.rel(out_dir))
 
+    bar.close()   # 요약을 찍기 전에 진행률 줄을 지운다
     report.count(**counts)
     report.artifact(space.rel(space.sources))
     report.extra["exams"] = [t.exam_id for t in targets]

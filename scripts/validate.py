@@ -30,6 +30,7 @@ import pdfplumber  # 단어 좌표로 다시 읽는 축 — 아래 pdfplumber_an
 from PIL import Image
 
 from common import CURRICULUM_STANDARDS, Report, Space, load_subject, split_qid
+from common.progress import Progress
 
 # ---------------------------------------------------------------------------
 # 국가 시험 형식 상수. ids.py 의 EXAM_ALIASES 와 같은 층위 — "지구과학" 같은 과목
@@ -699,9 +700,13 @@ def run(args) -> int:
     for problem in glyph_problems:
         note(subject.slug, problem, "warn")
 
+    # 문항마다 크롭 PNG 를 열고 회차마다 정답지 PDF 를 다시 파싱한다 — 380문항이면
+    # 십수 초다. 세는 단위는 문항(사용자가 세는 단위), 지금 보는 회차는 detail 에 둔다.
+    bar = Progress(len(items), "문항", label="validate", args=args).open()
     try:
         for exam_id in sorted(exams):
             rows = sorted(exams[exam_id])
+            bar.detail(exam_id)
 
             # 회차 단위 불변식(1·2번). --only 로 부분집합만 볼 때는 카운트가
             # 원래부터 안 맞으므로 의미가 없어 생략한다.
@@ -719,9 +724,12 @@ def run(args) -> int:
             needs_fallback = [(n, q, it) for n, q, it in rows
                               if not apply_recorded_answer_check(q, it, note)]
             if needs_fallback and cross_checker is not None:
+                # 정답지·해설지를 다시 여는 구간이라 회차당 수 초가 든다. 무엇을 하는 중인지 말한다.
+                bar.detail(f"{exam_id} 정답 3중 대조")
                 cross_checker(space, exam_id, subject, needs_fallback, note)
+                bar.detail(exam_id)
 
-            for number, qid, item in rows:
+            for number, qid, item in bar.wrap(rows):
                 if item.get("status") == "verified":
                     verified += 1
                 else:
@@ -733,7 +741,10 @@ def run(args) -> int:
     except NotImplementedError as exc:
         note(subject.slug, str(exc), "error")
         report.next = "docs/LAYOUTS.md 를 보고 이 판형의 검증 로직부터 설계한다"
+        bar.close()
         return finish(ok=False)
+    finally:
+        bar.close()   # 어느 갈래로 나가도 진행률 줄은 지운다(두 번 불러도 안전)
 
     report.count(verified=verified, scaffold=scaffold, vision=vision)
     report.artifact(space.rel(space.report("validate")))
