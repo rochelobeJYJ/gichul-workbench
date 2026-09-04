@@ -1,0 +1,517 @@
+<title>기출 문항집 작업기 사용 안내</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@500;700&display=swap">
+<style>
+  :root{
+    --paper:#FBFAF7; --panel:#FFFFFF; --ink:#1A1C21; --dim:#6A6E77;
+    --rule:#DBD9D4; --rule-soft:#EDEBE7;
+    --accent:#27467E; --accent-soft:#E9EEF8; --accent-line:#B9C7E2;
+    --mark:#A8412C; --mark-soft:#F7ECE8;
+    --ok:#2E6B4F; --ok-soft:#E7F1EB;
+    --serif:"Noto Serif KR",'Nanum Myeongjo',Batang,serif;
+    --sans:"IBM Plex Sans KR","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",Consolas,"D2Coding",monospace;
+    --col:68ch;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#15171B; --panel:#1B1E23; --ink:#E8E7E3; --dim:#9BA0A9;
+      --rule:#2B2F36; --rule-soft:#232730;
+      --accent:#8FAEE2; --accent-soft:#1C2735; --accent-line:#39506F;
+      --mark:#DE8B76; --mark-soft:#2E211D;
+      --ok:#7FBF9C; --ok-soft:#1B2A22;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#15171B; --panel:#1B1E23; --ink:#E8E7E3; --dim:#9BA0A9;
+    --rule:#2B2F36; --rule-soft:#232730;
+    --accent:#8FAEE2; --accent-soft:#1C2735; --accent-line:#39506F;
+    --mark:#DE8B76; --mark-soft:#2E211D;
+    --ok:#7FBF9C; --ok-soft:#1B2A22;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:16.5px; line-height:1.78;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--col); margin:0 auto; padding:0 22px}
+
+  /* ── 상단 ── */
+  header{border-bottom:1px solid var(--rule); background:var(--panel)}
+  .head{display:flex; flex-direction:column; gap:10px; padding:44px 0 34px}
+  .kicker{font-size:12px; letter-spacing:.13em; text-transform:uppercase;
+          color:var(--accent); font-weight:600}
+  h1{font-family:var(--serif); font-weight:700; font-size:clamp(30px,5.2vw,42px);
+     line-height:1.28; margin:0; text-wrap:balance; letter-spacing:-.01em}
+  .lede{margin:0; color:var(--dim); font-size:17px; max-width:56ch}
+
+  nav.jump{position:sticky; top:0; z-index:5; background:var(--paper);
+    border-bottom:1px solid var(--rule); backdrop-filter:saturate(1.2)}
+  nav.jump ol{display:flex; gap:0; list-style:none; margin:0; padding:0;
+    overflow-x:auto; scrollbar-width:thin}
+  nav.jump a{display:block; white-space:nowrap; padding:11px 14px; font-size:13.5px;
+    color:var(--dim); text-decoration:none; border-bottom:2px solid transparent}
+  nav.jump a:hover{color:var(--ink); border-bottom-color:var(--accent-line)}
+  nav.jump a:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+
+  main{padding:8px 0 80px}
+  section{padding:38px 0; border-bottom:1px solid var(--rule-soft)}
+  section:last-child{border-bottom:0}
+  h2{font-family:var(--serif); font-weight:700; font-size:25px; line-height:1.35;
+     margin:0 0 6px; text-wrap:balance; letter-spacing:-.01em}
+  h3{font-family:var(--sans); font-weight:600; font-size:16.5px; margin:26px 0 8px}
+  .sub{margin:0 0 20px; color:var(--dim); font-size:15px}
+  p{margin:0 0 15px}
+  ul,ol{margin:0 0 15px; padding-left:1.25em}
+  li{margin:5px 0}
+  strong{font-weight:600}
+  a{color:var(--accent)}
+
+  /* ── 명령어 ── */
+  .cmd{font-family:var(--mono); font-size:13.5px; line-height:1.72;
+    background:var(--panel); border:1px solid var(--rule); border-left:3px solid var(--accent);
+    border-radius:3px; padding:13px 15px; margin:0 0 15px; overflow-x:auto;
+    white-space:pre; -webkit-user-select:all; user-select:all}
+  .cmd.term{border-left-color:var(--rule); color:var(--dim); white-space:pre-wrap;
+    -webkit-user-select:auto; user-select:auto}
+  code{font-family:var(--mono); font-size:.88em; background:var(--accent-soft);
+    padding:1px 5px; border-radius:3px}
+  .cmd code{background:none; padding:0}
+
+  /* ── 갈림길 ── */
+  .fork{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:22px 0 8px}
+  @media (max-width:640px){ .fork{grid-template-columns:1fr} }
+  .path{display:flex; flex-direction:column; gap:8px; padding:18px;
+    border:1px solid var(--rule); border-radius:4px; background:var(--panel);
+    text-decoration:none; color:inherit}
+  .path:hover{border-color:var(--accent-line)}
+  .path:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .path.rec{border-color:var(--accent-line); background:var(--accent-soft)}
+  .path .tag{font-size:11.5px; font-weight:600; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--accent)}
+  .path .t{font-family:var(--serif); font-weight:700; font-size:19px; line-height:1.35}
+  .path .d{font-size:14px; color:var(--dim); line-height:1.65}
+
+  /* ── 라벨 ── */
+  .who{display:inline-block; font-size:11.5px; font-weight:600; letter-spacing:.07em;
+    padding:2px 8px; border-radius:99px; vertical-align:middle;
+    background:var(--accent-soft); color:var(--accent); margin-left:8px}
+
+  /* ── 주의/확인 ── */
+  .note{border-left:3px solid var(--mark); background:var(--mark-soft);
+    padding:13px 16px; margin:0 0 15px; border-radius:0 3px 3px 0; font-size:15px}
+  .note b{color:var(--mark)}
+  .tip{border-left:3px solid var(--ok); background:var(--ok-soft);
+    padding:13px 16px; margin:0 0 15px; border-radius:0 3px 3px 0; font-size:15px}
+
+  /* ── 표 ── */
+  .tw{overflow-x:auto; margin:0 0 16px; border:1px solid var(--rule); border-radius:4px}
+  table{border-collapse:collapse; width:100%; font-size:14.5px; min-width:460px}
+  th,td{text-align:left; padding:10px 13px; border-bottom:1px solid var(--rule-soft);
+    vertical-align:top}
+  thead th{background:var(--panel); font-weight:600; font-size:12.5px;
+    letter-spacing:.05em; text-transform:uppercase; color:var(--dim); white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.n{font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  /* ── 단계 ── */
+  .steps{list-style:none; padding:0; margin:0 0 8px; counter-reset:s}
+  .steps>li{counter-increment:s; position:relative; padding-left:38px; margin:0 0 22px}
+  .steps>li::before{content:counter(s); position:absolute; left:0; top:1px;
+    width:25px; height:25px; border-radius:50%; background:var(--accent-soft);
+    color:var(--accent); font-family:var(--mono); font-size:13px; font-weight:500;
+    display:grid; place-items:center}
+  .steps h3{margin:0 0 7px}
+
+  details{border:1px solid var(--rule); border-radius:4px; padding:0 15px;
+    margin:0 0 15px; background:var(--panel)}
+  summary{cursor:pointer; padding:11px 0; font-size:15px; font-weight:500}
+  summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  details[open] summary{border-bottom:1px solid var(--rule-soft); margin-bottom:13px}
+  details>:last-child{margin-bottom:13px}
+
+  footer{border-top:1px solid var(--rule); padding:30px 0 60px;
+    color:var(--dim); font-size:14px}
+  .circ{font-family:var(--serif)}
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
+</style>
+
+<header>
+  <div class="wrap head">
+    <div class="kicker">기출 문항집 작업기 · gichul-workbench</div>
+    <h1>수능 기출로 학습지 만들기</h1>
+    <p class="lede">기출 PDF를 내려받아 문항별로 잘라내고, 필요한 것만 골라 A4 학습지로 인쇄합니다.
+      사회탐구·과학탐구 17과목과 통합과학·통합사회를 지원합니다.</p>
+  </div>
+</header>
+
+<nav class="jump">
+  <div class="wrap">
+    <ol>
+      <li><a href="#fit">하는 일</a></li>
+      <li><a href="#install">설치</a></li>
+      <li><a href="#fork">두 가지 방법</a></li>
+      <li><a href="#ai">AI로 하기</a></li>
+      <li><a href="#model">모델 고르기</a></li>
+      <li><a href="#self">직접 하기</a></li>
+      <li><a href="#sheet">학습지 만들기</a></li>
+      <li><a href="#scope">되는 것·안 되는 것</a></li>
+      <li><a href="#stuck">잘 안 될 때</a></li>
+      <li><a href="#legal">저작권</a></li>
+    </ol>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="fit">
+  <h2>이 도구가 하는 일</h2>
+
+  <p>기출 PDF를 열어 화면을 캡처하고, 한글에 붙여넣고, 크기를 맞추고, 정답을 옮겨 적는 일을 대신합니다.
+    문항 하나에 3~4분씩 걸리던 작업입니다.</p>
+
+  <p>문항을 고르는 건 선생님 몫입니다. 이 도구는 고르기 쉽게 늘어놓는 데까지만 합니다.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>이런 경우</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>기출로 단원별 학습지를 자주 만든다</td><td>맞습니다</td></tr>
+        <tr><td>회차 하나를 통째로 뽑아 쓴다</td><td>맞습니다</td></tr>
+        <tr><td>2015 기출을 2022 교육과정에 맞춰 다시 묶고 싶다</td><td>지구과학·통합과목은 됩니다</td></tr>
+        <tr><td>국어·수학·영어 학습지가 필요하다</td><td>아직 안 됩니다</td></tr>
+        <tr><td>문항을 새로 만들고 싶다</td><td>이 도구로는 안 됩니다</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="install">
+  <h2>설치</h2>
+  <p class="sub">파이썬을 따로 깔 필요는 없습니다. 관리자 권한도 필요 없습니다.</p>
+
+  <ol class="steps">
+    <li>
+      <h3>PowerShell을 엽니다</h3>
+      <p>시작 메뉴에서 <code>PowerShell</code>을 검색하면 나옵니다. 검은 창이 하나 뜹니다.</p>
+    </li>
+    <li>
+      <h3>아래 한 줄을 붙여넣고 Enter</h3>
+      <div class="cmd">irm https://raw.githubusercontent.com/rochelobeJYJ/gichul-workbench/main/install.ps1 | iex</div>
+      <p>필요한 것을 알아서 받아옵니다. 인터넷 속도에 따라 1~3분쯤 걸립니다.</p>
+    </li>
+    <li>
+      <h3>“설치가 끝났습니다”가 나오면 됩니다</h3>
+      <p>화면에 설치된 위치가 적혀 있습니다. 나중에 쓰이니 창을 바로 닫지 마세요.</p>
+    </li>
+  </ol>
+
+  <details>
+    <summary>“이 시스템에서 스크립트를 실행할 수 없습니다”라고 나올 때</summary>
+    <p>학교 컴퓨터에서 가끔 있습니다. 설정을 바꾸지 마시고 이 형태로 한 번만 실행하세요.
+      이 실행에만 적용되고 컴퓨터 설정은 그대로입니다.</p>
+    <div class="cmd">powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/rochelobeJYJ/gichul-workbench/main/install.ps1 | iex"</div>
+  </details>
+
+  <details>
+    <summary>나중에 최신으로 맞추려면</summary>
+    <p>설치 폴더의 <code>update.cmd</code>를 더블클릭하면 됩니다. 맨 처음 그 한 줄을 다시 실행해도 같습니다.
+      어느 쪽이든 작업하신 내용은 그대로 남습니다.</p>
+    <p class="sub" style="margin:0">시험지 판형은 회차마다 조금씩 다릅니다.
+      새 판형에 대응하는 수정이 계속 올라오니 가끔 눌러주세요.</p>
+  </details>
+</section>
+
+<section id="fork">
+  <h2>두 가지 방법</h2>
+  <p class="sub">AI를 쓰는 방법과 직접 하는 방법이 있습니다. 나중에 바꿔도 됩니다.</p>
+
+  <div class="fork">
+    <a class="path rec" href="#ai">
+      <span class="tag">권장</span>
+      <span class="t"><span class="circ">㉠</span> AI에게 맡기기</span>
+      <span class="d">Claude Code나 Codex를 이미 쓰고 계신 경우.
+        말로 시키면 됩니다. 단원별 학습지가 19과목 전부 됩니다.</span>
+    </a>
+    <a class="path" href="#self">
+      <span class="tag">AI 없이</span>
+      <span class="t"><span class="circ">㉡</span> 직접 하기</span>
+      <span class="d">터미널에 명령 하나를 칩니다.
+        회차 단위 학습지는 전부, 단원별은 네 과목이 됩니다.</span>
+    </a>
+  </div>
+
+  <p style="margin-top:18px">㉡도 쓸 만합니다. “2025학년도 수능 20문항으로 학습지 한 장”은
+    AI 없이 모든 과목에서 됩니다. 지구과학Ⅰ·Ⅱ와 통합과학·통합사회는 단원별까지 되는데,
+    이 네 과목은 단원 분류를 미리 해서 함께 넣어두었습니다.</p>
+</section>
+
+<section id="ai">
+  <h2><span class="circ">㉠</span> AI에게 맡기기<span class="who">권장</span></h2>
+
+  <p>설치할 때 AI가 찾는 자리에 넣어두기 때문에 폴더 위치를 몰라도 됩니다.
+    이렇게 말씀하시면 됩니다.</p>
+
+  <div class="cmd term">지구과학2 기출로 단원별 학습지 만들어줘
+
+한국지리 2020년부터 2026년까지 수능·모평 기출 받아서 단원별로 정리해줘
+
+화학1 2024·2025 수능에서 산화환원 단원 문항만 골라서 학습지 만들어줘
+
+통합과학 학습지 만들어줘. 오답률 50% 넘는 어려운 문항만.</div>
+
+  <p>AI가 내려받고, 자르고, 단원을 나누고, 학습지 파일을 만듭니다.
+    판단이 필요한 것만 중간에 물어봅니다.</p>
+
+  <div class="note">
+    <b>잘라낸 문항이 온전한지는 한 번 봐주셔야 합니다.</b>
+    AI가 확인용 이미지를 한 장 보여드릴 겁니다. ⑤번 선택지가 잘린 문항이 없는지만 보시면 됩니다.
+    기계가 이것만은 못 잡습니다. 잘린 건 그림이고 글자는 그대로 남아 있어서 자동 검사를 그냥 통과합니다.
+  </div>
+</section>
+
+<section id="model">
+  <h2>모델 고르기</h2>
+  <p class="sub">작업에 따라 필요한 성능이 다릅니다. 비싼 모델이 늘 필요하지는 않습니다.</p>
+
+  <h3>Claude Code</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>작업</th><th>권장</th><th>이유</th></tr></thead>
+      <tbody>
+        <tr><td>내려받기 → 학습지 만들기</td><td>Sonnet</td>
+            <td>도구가 다 하고 AI는 결과 요약만 읽습니다</td></tr>
+        <tr><td>단원 나누기 (20~40문항)</td><td>Sonnet</td>
+            <td>판정 지침이 도구 안에 들어 있어 이 정도는 충분합니다</td></tr>
+        <tr><td>단원 나누기 (한 과목 통째로)</td><td>Sonnet + Opus 감사</td>
+            <td>아래 참고</td></tr>
+        <tr><td>새로운 시험지 판형 대응</td><td>Opus</td>
+            <td>디버깅 작업이라 여기서 아끼면 더 오래 걸립니다</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <b>한 과목을 통째로 나눌 때 있었던 일입니다.</b>
+    모델이 성취기준을 동사 위주로 읽는 바람에, 성취기준 15개 중 9개가 “해당 문항 없음”으로 나왔습니다.
+    실제로는 관련 문항이 일곱 개 넘게 있었습니다. 상위 모델로 다시 훑어서 찾았습니다.
+    <br><br>
+    지금은 “동사가 아니라 대상으로 판정하라”는 지침이 도구 안에 들어 있어 이런 일이 줄었습니다.
+    그래도 문항이 0개로 나온 단원은 한 번 더 보시는 게 좋습니다.
+  </div>
+
+  <p>Haiku는 결과를 읽고 명령을 실행하는 정도는 됩니다. 단원 나누기에는 권하지 않습니다.</p>
+
+  <h3>Codex</h3>
+  <p>모델 이름은 버전에 따라 달라져서 등급으로 적습니다. 갈래는 위와 같습니다.</p>
+  <ul>
+    <li>내려받기·학습지 만들기 — 중간 등급, 추론 강도 낮음~중간</li>
+    <li>단원 나누기 — 중간~상위 등급, 추론 강도 높임</li>
+    <li>판형 대응 — 가장 상위 모델, 추론 강도 최고</li>
+  </ul>
+
+  <h3>비용</h3>
+  <p>학습지를 만드는 데는 토큰이 거의 들지 않습니다. 문항마다 AI를 부르는 게 아니라,
+    전 과정을 한 번에 돌린 뒤 요약 한 장만 넘기도록 만들었습니다.</p>
+  <p>많이 드는 건 문항 본문을 글자로 옮기는 작업인데(문항당 6만 토큰쯤),
+    학습지를 만드는 데는 그게 필요 없습니다. 잘라낸 이미지가 본체입니다.</p>
+</section>
+
+<section id="self">
+  <h2><span class="circ">㉡</span> 직접 하기</h2>
+  <p class="sub">명령 하나면 됩니다. 질문 셋 중 둘은 엔터만 치면 됩니다.</p>
+
+  <ol class="steps">
+    <li>
+      <h3>설치 폴더로 이동합니다</h3>
+      <p>설치 화면에 적혀 있던 경로입니다.</p>
+      <div class="cmd">cd "$HOME\.claude\skills\gichul-workbench"</div>
+    </li>
+    <li>
+      <h3>시작합니다</h3>
+      <div class="cmd">.\gw quickstart</div>
+    </li>
+    <li>
+      <h3>작업 폴더를 한 번 묻습니다</h3>
+      <div class="cmd term">작업 폴더를 정합니다. (처음 한 번만 묻습니다)
+  내려받은 기출 PDF와 잘라낸 문항 이미지가 여기 쌓입니다.
+  기본값:  C:\Users\...\Desktop\기출작업
+  그냥 Enter 를 치시면 기본값을 씁니다.
+작업 폴더&gt; </div>
+      <p>엔터만 치면 바탕화면에 <code>기출작업</code> 폴더가 생깁니다. 다음부터는 묻지 않습니다.</p>
+    </li>
+    <li>
+      <h3>세 가지를 답합니다</h3>
+      <div class="cmd term">어느 과목인가요?        → 번호를 적습니다 (예: 3)
+몇 년치를 받을까요?     → 엔터  (최근 3년)
+어떤 시험을 받을까요?   → 엔터  (수능 + 6·9월 모평)</div>
+      <p>꼭 답해야 하는 건 과목 하나입니다. 나머지는 엔터로 넘기면 됩니다.</p>
+    </li>
+    <li>
+      <h3>기다립니다</h3>
+      <div class="cmd term">③ 문항 잘라내기
+   █████████░░░  문항 137/180   2025_수능</div>
+      <p>생명과학Ⅰ 한 회차가 15초, 한국지리 두 회차가 76초 걸렸습니다. 대부분 내려받는 시간입니다.</p>
+    </li>
+    <li>
+      <h3>브라우저 두 창이 열립니다</h3>
+      <p>첫 창은 확인용 이미지입니다. 잘라낸 문항이 한눈에 보입니다.
+        ⑤번 선택지가 잘린 문항이 없는지만 보시면 됩니다.</p>
+      <p>둘째 창이 학습지 제작기입니다.</p>
+    </li>
+  </ol>
+
+  <div class="tip">
+    중간에 멈춰도 받은 것은 지워지지 않습니다.
+    어디서 멈췄고 무엇을 하면 되는지 한국어로 알려드립니다.
+    다시 돌리면 이미 받은 것은 건너뜁니다.
+  </div>
+
+  <details>
+    <summary>작업 폴더를 확인하거나 옮기려면</summary>
+    <div class="cmd">.\gw where                       지금 어디에 쌓이고 있는지
+.\gw where --set "D:\기출작업"    다른 곳으로 옮기기</div>
+    <p>내려받은 PDF와 이미지는 과목이 늘면 수 GB가 됩니다.
+      그래서 프로그램 폴더가 아니라 따로 정한 곳에 쌓습니다.</p>
+  </details>
+
+  <details>
+    <summary>단계를 하나씩 보고 싶으면</summary>
+    <p><code>quickstart</code>가 이 순서로 돕니다. 따로 돌려도 됩니다.</p>
+    <div class="cmd">.\gw download --subject earth-science-ii --years 2024-2026 --exams 수능,6월모평,9월모평 --kinds problem,answer,solution
+.\gw detect   --subject earth-science-ii
+.\gw crop     --subject earth-science-ii
+.\gw extract  --subject earth-science-ii
+.\gw validate --subject earth-science-ii
+.\gw build    --subject earth-science-ii</div>
+    <p>과목 이름은 <code>.\gw subjects</code>로 볼 수 있습니다.</p>
+  </details>
+</section>
+
+<section id="sheet">
+  <h2>학습지 만들기</h2>
+
+  <p>왼쪽에서 단원이나 시험 회차를 고르면 가운데에 문항이 시간순으로 나옵니다.
+    처음엔 전부 선택되어 있으니 빼고 싶은 문항의 체크만 풀면 됩니다.
+    문항을 클릭하면 크게 볼 수 있습니다.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>옵션</th><th>하는 일</th></tr></thead>
+      <tbody>
+        <tr><td>문항 위 정답</td><td>시험 정보 옆에 정답을 붙입니다. 교사용에 좋습니다</td></tr>
+        <tr><td>끝에 정답표</td><td>맨 뒤에 정답표를 붙입니다</td></tr>
+        <tr><td>문항 아래 풀이 공간</td><td>학생이 풀 자리를 만듭니다. 적게 / 보통 / 많이</td></tr>
+        <tr><td>머리말·꼬리말</td><td>학교명·단원명·이름·날짜 칸</td></tr>
+        <tr><td>번호 1,2,3…으로</td><td>원래 시험 번호 대신 순번으로 보이게 합니다</td></tr>
+        <tr><td>오답률</td><td>어려운 문항만 고르거나 난이도 순으로 정렬합니다</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>새 옵션은 전부 기본이 꺼져 있어서, 켜지 않으면 예전과 같이 나옵니다.
+    가운데 위의 검색창에 낱말을 넣으면 발문·<span class="circ">&lt;보기&gt;</span>·선택지에서 찾아줍니다.</p>
+
+  <p>다 고른 뒤 <strong>문항집 만들기</strong>를 누르고 <strong>인쇄 / PDF 저장</strong>을 누르면
+    A4 2단으로 조판된 학습지가 나옵니다.</p>
+
+  <div class="tip">
+    인쇄물에는 저작권 문구나 출처가 찍히지 않습니다. 화면에서만 보입니다.
+    PDF 파일명은 <code>지구과학Ⅱ 해수의 운동_19문항_정답_260904.pdf</code>처럼 자동으로 붙습니다.
+    정답을 켜고 저장하면 <code>_정답</code>이 붙어서 교사용과 학생용이 섞이지 않습니다.
+  </div>
+</section>
+
+<section id="scope">
+  <h2>되는 것과 안 되는 것</h2>
+
+  <h3>과목</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>과목</th><th>회차 단위</th><th>단원별</th></tr></thead>
+      <tbody>
+        <tr><td>지구과학Ⅰ·Ⅱ, 통합과학, 통합사회</td><td>됩니다</td>
+            <td>됩니다 <span style="color:var(--dim)">(분류를 미리 넣어둠)</span></td></tr>
+        <tr><td>나머지 과학탐구 5과목 · 사회탐구 8과목</td><td>됩니다</td>
+            <td>AI가 필요합니다</td></tr>
+        <tr><td>국어 · 영어</td><td colspan="2">아직 안 됩니다.
+            지문 하나에 문항이 여러 개 묶여 있어 문항 단위로 자를 수가 없습니다</td></tr>
+        <tr><td>수학</td><td colspan="2">아직 안 됩니다.
+            수식이 그림처럼 그려져 있고 단답형에는 선택지가 없습니다</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>시험</h3>
+  <p>수능, 6·9월 모평, 전국연합학력평가까지 됩니다.
+    학평은 학년(고1·고2·고3)을 함께 지정해야 합니다. 같은 달에 학년별로 다른 시험이 있어서입니다.</p>
+
+  <div class="note">
+    <b>끝까지 돌려서 확인한 과목은 아직 넷입니다.</b>
+    나머지 과목은 판형이 같아서 잘 돌아가지만, 새로운 판형은 과목마다 나옵니다.
+    새 과목을 시작하실 때는 한 회차만 먼저 돌려서 확인용 이미지를 보시는 편이 좋습니다.
+  </div>
+</section>
+
+<section id="stuck">
+  <h2>잘 안 될 때</h2>
+
+  <h3>“자동 분류 0개”라고 나옵니다</h3>
+  <p>정상입니다. 그 과목은 아직 단원 분류가 검증되지 않아서, 틀린 단원을 넣는 대신
+    전부 확인 목록으로 보냅니다.</p>
+  <p>이 상태에서도 학습지는 만들 수 있습니다. 왼쪽에 단원 대신 시험 회차가 나오고,
+    회차 한 줄을 누르면 그 회차 전체가 담깁니다.</p>
+
+  <h3>이미 받아둔 PDF가 인식이 안 됩니다</h3>
+  <p>문제지·정답지·해설지는 파일 이름이 없어도 파일 안을 읽어서 가려냅니다.
+    다만 폴더 이름은 회차로 지어야 합니다. <code>2025_고3_3월학평</code>처럼요.</p>
+  <p>몇 학년도 무슨 시험인지가 파일 안에 안 적혀 있는 경우가 있습니다.
+    학평 문제지에는 월 표기가 아예 없습니다. 폴더 이름이 그 단서가 됩니다.</p>
+
+  <h3>정답이 비어 있는 문항이 있습니다</h3>
+  <p>정답을 세 가지 방법으로 따로 읽어서 대조하는데, 셋이 다 다르면 채우지 않고 비워둡니다.
+    추측해서 채우면 틀렸을 때 찾기 어려워서입니다. 어느 회차인지는 결과 파일에 적혀 있습니다.</p>
+
+  <h3>“선택지 0개”라고 나옵니다</h3>
+  <p>선택지가 분수나 도형 그림인 문항입니다. 화학·물리에 회차당 두세 개씩 있습니다.
+    글자가 아니라 그림이라 옮길 수가 없어서 ‘전사 대기’로 표시됩니다.
+    학습지를 만드는 데는 문제가 없습니다. 잘라낸 이미지가 본체입니다.</p>
+
+  <h3>그래도 안 되면</h3>
+  <p>명령을 돌릴 때마다 결과 파일이 남습니다. 그 안에 무엇이 문제인지와 다음에 실행할 명령이
+    적혀 있습니다. AI를 쓰고 계시면 그 파일을 읽고 처리합니다.</p>
+  <p>처음 보는 문제라면 <a href="https://github.com/rochelobeJYJ/gichul-workbench/issues">이슈로 남겨</a>주세요.
+    새로운 판형 때문에 고생하셨다면 특히 알려주시면 좋겠습니다. 다음 분이 덜 고생합니다.</p>
+</section>
+
+<section id="legal">
+  <h2>저작권</h2>
+
+  <p>기출문제와 정답의 저작권은 한국교육과정평가원, 해설은 EBS 등에 있습니다.</p>
+
+  <p>이 도구는 저작물을 배포하지 않습니다. 각자 컴퓨터에서만 처리하고,
+    작업 폴더는 프로그램 폴더 밖에 따로 있어서 공유될 수 없는 구조입니다.</p>
+
+  <p>만드신 학습지는 저작권법 제25조가 허용하는 수업 목적 범위에서 쓰시면 됩니다.
+    공개적으로 배포하거나 판매하는 것은 그 범위 밖입니다.</p>
+
+  <div class="note">
+    동료 선생님께 작업 결과를 통째로 넘기는 건 권하지 않습니다.
+    평가원 저작물을 재배포하는 게 됩니다. 설치가 한 줄이니 각자 받는 편이 안전합니다.
+  </div>
+
+  <p style="color:var(--dim);font-size:14.5px">도구 자체는 CC BY-NC-SA 4.0입니다.
+    자유롭게 쓰시되 출처를 밝히고, 상업적으로 쓰지 않으며,
+    고쳐서 배포할 때는 소스를 같은 조건으로 공개해주세요.</p>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p><a href="https://github.com/rochelobeJYJ/gichul-workbench">github.com/rochelobeJYJ/gichul-workbench</a></p>
+  <p>쓸 만하셨다면 별 하나 눌러주시면 힘이 됩니다.
+    현장에서 만난 문제는 이슈로 남겨주세요.</p>
+</footer>
