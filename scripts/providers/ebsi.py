@@ -43,12 +43,16 @@ from . import (Candidate, ExamTarget, RateSheet, SourceProvider, clean_html,
 try:
     from common import make_exam_id
     from common.ids import EXAM_ALIASES
+    # 배점 읽기도 한 곳(extractlib/points.py)에서만 한다. 여기 정규식을 따로 두었더니
+    # 소수 배점을 못 읽는 결함이 tamgu.py 와 각자 살아 있었다.
+    from extractlib.points import read_point_cell
 except ImportError:                                    # 프로바이더만 단독으로 임포트한 경우
     import pathlib
     import sys
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
     from common import make_exam_id
     from common.ids import EXAM_ALIASES
+    from extractlib.points import read_point_cell
 
 AJAX_URL = "https://www.ebsi.co.kr/ebs/xip/xipc/previousPaperListAjax.ajax"
 LIST_URL = "https://www.ebsi.co.kr/ebs/xip/xipc/previousPaperList.ebs"
@@ -241,7 +245,11 @@ def parse_rate_rows(page: str, count: int) -> list[dict]:
         rate = _as_ratio(cells[2])
         if rate is None:
             continue
-        points = int(cells[3]) if re.fullmatch(r"[1-9]", cells[3].strip()) else None
+        # 배점 칸은 소수일 수 있다. 옛 조건 `[1-9]` 는 한 자리 정수만 받아서 통합과목
+        # 25문항 판형의 1.5·2.5 를 **전부 None 으로 떨어뜨렸고**, 소비하는 rates.py 가
+        # `if ours and theirs` 로 건너뛰기 때문에 배점 대조 축이 통째로 사라진 채
+        # mismatch=0 으로 보고됐다(실측 4회차 60행). 없는 것과 맞는 것이 구분되지 않았다.
+        points = read_point_cell(cells[3])
         answer = _as_answer(cells[4])
         choices: list[float] | None = None
         for start in range(5, len(cells) - 4):

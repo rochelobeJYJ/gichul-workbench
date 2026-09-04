@@ -883,9 +883,37 @@ def collect_standards(lines: list[Line], lo: int, hi: int) -> list[dict]:
             j += 1
         _stitch_across_page(lines, body, j, hi, page)
         text = join_lines(body)
+        # `line` 은 이 성취기준이 시작한 줄 번호다. 한 절에 과목이 둘 붙어 있을 때
+        # (예: '통합과학1, 통합과학2') 단원 제목을 과목별 구간에서만 줍기 위해 쓴다 —
+        # 구간을 안 나누면 두 과목이 같은 제목표를 받아 뒤 과목의 단원 제목이
+        # **조용히 앞 과목 것**이 된다. 저장 스키마에는 안 실린다(to_schema 참조).
         out.append({"code": code.raw, "prefix": code.prefix, "unit": code.unit,
-                    "seq": code.seq, "text": text, "page": page})
+                    "seq": code.seq, "text": text, "page": page, "line": i})
         i = j
+    return out
+
+
+def _unit_titles_by_group(lines: list[Line], anchor: int, end: int,
+                          groups: dict[str, list[dict]]) -> dict[str, dict[int, str]]:
+    """한 절 안에 과목이 여럿일 때 **과목별 구간**에서 단원 제목을 줍는다.
+
+    구간을 문서 순서로 자른다 — 첫 과목은 `anchor` 부터, 다음 과목은 앞 과목의
+    마지막 성취기준 **다음 줄**부터. 단원 제목(`(1) 과학의 기초`)은 그 과목의 첫
+    성취기준보다 **앞**에 오므로 시작점을 성취기준 줄로 잡으면 제목을 놓친다.
+
+    과목이 하나뿐이면 예전과 똑같이 절 전체를 본다(결과가 바뀌지 않는다).
+    """
+    if len(groups) <= 1:
+        return {}
+    ordered = sorted(groups.items(), key=lambda kv: min(s["line"] for s in kv[1]))
+    out: dict[str, dict[int, str]] = {}
+    for k, (prefix, items) in enumerate(ordered):
+        lo = anchor if k == 0 else max(s["line"] for s in ordered[k - 1][1]) + 1
+        hi = (min(s["line"] for s in ordered[k + 1][1]) if k + 1 < len(ordered) else end)
+        # 다음 과목의 첫 성취기준 줄까지 보면 그 과목의 첫 단원 제목까지 딸려 온다.
+        # 하지만 `collect_unit_titles` 는 같은 번호를 **선착순**으로만 담으므로
+        # 이 과목의 (1) 이 이미 잡혀 있어 덮이지 않는다.
+        out[prefix] = collect_unit_titles(lines, lo, hi)
     return out
 
 
@@ -1129,13 +1157,23 @@ def parse_pdf(path: Path, area_fallback: str = "미분류", *,
                 if len(groups) > 1:
                     out.problems.append(
                         (sec.title, f"한 절에서 코드 접두사 {len(groups)}개가 나왔다 — 과목명을 확인해라"))
+            # ★ 단원 제목은 **과목별 구간에서만** 줍는다.
+            #   예전에는 절 전체(anchor~sec.end)에서 한 번 주운 표를 두 과목이 나눠 썼다.
+            #   두 과목이 똑같이 단원 1·2·3 을 쓰면(통합과학1/2, 통합사회1/2가 그렇다)
+            #   `titles` 는 먼저 나온 과목 것만 담고 있으므로, **뒤 과목의 단원 제목이
+            #   조용히 앞 과목 것으로 채워진다.** 코드와 본문은 정확해서 아무 검사에도
+            #   안 걸리고, 분류 결과의 unit 칸과 문항집 사이드바만 틀린다.
+            #   실측(2022 별책9·별책7): 통합과학2 세 단원, 통합사회2 다섯 단원이 그랬다.
+            titles_of = _unit_titles_by_group(lines, anchor, sec.end, groups)
             for name, (prefix, items) in zip(names, sorted(groups.items())):
                 if len(groups) > 1 and names.count(name) > 1:
                     name = f"{name}({prefix})"
+                own = titles_of.get(prefix, titles)
                 out.subjects.append(ParsedSubject(
                     name=name, prefix=prefix, area=area, dept=sec.dept, source_pdf=path.name,
-                    units={n: t for n, t in titles.items()
-                           if n in {s["unit"] for s in items}},
+                    units={n: own.get(n, titles.get(n))
+                           for n in sorted({s["unit"] for s in items})
+                           if own.get(n) or titles.get(n)},
                     standards=items, commentary=comm,
                     vocabulary=vocab, learning=learning))
         return out
@@ -1634,13 +1672,15 @@ def resolve_subject_entries(subject, rev: str, data: dict) -> tuple[list[tuple[s
     hits = [(n, s) for n, s in subjects.items() if s["code_prefix"] in prefixes]
     if hits:
         return hits, None
-    label = (subject.curriculum or {}).get(rev)
-    if label:
-        hits = [(n, s) for n, s in subjects.items() if n == label]
+    # 한 개정에서 과목이 둘로 갈린 경우(2022 통합과학1·통합과학2)를 담으려면 이름이
+    # 여럿일 수 있다. 문자열 하나만 보면 그런 과목은 이름 폴백에서도 못 찾는다.
+    labels = subject.curriculum_names(rev)
+    if labels:
+        hits = [(n, s) for n, s in subjects.items() if n in labels]
         if hits:
             found = ", ".join(s["code_prefix"] for _n, s in hits)
             return hits, (f"standard_prefixes.{rev} = {sorted(prefixes) or '[]'} 로는 못 찾았다. "
-                          f"과목명 '{label}' 로 찾아 {found} 를 썼다 — subject.json 을 고쳐라")
+                          f"과목명 {labels} 로 찾아 {found} 를 썼다 — subject.json 을 고쳐라")
     return [], None
 
 

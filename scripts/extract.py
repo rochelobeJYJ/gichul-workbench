@@ -25,6 +25,7 @@ from common.progress import Progress
 from extractlib import answers as ax
 from extractlib import sources as src
 from extractlib.layouts import get_strategy
+from extractlib.points import normalize_points, points_equal
 from extractlib.textnorm import ANSWER_NONE, answer_to_symbol
 
 # 이 단계가 소유하는 items 키. 나머지는 손대지 않는다 (crop/classify/map 의 몫).
@@ -152,7 +153,11 @@ class ExamResult:
 
 def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> ExamResult:
     result = ExamResult(exam_id)
-    count = subject.question_count
+    # ★ 문항 수는 **회차 단위**다. 한 슬러그 안에 판형이 둘 있는 과목이 실재한다
+    #   (통합과목: 2025년 3월까지 20문항, 6월부터 25문항). 과목 스칼라 하나로 읽으면
+    #   20문항 회차에서 정답지 원문자 픽셀 대조의 자기검증('찾은 원문자 수 == 문항 수')이
+    #   20 != 25 로 깨져 **정답 축이 통째로 죽는다**(실측: 그 회차 answer 가 전부 null).
+    count = subject.question_count_for(exam_id)
     if not count:
         raise ValueError("subject.question_count 가 없다 — 문항 수 불변식을 세울 수 없다")
 
@@ -204,7 +209,13 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
     if mode != "vision":
         for number, block in blocks.items():
             parsed[number] = strategy.parse(block)
-        ok = sum(1 for p in parsed.values() if not p.error)
+        # ★ 세는 것은 '에러가 아닌 문항'이 아니라 **선택지까지 텍스트로 복원된 문항**이다.
+        # choices_source=="image" 는 '텍스트로는 못 읽었지만 크롭이 본체라 실패는 아니다'라는
+        # 표시라서, 이것을 성공으로 세면 OCR 품질 관문이 조용히 무력화된다.
+        # 실측: 텍스트 레이어가 없는 지구과학Ⅱ 2025 수능은 OCR 본문에서 선택지 라벨이
+        # 통째로 사라져 20문항이 전부 image 로 판정됐고, 그 결과 20/20 '성공'이 되어
+        # vision 으로 떨어지지 않고 **믿을 수 없는 OCR 전사가 본문으로 채택될 뻔했다.**
+        ok = sum(1 for p in parsed.values() if not p.error and not p.choices_source)
         if mode != "direct" and ok < count * OCR_ACCEPT_RATIO:
             # OCR 전사가 이 정도로 깨지면 본문으로 쓸 수 없다. 배점 표기는 그대로 쓴다.
             result.notes.append(
@@ -239,10 +250,13 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
     candidates += [r for r in readings if r.points]
     # 배점 축은 **완전할 때만** 표를 준다. 일부 문항만 읽힌 배점표는 정보가 아니라
     # 잡음이고, 한 표만으로 교차검증을 무승부로 만들어 멀쩡한 배점을 지운다.
+    # 합계 비교는 points_equal 로 한다. 배점이 실수가 될 수 있어서다(통합과목 1.5/2.5점).
+    # `==` 로 두면 부동소수 오차 한 번에 **멀쩡한 배점 축이 통째로 버려지고**
+    # 문항 배점이 전부 빈다 — 값이 틀리는 게 아니라 사라지는 쪽이라 더 조용하다.
     point_readings = [r for r in candidates
                       if len(r.points) >= count
                       and (not subject.points_total
-                           or sum(r.points.values()) == subject.points_total)]
+                           or points_equal(sum(r.points.values()), subject.points_total))]
     if not marks and mark_reason and any(b for b in blocks.values()):
         result.notes.append((exam_id, f"배점 표기 해석 실패 — {mark_reason}", "warn"))
     if not point_readings:
@@ -330,9 +344,11 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
                       f"크롭 이미지가 본체다: {', '.join(str(n) for n in numbers)}", "info"))
 
     # --- 불변식 ----------------------------------------------------------
-    if subject.points_total and total_points and total_points != subject.points_total:
+    if (subject.points_total and total_points
+            and not points_equal(total_points, subject.points_total)):
         result.notes.append(
-            (exam_id, f"배점 합이 맞지 않는다: {total_points} != {subject.points_total}", "error"))
+            (exam_id, f"배점 합이 맞지 않는다: {normalize_points(total_points)} "
+                      f"!= {subject.points_total}", "error"))
     return result
 
 
@@ -408,7 +424,9 @@ def run(args) -> int:
         report.next = f"python scripts/gw.py download --subject {subject.slug}"
         return _finish(report, args)
 
-    report.count(expected=len(exam_ids) * count, done=0, failed=0, skipped=0,
+    # 회차마다 문항 수가 다를 수 있으므로 `문항수 × 회차수` 가 아니라 합계로 센다.
+    count_of = {e: (subject.question_count_for(e) or count) for e in exam_ids}
+    report.count(expected=sum(count_of.values()), done=0, failed=0, skipped=0,
                  exams=len(exam_ids))
     space.ensure()
     modes: dict[str, int] = {}
@@ -425,7 +443,7 @@ def run(args) -> int:
             result = _read_exam(space, subject, strategy, exam_id, use_ocr=not args.no_ocr)
         except Exception as exc:  # noqa: BLE001 — 회차 하나가 전체를 막지 않는다
             report.note(exam_id, f"{type(exc).__name__}: {exc}", "error")
-            report.bump("failed", count)
+            report.bump("failed", count_of[exam_id])
             continue
 
         for ident, why, severity in result.notes:

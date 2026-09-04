@@ -25,6 +25,12 @@
 ## 판형
 subject.layout 으로 전략을 고른다. 지금 실동작하는 것은 tamgu-1q1block 뿐이고,
 나머지는 무엇을 구현해야 하는지 적힌 NotImplementedError 로 막혀 있다.
+
+## 리포트의 조용한-실패 신호 두 개
+`counts.dropped_columns` 자료 상자 안의 가짜 번호를 컬럼 후보에서 뺀 횟수.
+`counts.narrow_crops`    그 회차 최대폭의 75% 미만으로 잘린 크롭 수.
+둘 다 **컬럼을 잘못 세어 크롭이 세로 띠가 되는 사고**를 겨눈다. 그 사고는 텍스트가
+멀쩡해서 다른 검사가 전부 침묵하고 validate 도 통과시킨다 — 폭 말고는 흔적이 없다.
 """
 from __future__ import annotations
 
@@ -66,12 +72,17 @@ def _plan_tamgu(doc: Doc, subject, exam_id: str) -> ExamPlan:
     # 사실상 과목 하드코딩이고(CONTRACT 0절), question_count 를 아직 안 채운 과목에서
     # **조용히 20문항만 자르고 성공으로 보고**하는 사고를 낸다 — 45문항짜리 국어라면
     # 25문항이 소리 없이 사라진다. 값이 없으면 기본값을 지어내지 말고 멈춘다.
-    if not subject.question_count:
+    #
+    # ★ 문항 수는 **회차 단위**로 묻는다. 한 슬러그 안에 판형이 둘 있는 과목이 실재한다
+    #   (통합과목: 2025년 3월까지 20문항, 6월부터 25문항). 과목 스칼라 하나로 자르면
+    #   20문항 회차에서 없는 번호 21~25 를 찾다 회차 전체가 실패한다(실측).
+    count = subject.question_count_for(exam_id)
+    if not count:
         raise ValueError(
             f"subjects/{subject.slug}/subject.json 에 question_count 가 없다 — "
             f"회차당 문항 수를 모르면 문항 앵커 기대치를 세울 수 없다"
         )
-    return plan_exam(doc, subject.question_count)
+    return plan_exam(doc, count)
 
 
 def _plan_passage_group(doc: Doc, subject, exam_id: str) -> ExamPlan:
@@ -302,6 +313,10 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
     _exams, only_qids = _selected(args.only)
     has_text = doc.has_text_layer()
     cells: list[dict] = []
+    # 회차 안 크롭 폭 비교용. 이번에 자른 것뿐 아니라 **이미 있는 파일도** 넣는다 —
+    # --only 나 재실행으로 한 장만 다시 잘랐을 때 비교 대상이 자기 자신뿐이면
+    # 이 검사가 통째로 침묵한다(croplib/qa.py narrow_crops 주석).
+    widths: dict[str, int] = {}
 
     # 진행률은 문항 단위로 오른다 — 사용자가 세는 단위가 그것이다('문항 137/380').
     # 갈래가 여섯이라 갈래마다 advance() 를 심으면 하나만 놓쳐도 숫자가 어긋난다. 반복을 감싼다.
@@ -313,6 +328,7 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
             # 자를 때 그 회차 대지가 한 칸짜리로 덮어써져 검수 기준이 사라진다.
             cells.append({"label": qid, "path": out_png if out_png.exists() else None,
                           "flags": {}})
+            _note_width(widths, qid, out_png)
             continue
         if not qp.segments:
             warn(qid, "크롭 영역을 계산하지 못했다 — 앵커 다음에 유효한 세그먼트가 없다", "error")
@@ -323,6 +339,7 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
         if out_png.exists() and not args.force:
             report.bump("skipped")
             cells.append({"label": qid, "path": out_png, "flags": {}})
+            _note_width(widths, qid, out_png)
             continue
 
         try:
@@ -364,6 +381,7 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
         # 비율을 계산한 뒤 같은 사각형으로 자른다 — 저장되는 픽셀은 종전과 같다.
         tbox = imaging.trim_box(img, zoom, imaging.QUESTION_PAD_PT)
         number_box = numbox.ratio(qp.num_page, qp.num_rect, place, zoom, tbox)
+        widths[qid] = tbox[2] - tbox[0]
 
         if not args.dry_run:
             out_png.parent.mkdir(parents=True, exist_ok=True)
@@ -378,7 +396,34 @@ def _crop_exam(doc: Doc, space: Space, subject, exam_id: str, pdf: Path,
         report.bump("materials", len(material_rels))
         cells.append({"label": qid, "path": out_png if not args.dry_run else None,
                       "flags": flags})
+
+    # 회차 안에서 유독 좁은 크롭. 컬럼을 잘못 세면 크롭이 세로 띠가 되는데 그때
+    # **다른 신호가 하나도 울리지 않는다** — 유일하게 남는 흔적이 폭이다.
+    # 문항마다가 아니라 회차마다 한 줄로 올린다(attention 30건 상한 방어).
+    narrow, ref = qa.narrow_crops(widths)
+    if narrow:
+        report.bump("narrow_crops", len(narrow))
+        shown = ", ".join(q.rsplit("_", 1)[-1] for q in narrow[:12])
+        more = f" 외 {len(narrow) - 12}개" if len(narrow) > 12 else ""
+        warn(exam_id,
+             f"크롭 폭이 이 회차 최대폭({ref}px)의 "
+             f"{int(qa.NARROW_CROP_RATIO * 100)}% 미만인 문항 {len(narrow)}개({shown}{more}) — "
+             f"컬럼을 잘못 세어 세로 띠로 잘렸을 수 있다. 대지를 눈으로 봐라",
+             "warn")
     return cells
+
+
+def _note_width(widths: dict[str, int], qid: str, png: Path) -> None:
+    """이미 있는 크롭 PNG 의 폭을 비교 표에 넣는다(헤더만 읽으므로 값싸다).
+
+    한 회차를 서로 다른 `--dpi` 로 나눠 자른 작업공간이면 폭이 섞여 '좁다'는 오신고가
+    난다. 그런 작업공간은 대지 자체가 이미 못 쓰는 상태라 따로 막지 않았다.
+    """
+    if not png.exists():
+        return
+    size = numbox.png_size(png)
+    if size:
+        widths[qid] = size[0]
 
 
 def _crop_materials(doc: Doc, space: Space, qid: str, segments: list[Segment],
@@ -476,7 +521,9 @@ def _refill_number_boxes(space: Space, subject, args, report: Report, warn) -> i
             continue
         try:
             plans = [QuestionPlan(int(p.stem.rsplit("_", 1)[-1])) for p in items]
-            if attach_number_boxes(doc, plans, subject.question_count) == 0:
+            # 번호 토큰 상한도 회차 단위다 — 20문항 회차에 25를 주면 다음 문항의
+            # 쪽번호 같은 토큰이 21~25번 자리로 잘못 잡힐 여지가 생긴다.
+            if attach_number_boxes(doc, plans, subject.question_count_for(exam_id)) == 0:
                 warn(exam_id, "번호 토큰을 찾을 수 없다(텍스트 레이어 없음) — number_box 없이 둔다",
                      "info")
                 report.bump("skipped", len(items))
@@ -603,22 +650,27 @@ def run(args) -> int:
         print(msg)
         return report.finish()
 
-    expected_each = subject.question_count
-    # --only 로 문항을 콕 집었으면 기대치도 그 개수다. 회차 전체 수로 두면 done=1 이 실패처럼 보인다.
-    per_exam = len(sel_qids) if sel_qids else expected_each
-    report.count(expected=per_exam if sel_qids else expected_each * len(exams),
+    # ★ 문항 수는 회차마다 다를 수 있다(통합과목: 2025.3 까지 20, 2025.6~ 25).
+    #   합계를 `문항수 × 회차수` 로 잡으면 두 판형이 섞인 작업 공간에서 expected 가
+    #   실제와 어긋나 done/expected 가 영영 안 맞는다.
+    count_of = {e: subject.question_count_for(e) for e in exams}
+    total_expected = sum(count_of.values())
+    report.count(expected=len(sel_qids) if sel_qids else total_expected,
                  done=0, failed=0, skipped=0, materials=0, exams=len(exams),
-                 number_box_missing=0)
+                 number_box_missing=0, dropped_columns=0, narrow_crops=0)
     pending_vision: list[str] = []
 
     # 380문항이면 몇 분이 걸린다. 표시가 없으면 멈춘 것과 구분되지 않는다.
     # 세는 단위는 사용자가 세는 단위(문항)다. 총량은 **이 실행이 실제로 훑을 문항 수**이고
     # 리포트의 expected 와 다를 수 있다 — `--only <qid>` 로 한 문항만 골라도 앵커 계획은
     # 그 회차 전체를 훑기 때문이다. 리포트 숫자는 손대지 않는다(진행률은 표시일 뿐이다).
-    bar = Progress(expected_each * len(exams), "문항", label="crop", args=args).open()
+    bar = Progress(total_expected, "문항", label="crop", args=args).open()
 
     for exam_id in exams:
         bar.detail(exam_id)
+        # 이 회차의 기대치. 아래 expected_each/per_exam 은 **이 회차** 값이다.
+        expected_each = count_of[exam_id]
+        per_exam = len(sel_qids) if sel_qids else expected_each
         pdf = _problem_pdf(space, exam_id)
         if pdf is None:
             warn(exam_id, "problem.pdf 가 없다", "error")
@@ -680,6 +732,14 @@ def run(args) -> int:
                     warn(exam_id, f"같은 번호가 여러 번 나온다(첫 것을 썼다): {plan.duplicated}", "warn")
                 if len(plan.columns) not in (1, 2, 3):
                     warn(exam_id, f"컬럼 {len(plan.columns)}개로 인식됐다 — 판형 확인 필요", "warn")
+                # 자료 상자 안의 가짜 번호를 컬럼에서 뺐다는 사실 자체를 남긴다.
+                # 이 판정이 틀리면 컬럼 하나가 통째로 사라지므로 **조용히 넘어가면 안 된다.**
+                # 반대로 안 뺐으면 크롭이 세로 띠가 됐을 자리이기도 하다.
+                for d in plan.dropped_columns:
+                    report.bump("dropped_columns")
+                    warn(exam_id,
+                         f"x={d['x']:.0f} 의 번호 토큰 {d['tokens']}개(번호 {d['numbers']}, "
+                         f"{len(d['pages'])}쪽)를 컬럼에서 뺐다 — {d['why']}", "info")
                 cells = _crop_exam(doc, space, subject, exam_id, pdf, plan.questions,
                                    "direct", args, report, warn, bar)
 

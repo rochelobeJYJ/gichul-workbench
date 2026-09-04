@@ -274,8 +274,18 @@ def _build_excerpt(item: dict, limit: int = EXCERPT_LIMIT) -> str:
 # 채점하게 된다. 개정을 파일 구조로 올려 그 가능성 자체를 없앴다.
 
 
+def _note_scope(report, scope) -> None:
+    """개정 판정이 접두사 폴백으로 떨어졌으면 리포트에 올린다.
+
+    폴백 자체는 옛 동작이라 결과가 나빠지지는 않지만, 그 상태에서는 접두사가
+    같은 두 개정을 못 가른다. 조용히 떨어지면 그 사실을 아무도 모른다.
+    """
+    if scope.why:
+        report.note(f"{scope.revision} 성취기준 범위", scope.why, "warn")
+
+
 def _keyword_view(entries: dict[str, dict],
-                  prefixes: list[str]) -> tuple[dict[str, list[str]], dict, dict]:
+                  scope) -> tuple[dict[str, list[str]], dict, dict]:
     """한 개정의 {코드: 칸} → (코드별 용어 목록, (코드,용어)별 학습 가중치, 통계).
 
     점수 계산기는 "코드마다 용어 목록"만 알면 되므로 여기서 평평하게 만든다.
@@ -283,14 +293,18 @@ def _keyword_view(entries: dict[str, dict],
     라벨에서 직접 잰 변별력을 써야 하기 때문이다(IDF 는 드묾만 재고, 형제 성취기준이
     공유하는 희귀어를 구분하지 못한다. 그게 이 사전이 40% 로 틀린 이유였다).
 
-    prefixes 로 한 번 더 거르는 이유: 개정 층을 믿되 검산은 한다. 옛 형태 파일을
+    scope 로 한 번 더 거르는 이유: 개정 층을 믿되 검산은 한다. 옛 형태 파일을
     역추정해 읽은 경우 그 개정 층에 남의 코드가 섞여 들어올 수 있다.
+    ★ 예전엔 이 검산을 `code.startswith(접두사)` 로 했는데, 그 비교는 2015 통합과학
+      접두사 `10통과` 로 2022 코드 `10통과1-01-01` 까지 통과시킨다. 그러면 2015
+      후보 사전에 2022 성취기준이 섞이고, 그 문항은 **에러 없이** 2022 코드로
+      자동확정된다. 이제는 `subject.code_scope(개정)` 이 개정 목록 소속을 본다.
     """
     candidates: dict[str, list[str]] = {}
     weights: dict[tuple[str, str], float] = {}
     n_cur = n_learn = 0
     for code, entry in entries.items():
-        if prefixes and not any(code.startswith(p) for p in prefixes):
+        if code not in scope:
             continue
         cur = list(entry.get("curriculum") or [])
         terms = list(cur)
@@ -757,8 +771,9 @@ def _classify(args) -> int:
     weights_by_rev: dict[str, dict] = {}
     kw_stats: dict[str, dict] = {}
     for rev in revisions:
-        prefixes = subject.standard_prefixes.get(rev, [])
-        cands, weights, stats = _keyword_view(book.revision(rev), prefixes)
+        scope = subject.code_scope(rev)
+        _note_scope(report, scope)
+        cands, weights, stats = _keyword_view(book.revision(rev), scope)
         candidates_by_rev[rev] = cands
         weights_by_rev[rev] = weights
         kw_stats[rev] = stats
@@ -965,14 +980,18 @@ def _learn(args) -> int:
 
     n_terms = 0
     for rev in revisions:
-        prefixes = subject.standard_prefixes.get(rev, [])
+        scope = subject.code_scope(rev)
+        _note_scope(report, scope)
         # 학습 라벨은 manual(사람) 과 llm(큐 판정) 을 모두 받는다 — 미션 지시.
         # 채점(--calibrate)은 manual 만 받는다. 배우는 것과 채점하는 것의 기준이
         # 같으면 자기가 만든 답으로 자기를 채점하는 꼴이 된다.
+        # 라벨 코드를 scope 로 거르는 이유: 다른 개정의 코드가 라벨에 섞여 있으면
+        # 그 용어가 이 개정 사전에 학습돼 다음 실행부터 **에러 없이** 남의 개정
+        # 성취기준을 추천하게 된다. 접두사 비교로는 통합과목처럼 접두사가 겹치는
+        # 자리에서 못 걸러냈다.
         gold, _sources_before_filter = _gold_labels(subject, items, rev, ("manual", "llm"))
         gold = {q: c for q, c in gold.items()
-                if _selected(q, only)
-                and (not prefixes or any(c.startswith(p) for p in prefixes))}
+                if _selected(q, only) and c in scope}
         # 출처 집계는 --only 로 걸러낸 **뒤** 다시 센다. 필터 전 숫자를 리포트에 실으면
         # "라벨 120건(items(by=manual)=160)" 처럼 앞뒤가 안 맞는 문장이 나온다.
         counted = collections.Counter()
@@ -1006,7 +1025,7 @@ def _learn(args) -> int:
         # ★ **이 개정 층만** 건드린다. 다른 개정의 사전은 이 실행의 라벨과 아무 관계가
         #   없으므로 손대면 안 된다(같은 코드를 두 개정이 쓰는 과목에서 특히 중요하다).
         for code, entry in list(book.revision(rev).items()):
-            if prefixes and not any(code.startswith(p) for p in prefixes):
+            if code not in scope:
                 continue
             book.set_entry(rev, code, {"curriculum": list(entry.get("curriculum") or []),
                                        "learned": learned.get(code, [])})
@@ -1104,8 +1123,9 @@ def _calibrate(args) -> int:
     }
 
     for rev in revisions:
-        prefixes = subject.standard_prefixes.get(rev, [])
-        candidates, weights, stats = _keyword_view(book.revision(rev), prefixes)
+        scope = subject.code_scope(rev)
+        _note_scope(report, scope)
+        candidates, weights, stats = _keyword_view(book.revision(rev), scope)
         meta_by_rev = {rev: _load_standards_meta(rev)}
         unit_of = {code: _unit_label(meta_by_rev, rev, code) for code in candidates}
 
@@ -1369,10 +1389,13 @@ def _export_xlsx(args) -> int:
     meta_by_rev: dict[str, dict] = {}
     for rev in revisions:
         meta_by_rev[rev] = _load_standards_meta(rev)
-        prefixes = subject.standard_prefixes.get(rev, [])
-        codes = set(book.revision(rev)) | set(meta_by_rev[rev])
-        if prefixes:
-            codes = {c for c in codes if any(c.startswith(p) for p in prefixes)}
+        scope = subject.code_scope(rev)
+        _note_scope(report, scope)
+        # `_load_standards_meta(rev)` 는 그 개정 파일 **전체**(2022 는 2,537개)를 준다.
+        # 접두사로 걸렀을 때는 통합과목처럼 접두사가 겹치는 자리에서 남의 개정 코드가
+        # 열로 섞여 들어왔다. 사람이 채우는 시트에 그런 열이 있으면 거기 적힌 용어가
+        # --import-xlsx 로 그대로 이 개정 사전에 들어앉는다.
+        codes = scope.filter(set(book.revision(rev)) | set(meta_by_rev[rev]))
         columns.extend((rev, c) for c in sorted(codes))
 
     if not columns:

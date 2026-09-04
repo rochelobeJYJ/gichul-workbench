@@ -55,8 +55,14 @@ def wanted_subjects() -> dict[str, set[str]]:
     """
     want: dict[str, set[str]] = {}
     for s in all_subjects():
-        for rev, name in (s.curriculum or {}).items():
-            if name:
+        # 한 개정에서 과목이 둘로 갈리는 자리가 있다(2022 통합과학 = 통합과학1·통합과학2).
+        # 예전에는 이 필드가 문자열 하나만 받아서 `"통합과학1·통합과학2"` 라는 없는
+        # 과목명이 들어와 있었고, 그 문자열은 성취기준 JSON 의 어느 과목과도 안 맞아
+        # 두 과목의 마크다운이 **조용히** 이름 경로로는 안 만들어졌다.
+        # 리스트를 그대로 `set.add()` 하면 TypeError 로 19과목 전부가 멈춘다 —
+        # 그래서 isinstance 갈래는 Subject.curriculum_names() 한 곳에만 둔다.
+        for rev in (s.curriculum or {}):
+            for name in s.curriculum_names(rev):
                 want.setdefault(rev, set()).add(name)
     return want
 

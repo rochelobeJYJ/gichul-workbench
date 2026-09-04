@@ -143,12 +143,22 @@ def _do_import(subject, args, report, revision) -> None:
             items[qid] = _normalize_item(raw, code_to_unit, revision)
 
     # 엉뚱한 폴더를 --import 했는지(예: earth1 을 earth-science-ii 에 실수로 넣었는지) 조기 발견.
-    expected = (subject.curriculum or {}).get("2015")
-    if expected and subject_names - {expected} - {None}:
+    # curriculum.<개정> 은 이름이 여럿일 수 있다(2022 통합과학 = 통합과학1·통합과학2).
+    # 문자열 하나로만 비교하면 리스트일 때 `set - {list}` 가 아니라 애초에 비교가 성립하지 않는다.
+    expected = set(subject.curriculum_names("2015"))
+    if expected and subject_names - expected - {None}:
         report.note("subject", f"가져온 파일의 subject 필드 {sorted(subject_names)} 가 "
-                                f"subject.json curriculum.2015={expected!r} 와 다르다", "warn")
+                                f"subject.json curriculum.2015={sorted(expected)} 와 다르다", "warn")
 
-    target_catalog = _target_catalog(code_to_unit, (subject.standard_prefixes or {}).get(revision, []))
+    scope = subject.code_scope(revision)
+    if scope.why:
+        report.note(f"{revision} 성취기준 범위", scope.why, "warn")
+    target_catalog, dropped = _target_catalog(code_to_unit, scope)
+    if dropped:
+        report.note("taxonomy", f"--taxonomy 의 코드 {len(dropped)}개가 접두사에는 걸리지만 "
+                                f"curriculum/standards/{revision}.json 에 없다 — 다른 개정 코드일 "
+                                f"확률이 높아 target_catalog 에서 뺐다: {', '.join(dropped[:5])}"
+                                + (" …" if len(dropped) > 5 else ""), "warn")
 
     ordered_items = {
         qid: items[qid]
@@ -331,11 +341,29 @@ def _is_qid(token: str) -> bool:
         return False
 
 
-def _target_catalog(code_to_unit: dict, prefixes: list[str]) -> list[dict]:
-    if not prefixes or not code_to_unit:
-        return []
-    codes = sorted(c for c in code_to_unit if any(c.startswith(p) for p in prefixes))
-    return [{"standard": c, "unit": code_to_unit[c]} for c in codes]
+def _target_catalog(code_to_unit: dict, scope) -> tuple[list[dict], list[str]]:
+    """--taxonomy 로 받은 {코드: 단원} 에서 **이 과목·이 개정의 것만** 고른다.
+
+    → (target_catalog, 접두사에는 걸리지만 개정 목록에 없는 코드들)
+
+    taxonomy 파일은 밖에서 온 것이라 다른 개정·다른 과목의 코드가 섞여 있을 수 있다.
+    예전엔 `code.startswith(접두사)` 로 골랐는데, 통합과목 2015 접두사 `10통과` 는
+    2022 코드 `10통과1-01-01` 까지 통과시킨다. 그렇게 섞인 코드는 target_catalog
+    (문항집 성취기준 트리와 0문항 리포트의 기준 목록)에 그대로 실려서, 있지도 않은
+    성취기준이 '0문항' 으로 보고되거나 남의 개정 성취기준이 트리에 나타난다.
+    둘째 반환값을 따로 주는 이유: 조용히 버리면 taxonomy 가 낡았다는 사실을 못 본다.
+    """
+    if not code_to_unit:
+        return [], []
+    dropped = sorted(c for c in code_to_unit
+                     if c not in scope
+                     and scope.prefixes and c.startswith(tuple(scope.prefixes)))
+    codes = sorted(c for c in code_to_unit if c in scope)
+    if scope.basis == "any":
+        # 접두사도 개정 목록도 없는 과목이면 무엇이 이 과목 것인지 말할 근거가 없다.
+        # 예전 동작(빈 목록)을 유지한다 — 전부 담으면 남의 과목 성취기준이 실린다.
+        return [], []
+    return [{"standard": c, "unit": code_to_unit[c]} for c in codes], dropped
 
 
 # --- mapping.json → items/*.json 적용 --------------------------------------

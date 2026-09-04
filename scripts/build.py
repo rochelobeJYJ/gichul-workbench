@@ -428,8 +428,11 @@ def run(args) -> int:
     else:
         requested = []
         for s in subjects:
-            for rev, name in (s.curriculum or {}).items():
-                if name and rev not in requested:
+            # curriculum.<개정> 은 문자열 하나일 수도, 이름 여럿일 수도 있다
+            # (2022 통합과학 = 통합과학1·통합과학2). isinstance 갈래는
+            # Subject.curriculum_names() 한 곳에만 둔다.
+            for rev in (s.curriculum or {}):
+                if s.curriculum_names(rev) and rev not in requested:
                     requested.append(rev)
     if not requested:
         report.note("revision", "선택한 과목 어디에도 등록된 교육과정 개정이 없다 "
@@ -482,9 +485,13 @@ def run(args) -> int:
     for subject in subjects:
         rows = rows_by_slug[subject.slug]
         for revision in requested:
-            curriculum_name = (subject.curriculum or {}).get(revision)
-            if not curriculum_name:
+            # 한 개정에서 과목이 둘로 갈린 경우(2022 통합과학1·통합과학2) 탭 이름에는
+            # 둘을 함께 적는다. 탭을 둘로 쪼개지는 않는다 — 문항의 classification 은
+            # 개정 하나당 한 칸이고, 성취기준 트리가 두 과목을 이미 단원으로 나눈다.
+            names = subject.curriculum_names(revision)
+            if not names:
                 continue
+            curriculum_name = " · ".join(names)
             std_texts = std_texts_cache.setdefault(revision, _load_standard_texts(revision))
             units = _build_units(rows, revision, std_texts)
             n = sum(len(st["questions"]) for u in units for st in u["standards"])

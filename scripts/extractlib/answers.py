@@ -56,7 +56,9 @@ class Reading:
     source: str                                  # 축 이름
     origin: str = ""                             # 어떤 파일·전략에서 나왔는지 (리포트용)
     answers: dict[int, int] = field(default_factory=dict)
-    points: dict[int, int] = field(default_factory=dict)
+    # 배점은 정수가 아닐 수 있다 — 통합과목 25문항 판형은 1.5 / 2 / 2.5 세 계단이다.
+    # 그래서 축끼리 합을 비교할 때 `==` 대신 extractlib.points.points_equal 을 쓴다.
+    points: dict[int, float] = field(default_factory=dict)
     reason: str = ""                             # 비어 있을 때 왜 비었는지
 
     def __bool__(self) -> bool:
@@ -211,6 +213,13 @@ def parse_number_answer_tokens(tokens: list[str], count: int
     3칸 묶음으로 훑어 1..count 가 다 채워지면 그것을 쓰고, 아니면 2칸 묶음으로 다시 훑는다.
     **결과가 1..count 를 정확히 덮는지로 자기검증**하는 것이 요령이다.
     배점 후보를 {2,3} 으로 못 박지 않는 이유는 과목마다 배점 체계가 다르기 때문이다.
+
+    ⚠ 이 경로는 **정수 배점만** 읽는다. 소수 배점 칸('1.5')은 토큰화 단계에서 통째로
+    버려지므로(`\\d{1,2}` 로도 안 맞고 조각 합이 길이와 안 맞는다) 3칸 묶음이 1..count 를
+    못 채워 2칸 판형으로 떨어지고 배점은 빈 표가 된다. **틀린 값이 아니라 없는 값이 되므로**
+    안전한 실패다. 소수 배점이 실재하는 판형(통합과목 25문항)은 학평이고, 학평 정답표에는
+    배점 칸 자체가 없어(평가원 3칸 vs 학평 2칸) 이 경로로 배점이 올 일이 없다.
+    소수 배점은 문제지의 [N.N점] 표기(extractlib/points.py)에서만 온다.
     """
     def scan(stride: int):
         answers: dict[int, int] = {}

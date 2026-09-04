@@ -38,6 +38,7 @@ import io
 import json
 from datetime import datetime, timezone
 
+from extractlib.points import points_equal
 from common import (Progress, Report, Space, exam_sort_key, load_subject,
                     make_exam_id, normalize_exam)
 from common.ids import GRADE_BEARING, split_qid
@@ -193,7 +194,9 @@ class Crosscheck:
         theirs_points = row.get("points")
         if ours_points and theirs_points:
             used = True
-            if int(ours_points) != int(theirs_points):
+            # int() 로 자르면 2.0 vs 2.5 를 2 == 2 로 놓친다. 통합과목처럼 배점이
+            # 0.5 단위인 판형에서 이 대조축이 조용히 무력해진다.
+            if not points_equal(ours_points, theirs_points):
                 self.mismatch.append(
                     f"{number}번 배점 우리={ours_points} EBSi={theirs_points}")
         if used:
@@ -337,7 +340,10 @@ def run(args) -> int:
     for exam_id in bar.wrap(sorted(by_exam, key=_order)):
         bar.detail(exam_id)
         sheet: RateSheet = by_exam[exam_id]
-        sheet.extra["_question_count"] = count
+        # 번호 상한은 **회차 단위**다(통합과목: 2025.3 까지 20, 2025.6~ 25).
+        # 상한을 넉넉하게 주면 PITFALLS 1-8 의 사고 — 엉뚱한 paperId 의 표가
+        # 그대로 통과하는 것 — 를 막는 검사가 그만큼 헐거워진다.
+        sheet.extra["_question_count"] = subject.question_count_for(exam_id) or count
         if args.dry_run:
             per_exam[exam_id] = {"planned": True, "paper_id": sheet.extra.get("paper_id"),
                                  "title": sheet.title}

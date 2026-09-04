@@ -17,6 +17,12 @@ CONTRACT 3절: layout 은 크롭·추출 전략 선택자다. 이 파일의 검�
 LAYOUT_CHECKERS 테이블에 자리만 만들고 NotImplementedError 로 명확히 막는다.
 points_total/question_count 불변식만은 subject.json 데이터를 그대로 세는 것이라
 판형과 무관해 테이블 밖(공통)에 둔다.
+
+## 불변식은 회차 단위다
+`subject.invariants(exam_id)` 가 그 회차의 (question_count, points_total,
+배점 계단) 을 준다. 과목 스칼라 하나로 재면 한 슬러그 안에 판형이 둘 있는 과목에서
+**둘 중 하나가 반드시 깨진다** — 통합과목은 2025년 3월까지 20문항, 6월부터 25문항이고
+points_total 은 두 판형 모두 50 이라 question_count 와 배점 계단만 갈린다.
 """
 from __future__ import annotations
 
@@ -285,29 +291,70 @@ def _check_image_sane(path: Path, ident: str, note) -> None:
 
 # 발문 안의 배점 표기. 값을 숫자로 뽑는다 — extractlib/tamgu.py 의 POINT_MARK_RE 와
 # 같은 규칙이다(그쪽은 추출, 이쪽은 검증이라 의존은 만들지 않고 규칙만 맞춘다).
-POINT_MARK_RE = re.compile(r"\[\s*(\d)\s*점\s*\]")
+# ★ 한 자리 숫자만 잡던 `(\d)` 를 넓혔다. 통합과목 25문항 판형의 실제 표기는
+#   `[1.5점]`·`[2점]`·`[2.5점]` 이고(문제지 원본 실측: 8·9·8 = 25문항, 합 50),
+#   좁은 정규식은 `[1.5점]`·`[2.5점]` 을 **표기 없음**으로 읽었다. 그러면 이 검사가
+#   회차당 16문항에 대해 눈을 감는다 — 배점이 통째로 틀려도 error 가 하나도 안 난다.
+#   `2.0` 처럼 소수점이 붙은 표기도 실재해서(2025 9월 통합과학) 값 비교는 실수로 한다.
+# 복사본을 두면 언젠가 갈라진다. 한 자리 숫자만 잡던 옛 정규식이 소수 배점을
+# 통째로 놓쳤던 것이 정확히 그 사고였다(PITFALLS 4장).
+from extractlib.points import POINT_MARK_RE  # noqa: E402
 
 
-def _point_tiers(subject) -> tuple[int, int] | None:
-    """이 판형의 배점 계단 (기본 배점, 표기 배점) 을 subject.json 에서 역산한다.
+def _exam_of(qid: str) -> str | None:
+    """qid → exam_id. 회차 불변식을 고르는 데만 쓴다.
 
-    예전엔 이 자리에 `points not in (2, 3)` 과 `"[3점]" in stem` 이 리터럴로 박혀
-    있었다. 2점/3점은 **탐구 영역의 값**이지 모든 과목의 값이 아니다 — 배점 구성이
-    다른 과목이 들어오면 멀쩡한 문항 전부가 error 로 쏟아진다. extract 쪽
-    (extractlib/tamgu.points_from_marks)은 애초에 이 값을 역산하도록 만들어 두었는데
-    validate 만 박아 두면 두 단계가 서로 다른 전제 위에 서게 된다.
-
-    이 판형은 배점 계단이 두 개뿐이고([N점] 표기가 없는 기본 배점과, 표기가 붙는
-    한 단계 위) 표기 없는 문항이 다수라 `points_total // question_count` 가 곧
-    기본 배점이다. 탐구 20문항 50점 → (2, 3). 45문항 100점이어도 → (2, 3).
-    배점 계단이 셋 이상인 판형(수학 2·3·4점)은 이 함수가 아니라 LAYOUT_CHECKERS 에
-    자기 몫의 검사기를 달아야 한다 — 그래서 이 함수는 tamgu 검사기 전용이다.
+    item 에 `exam_id` 가 있으면 그쪽이 먼저다. 여기는 옛 items(그 필드가 없는 것)를
+    위한 폴백이다 — 형식이 어긋난 qid 는 이미 위에서 error 로 잡히므로 조용히 None.
     """
-    n, total = subject.question_count, subject.points_total
+    try:
+        return split_qid(qid)[0]
+    except ValueError:
+        return None
+
+
+def _points_equal(a, b) -> bool:
+    """배점 비교는 실수로. `2`(int)와 `2.0`(표기)이 다르다고 하면 안 된다."""
+    try:
+        return abs(float(a) - float(b)) < 1e-9
+    except (TypeError, ValueError):
+        return False
+
+
+def _fmt_points(value) -> str:
+    """`2.0` 을 `2` 로, `1.5` 는 그대로. 리포트 문장에서만 쓴다."""
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value)
+
+
+def _point_tiers(subject, exam_id: str | None = None):
+    """이 **회차**의 배점 계단 → (계단 목록, 표기 없는 문항의 정상 배점, 그 값이 선언됐나)
+
+    없으면 None. 계단은 두 곳에서 온다.
+
+    ① `subject.json` 이 `point_tiers` 로 선언한 값(회차 오버라이드가 갈아끼울 수 있다).
+    ② 선언이 없으면 예전처럼 `points_total // question_count` 로 역산한다 —
+       탐구 20문항 50점 → (2, 3). 45문항 100점이어도 → (2, 3).
+
+    예전엔 ② 만 있었고 계단이 **둘**이라고 가정했다(표기 없는 기본 배점 + 표기가 붙는
+    한 단계 위). 통합과목 25문항 판형은 계단이 **셋**(1.5 / 2 / 2.5)이라 그 가정이
+    성립하지 않는다. 게다가 그 판형은 25문항 **전부**에 표기가 붙어서 '표기 없는
+    문항의 정상 배점' 이라는 것이 아예 없다 — 역산으로는 50//25 = 2 가 나와 "2점짜리는
+    표기가 없어도 된다" 는 거짓 규칙이 만들어진다. 그래서 그 값은 추측하지 않고
+    `points_unmarked` 로 **선언**하게 했다(그런 문항이 없으면 null).
+    """
+    inv = subject.invariants(exam_id)
+    if inv.point_tiers:
+        return tuple(inv.point_tiers), inv.points_unmarked, inv.points_unmarked_declared
+    n, total = inv.question_count, inv.points_total
     if not n or not total:
         return None
     base = total // n
-    return base, base + 1
+    # 계단은 역산하더라도 `points_unmarked` 를 적어 두었으면 그쪽을 쓴다.
+    # 적힌 값을 조용히 무시하면 "설정했는데 왜 안 먹지" 가 된다.
+    unmarked = inv.points_unmarked if inv.points_unmarked_declared else base
+    return (base, base + 1), unmarked, True
 
 
 def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
@@ -318,7 +365,10 @@ def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
     stem = text.get("stem") or ""
     choices = text.get("choices") or []
     points = item.get("points")
-    tiers = _point_tiers(subject)
+    # 배점 계단은 **회차마다** 다를 수 있다(통합과목: 2025.3 은 2/3, 2025.6~ 은 1.5/2/2.5).
+    # 과목 스칼라로만 보면 한쪽 판형의 멀쩡한 문항이 전부 '배점 이상' error 가 된다.
+    tier_info = _point_tiers(subject, item.get("exam_id") or _exam_of(qid))
+    tiers = tier_info[0] if tier_info else None
     ext = item.get("ext") or {}
     if glyph_rules is None:
         glyph_rules, _ = glyph_smells(subject)
@@ -365,11 +415,29 @@ def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
             raw_text = (item.get("ext") or {}).get("text_raw") or text.get("raw") or ""
             mark = POINT_MARK_RE.search(raw_text)
         if mark:
-            marked = int(mark.group(1))
-            if points != marked:
-                note(qid, f"발문에 [{marked}점]인데 points={points!r}", "error")
-        elif tiers and points == tiers[1]:
-            note(qid, f"points={points}인데 발문에 [{tiers[1]}점] 표기가 없음", "error")
+            marked = float(mark.group(1))
+            if not _points_equal(points, marked):
+                note(qid, f"발문에 [{_fmt_points(marked)}점]인데 points={points!r}", "error")
+        elif tier_info and tiers and any(_points_equal(points, t) for t in tiers):
+            # 표기가 없다. 정상인가? '표기 없는 문항의 정상 배점'(points_unmarked)과
+            # 같으면 정상이고, 아니면 표기가 사라졌거나 배점이 틀린 것이다.
+            # 계단이 둘인 판형에서는 기본 배점이 그 값이라 **예전 규칙과 결과가 같다**
+            # (예전 조건 `points == tiers[1]` 은 '기본 배점이 아니다' 와 같은 말이다).
+            # 계단이 셋이고 전 문항에 표기가 붙는 판형(통합과목 25문항)은
+            # points_unmarked=null 이라 **표기가 없다는 것 자체가 error** 다.
+            # **계단 안의 값일 때만** 본다. 계단 밖 배점(예: 20문항 50점 판형에서 4점)은
+            # 아래 계단 검사가 이미 잡으므로, 여기서 또 올리면 문항 하나가 error 두 줄이
+            # 된다(PITFALLS 4-3: 오류의 번식). 실측으로 확인한 회귀 지점이다 —
+            # 이 조건이 없으면 points=4 인 문항이 옛 코드보다 note 를 하나 더 받는다.
+            _tiers, unmarked, declared = tier_info
+            if not declared:
+                note(qid, "subject.json 에 point_tiers 는 있는데 points_unmarked 가 없다 — "
+                          "표기 없는 문항의 정상 배점을 몰라 [N점] 대조를 못 한다", "warn")
+            elif unmarked is None:
+                note(qid, f"발문에 [N점] 표기가 없다 — 이 판형은 전 문항에 표기가 붙는다"
+                          f" (계단 {', '.join(_fmt_points(t) for t in _tiers)}점)", "error")
+            elif not _points_equal(points, unmarked):
+                note(qid, f"points={points}인데 발문에 [{_fmt_points(points)}점] 표기가 없음", "error")
 
         # 글리프 손상 잔존 — 발문 + 자료 서술 + 선택지만 본다. 원문 보존 필드가
         # 있다면 그건 무수정 보존이 원칙이라(CONTRACT) 검사 대상에서 뺀다.
@@ -381,9 +449,12 @@ def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
 
     if tiers is None:
         note(qid, "subject.json 에 question_count/points_total 이 없어 배점 검사를 못 한다", "warn")
-    elif points not in tiers:
-        note(qid, f"배점 이상({points!r}) — 이 과목은 {tiers[0]}점 또는 {tiers[1]}점만 가능"
-                  f" (question_count={subject.question_count}, points_total={subject.points_total})",
+    elif not any(_points_equal(points, t) for t in tiers):
+        # 계단이 둘일 때 문장이 바뀌지 않도록 '또는' 을 그대로 쓴다(회귀 대조용).
+        inv = subject.invariants(item.get("exam_id") or _exam_of(qid))
+        allowed = "점 또는 ".join(_fmt_points(t) for t in tiers) + "점"
+        note(qid, f"배점 이상({points!r}) — 이 과목은 {allowed}만 가능"
+                  f" (question_count={inv.question_count}, points_total={inv.points_total})",
              "error")
 
     # 정답 필드 자체 정합성(기호 ↔ 정수). "없음"/전원정답 처리된 문항은 표준
@@ -437,23 +508,39 @@ def _check_item_tamgu_1q1block(space: Space, subject, qid: str, item: dict,
         if p.exists():
             _check_image_sane(p, f"{qid}_m{i}", note)
 
-    # classification: subject.json 접두사 대조 + (있으면) curriculum/standards/ 실재 대조
+    # classification: 그 개정 목록 소속 대조.
+    # 예전엔 `code.startswith(접두사)` 였다. 통합과목처럼 앞 개정 접두사가 뒷 개정
+    # 코드의 접두사이기도 한 과목에서는 그 검사가 **2022 코드를 2015 자리에 그대로
+    # 통과시킨다**(`10통과` 로 63개가 걸리고 그중 31개가 2022 코드다). 이제
+    # subject.code_scope(개정) 이 curriculum/standards/<개정>.json 소속을 본다.
     classification = item.get("classification") or {}
-    for year, prefixes in (subject.standard_prefixes or {}).items():
-        applies = (subject.curriculum or {}).get(year)
-        if not applies:
+    for year in (subject.standard_prefixes or {}):
+        if not subject.curriculum_names(year):
             continue  # 이 과목엔 해당 교육과정이 없음(예: earth-science-ii의 2022: null) — 정상
         entry = classification.get(year) or {}
         code = entry.get("standard")
         if not code:
             note(qid, f"{year} 성취기준 분류가 없음(classify 큐 대기 중일 수 있음)", "warn")
             continue
-        if prefixes and not any(code.startswith(p) for p in prefixes):
-            note(qid, f"{year} 성취기준 {code!r} 가 subject.json 접두사 {prefixes} 밖", "error")
-        # 이 연도 revision 파일이 아예 없으면 "모른다"이지 "틀렸다"가 아니다 — 조용히 넘어간다.
+        scope = subject.code_scope(year)
+        # 이 연도 revision 파일이 아예 없으면 "모른다"이지 "틀렸다"가 아니다 — 접두사로 떨어진다.
         # (다른 연도 revision 파일에 우연히 같은 코드가 있어도 그건 대조하지 않는다 — 위 함수 설명 참고)
         year_codes = known_codes.get(year)
-        if year_codes and code not in year_codes:
+        if code not in scope:
+            # 한 문항에 error 두 줄을 붙이지 않는다 — 같은 사실을 두 번 말하면 리포트가
+            # 두 배로 불어나고 30건 상한 안에서 다른 문항이 밀려난다(PITFALLS 4-3).
+            # 대신 '왜 밖인가'를 한 줄에 담는다.
+            if year_codes and code in year_codes:
+                # 그 개정에 실재하는 코드이긴 한데 이 과목 것이 아니다. 접두사 검사로는
+                # 여기까지 못 왔다 — 그래서 남의 개정·남의 과목 코드가 조용히 앉아 있었다.
+                why = f"{year} 개정 목록에는 있지만 다른 과목 코드다"
+            elif year_codes:
+                why = f"curriculum/standards/{year}.json 에 그런 코드 자체가 없다"
+            else:
+                why = f"curriculum/standards/{year}.json 이 없어 접두사로만 판정했다"
+            note(qid, f"{year} 성취기준 {code!r} 가 이 과목({subject.slug}) 범위 밖 — {why} "
+                      f"(standard_prefixes.{year}={list(scope.prefixes)})", "error")
+        elif year_codes and code not in year_codes:
             note(qid, f"{year} 성취기준 {code!r} 가 curriculum/standards/{year}.json 에 존재하지 않음", "error")
 
 
@@ -533,7 +620,10 @@ def cross_check_answers(space: Space, exam_id: str, subject, rows: list[tuple[in
 
     if solution_pdf.exists():
         try:
-            blocks = split_solution_blocks(extract_pdf_text(solution_pdf), subject.question_count)
+            # 문항 수는 회차마다 다를 수 있다 — 20문항 회차를 25로 자르면 해설 블록이
+            # 어긋나 정답 축 하나가 통째로 죽는다.
+            blocks = split_solution_blocks(extract_pdf_text(solution_pdf),
+                                           subject.question_count_for(exam_id))
             for number, block in blocks.items():
                 m = _BLOCK_ANSWER_RE.search(block)
                 if m:
@@ -673,14 +763,31 @@ def run(args) -> int:
     report.count(items=len(items))
 
     known_codes = load_known_standard_codes(CURRICULUM_STANDARDS)
-    needed_years = [y for y, applies in (subject.curriculum or {}).items()
-                     if applies and (subject.standard_prefixes or {}).get(y)]
+    needed_years = [y for y in (subject.curriculum or {})
+                    if subject.curriculum_names(y) and (subject.standard_prefixes or {}).get(y)]
     missing_years = [y for y in needed_years if not known_codes.get(y)]
     if missing_years:
         note(args.subject,
              f"curriculum/standards/ 에 {', '.join(missing_years)} revision 데이터가 없음 "
              "— 그 연도 성취기준 실재 대조는 생략하고 접두사 검사만 수행",
              "info")
+    # 개정 판정이 접두사 폴백으로 떨어진 과목은 그 사실을 리포트에 올린다. 폴백
+    # 상태에서는 접두사가 같은 두 개정을 못 가르는데, 조용하면 아무도 모른다.
+    for year in needed_years:
+        scope = subject.code_scope(year)
+        if scope.why:
+            note(args.subject, scope.why, "warn")
+
+    # 오버라이드가 헛돌고 있지 않은지 본다. 규칙 하나가 어느 회차에도 안 걸리면
+    # 그 회차들은 기본 판형으로 조용히 돌아가고, 리포트에는 '문항 수가 다르다' 같은
+    # **결과**만 남아 원인을 못 짚는다.
+    exam_ids_seen = sorted({split_qid(q)[0] for q in items if _exam_of(q)})
+    for row in subject.override_coverage(exam_ids_seen):
+        if not row["matched"]:
+            note(args.subject,
+                 f"subject.json {row['rule']} (when.exam_id={row['pattern']!r}) 가 "
+                 f"이 작업 공간의 어느 회차에도 안 걸렸다 — 정규식을 확인해라. "
+                 f"의도: {row['why'][:80]}", "info")
 
     exams: dict[str, list[tuple[int, str, dict]]] = defaultdict(list)
     for qid, item in items.items():
@@ -711,11 +818,22 @@ def run(args) -> int:
             # 회차 단위 불변식(1·2번). --only 로 부분집합만 볼 때는 카운트가
             # 원래부터 안 맞으므로 의미가 없어 생략한다.
             if not only_qids:
+                # ★ 불변식은 **회차 단위**로 고른다. 한 슬러그 안에 판형이 둘 있는
+                #   과목이 실재한다(통합과목: 2025.3 까지 20문항, 2025.6~ 25문항.
+                #   points_total 은 두 판형 모두 50 이라 question_count 만 갈린다).
+                #   과목 스칼라 하나로 재면 둘 중 한 판형은 반드시 깨진다.
+                inv = subject.invariants(exam_id)
                 points_sum = sum((it.get("points") or 0) for _, _, it in rows)
-                if points_sum != subject.points_total:
-                    note(exam_id, f"배점 합 {points_sum} != subject.points_total {subject.points_total}", "error")
-                if len(rows) != subject.question_count:
-                    note(exam_id, f"문항 수 {len(rows)} != subject.question_count {subject.question_count}", "error")
+                where = "subject.points_total" if not inv.overridden \
+                    else f"points_total({inv.source})"
+                if not _points_equal(points_sum, inv.points_total):
+                    note(exam_id, f"배점 합 {_fmt_points(points_sum)} != {where} "
+                                  f"{_fmt_points(inv.points_total)}", "error")
+                where = "subject.question_count" if not inv.overridden \
+                    else f"question_count({inv.source})"
+                if len(rows) != inv.question_count:
+                    note(exam_id, f"문항 수 {len(rows)} != {where} {inv.question_count}"
+                                  + (f" — {inv.why}" if inv.overridden else ""), "error")
 
             # 정답 3중 대조. extract 가 이미 answer_check 를 남긴 문항은 그 기록을
             # 쓰고, 없는 문항만 validate 가 직접 PDF 를 재파싱한다(둘 다 위 함수

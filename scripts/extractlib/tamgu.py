@@ -9,21 +9,26 @@
   '과학탐구영역'  → subject.area + '영역'
   '지구과학I/II'  → subject.label + providers.kice.aliases
   20문항 / 50점   → subject.question_count / subject.points_total
-  배점 {2,3}      → [N점] 표기와 총점에서 역산 (아래 points_from_marks 참조)
+  배점 {2,3}      → [N점] 표기를 읽고, 표기 없는 문항이 있을 때만 총점에서 역산
+                    (아래 points_from_marks 참조. 배점 계단이 셋인 판형이 실재해서
+                     '표기 없음 = 기본 배점' 가정을 조건부로 바꿨다)
 """
 from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
 
+from .points import (POINT_MARK_RE, normalize_points, on_point_grid,  # noqa: F401
+                     points_equal, read_point_mark)
 from .textnorm import CHOICE_TO_INT, INT_TO_CHOICE, compact, fold_name, squash
 
 # 문항 시작: 줄머리의 'N.' — 두 자리까지.
 QUESTION_START_RE = re.compile(r"(?m)^(\d{1,2})\.(?:\s|$)")
 # <보기> 안의 항목 라벨. NFKC 를 거치면 ㉠㉡㉢ 도 여기로 눕는다.
 SECTION_LABEL_RE = re.compile(r"(?<![가-힣])([ㄱ-ㅎ])\.")
-# 배점 표기. 값을 숫자로 뽑는다 — '3점'을 코드에 박지 않기 위해서다.
-POINT_MARK_RE = re.compile(r"\[\s*(\d)\s*점\s*\]")
+# 배점 표기 정규식(POINT_MARK_RE)의 정의는 extractlib/points.py 한 곳뿐이다.
+# 여기서 이름만 다시 내주는 이유: `from .tamgu import POINT_MARK_RE` 로 쓰던 자리를 깨지 않으면서
+# **복사본을 없애기** 위해서다. 복사본은 한쪽만 고쳐지고, 실제로 그렇게 조용히 갈라졌다.
 # 가운뎃점 변형(textnorm.NAME_SEPARATORS 와 같은 목록). 과목명이 이 글자를 품는 과목에서만 쓴다.
 MIDDOT_VARIANTS = "·∙•・･‧⋅"
 
@@ -462,6 +467,106 @@ def image_choice_band(lines: list[str]) -> int | None:
     return start
 
 
+# 줄 안 아무 자리에서나 선택지 라벨(1~5)을 찾는다. 줄머리만 보는 _label_rows 와 다른 이유는
+# **표 판형에서는 선택지 둘이 한 줄에 들어오기 때문**이다('3 에베레스트산의 높이 4 지구의 반지름').
+# 라벨 뒤에 숫자가 이어지면 라벨이 아니다 — 자료 상자의 '1930년대'가 여기서 걸러진다.
+# 앞은 줄머리이거나 공백이어야 한다. '[1.5점]'의 1, '10hPa'의 0 같은 것이 라벨로 둔갑하지 않는다.
+# 뒤가 줄 끝이어도 라벨로 본다 — 표 판형에서는 라벨만 있고 칸 내용은 다음 줄에 오는 줄이 섞인다
+# (실측 통합과학 2025 고1 9월 10번: '3' 한 글자짜리 줄. 줄 끝을 안 받으면 이 줄에서 밴드가 끊긴다).
+_INLINE_LABEL_RE = re.compile(r"(?:^|(?<=\s))([1-5])(?=\D|$)")
+# 표 판형 밴드가 성립하려면 라벨이 몇 개나 보여야 하는가. 5지선다에서 4 는 '하나가 통째로
+# 사라진' 실측 사례(통합사회 2024 고1 6월 18번은 ③ 줄이 텍스트 레이어에 아예 없다)까지 덮되,
+# 3 이하로 내리면 본문 숫자 몇 개가 선택지로 둔갑할 수 있는 하한이다.
+TABLE_BAND_MIN_LABELS = 4
+
+
+def _inline_labels(line: str) -> list[int]:
+    """한 줄에서 왼쪽부터 읽은 선택지 라벨 번호들."""
+    return [int(m.group(1)) for m in _INLINE_LABEL_RE.finditer(compact(line))]
+
+
+def table_choice_band(lines: list[str]) -> int | None:
+    """선택지가 **표**로 짜여 텍스트로 복원할 수 없는 문항의 밴드 시작 줄. 아니면 None.
+
+    (실측) 통합과학·통합사회에는 선택지가 2~3열 표인 문항이 있다. 텍스트 레이어에서는
+    한 줄에 선택지가 둘씩 들어오거나(`1 염화 나트륨 설탕 2 염화 나트륨 염화 칼륨`,
+    `1감소 감소 2감소 증가`) 한 칸이 통째로 사라진다(2024 고1 6월 18번은 ③ 줄이 없다).
+    라벨이 '연속한 다섯 줄'로도 '순서만 지키는 줄머리'로도 서지 않아 기존 두 경로가 다 실패한다.
+
+    표는 열마다 뜻이 다르다(A열/B열, ㄱ/ㄴ). 그것을 한 줄 문자열로 펴면 열이 사라져
+    **틀린 선택지 다섯 개**가 만들어진다. 그래서 복원하지 않고 크롭 이미지를 본체로 삼는다.
+
+    판정 근거:
+      1. 블록 **끝**이 라벨을 품은 줄로만 이어질 것. 선택지 표는 언제나 문항 맨 끝이다.
+         (답안지 안내 꼬리글은 건너뛴다 — image_choice_band 와 같은 이유다.)
+      2. 그 줄들에서 읽은 라벨이 **1 로 시작해 5 로 끝나는 오름차순**일 것.
+         오름차순을 요구하는 것이 이 규칙의 안전장치다. 자료 상자의 숫자들은 순서가 없다.
+      3. 라벨이 TABLE_BAND_MIN_LABELS 개 이상일 것.
+      4. 그 앞에 발문이 남아 있을 것(start > 0).
+
+    ⚠ 일부러 안 덮는 것: 라벨과 칸 내용이 **줄마다 따로** 떨어지는 표
+       (지구과학Ⅱ 2027 6월모평 2번 — `1` / `조력 발전` / `파력 발전` / … 3열 표).
+       이 판형은 마지막 줄이 라벨을 품지 않아 1번 근거에서 걸린다. 표시하지 않으면
+       기존대로 error 로 남는다. 넓히면 지구과학Ⅱ 380문항의 회귀 기준선이 움직이는데,
+       그 문항은 **라벨 간격이 일정해 표 파서로 복원할 여지가 남아 있다** — 복원할 수 있는
+       것을 '그림'이라고 적으면 고칠 수 있는 버그를 덮는다(boxed_source 주석과 같은 원칙).
+    """
+    start = len(lines)
+    labels: list[int] = []
+    while start > 0:
+        line = lines[start - 1]
+        hits = _inline_labels(line)
+        if hits:
+            labels = hits + labels
+        elif not is_trailer_line(line):
+            break
+        start -= 1
+    if start == 0 or len(labels) < TABLE_BAND_MIN_LABELS:
+        return None
+    if labels[0] != 1 or labels[-1] != 5:
+        return None
+    if any(b <= a for a, b in zip(labels, labels[1:])):
+        return None
+    return start
+
+
+def absent_choice_band(lines: list[str]) -> int | None:
+    """선택지 자리가 텍스트 레이어에 **통째로 없는** 문항. 밴드 시작(=끝) 줄, 아니면 None.
+
+    (실측) 통합사회 2024 고1 10월 4번은 선택지 다섯 개가 벡터로 그려져 텍스트가 0자다.
+    블록에는 발문과 자료 문장만 남고 라벨이 하나도 없다. 조각조차 남지 않으므로
+    image_choice_band 의 '조각 줄' 근거로는 원리적으로 못 잡는다.
+
+    판정 근거는 **모순 하나**다 — 답을 고르라고 묻는 발문이 있는데 ⑤ 가 블록 어디에도 없다.
+    ⑤ 를 축으로 잡은 이유: 5지선다의 마지막 라벨이라 선택지가 조금이라도 살아 있으면
+    반드시 남는다. 반대로 '1 이 없다'는 근거로는 못 쓴다 — 자료 상자의 숫자가 늘 1을 흉내낸다.
+    실제로 이 문항의 자료에는 '3만 원', '2만 원', '4만 원'이 있어서 느슨한 라벨 대조로는
+    라벨이 있는 것처럼 보인다. 5 만 없다.
+
+    발문 존재를 물음표로 확인한다. 과목이 아니라 **선다형 문항의 성질**이라 하드코딩이 아니다
+    — 이 판정이 없으면 문항 분리가 어긋나 반쪽만 담긴 블록까지 '그림'으로 덮어버린다.
+    """
+    if not any(5 in _inline_labels(line) for line in lines):
+        if any("?" in line for line in lines):
+            return len(lines)
+    return None
+
+
+def choices_image_band(lines: list[str]) -> int | None:
+    """선택지를 텍스트로 복원할 수 없는 문항인가. 맞으면 발문이 끝나는 줄 번호.
+
+    세 판정을 **좁은 것부터** 차례로 본다. 앞의 것이 답을 주면 뒤를 보지 않는다.
+      1. image_choice_band  — 분수·도형 조각만 남은 판형 (화학·물리)
+      2. table_choice_band  — 선택지가 표라 라벨이 한 줄에 몰리거나 칸이 빠진 판형 (통합과목)
+      3. absent_choice_band — 선택지 자리가 통째로 텍스트에 없는 판형
+    """
+    for finder in (image_choice_band, table_choice_band, absent_choice_band):
+        band = finder(lines)
+        if band is not None:
+            return band
+    return None
+
+
 def split_boxed(statement_part: str) -> str:
     """<보기> 뒤쪽을 항목 단위로 줄바꿈해 둔다. 라벨을 못 찾으면 통짜로 둔다."""
     flat = compact(statement_part)
@@ -530,9 +635,9 @@ def parse_question(block: str, choice_count: int = 5) -> ParsedQuestion:
     choices, stem_lines, relaxed = extract_choices_from_lines(lines)
     choices_source = ""
     if len(choices) != choice_count:
-        # 선택지가 그림인 문항이면 실패가 아니다 — 선택지 자리만 비우고 발문은 살린다.
+        # 선택지가 그림·표인 문항이면 실패가 아니다 — 선택지 자리만 비우고 발문은 살린다.
         # 발문까지 버리면 '[N점] 표기가 없음' 같은 파생 오탐이 문항마다 하나씩 더 붙는다.
-        band = image_choice_band(lines)
+        band = choices_image_band(lines)
         if band is None:
             return ParsedQuestion(raw=body,
                                   error=f"선택지 {choice_count}개를 추출하지 못했다({len(choices)}개)")
@@ -556,29 +661,66 @@ def parse_question(block: str, choice_count: int = 5) -> ParsedQuestion:
 # --------------------------------------------------------------------------
 
 def points_from_marks(blocks: dict[int, str], count: int,
-                      points_total: int | None) -> tuple[dict[int, int], str]:
+                      points_total: int | None) -> tuple[dict[int, float], str]:
     """[N점] 표기와 총점으로 문항별 배점을 만든다.
 
-    배점 값을 코드에 박지 않으려고 역산한다. 표기가 붙은 문항은 표기값 N,
-    나머지는 (총점 - 표기 합) / (문항 수 - 표기 수) 로 나온 기본 배점.
-    이 나눗셈이 양의 정수로 떨어지지 않으면 표기를 잘못 읽은 것이므로 포기한다 —
-    **틀린 배점을 채우느니 비워 두는 편이 낫다.**
+    배점 값을 코드에 박지 않으려고 역산한다. **다만 역산이 성립하는 판형과 아닌 판형이
+    갈린다.** 실측한 두 판형이 정확히 그 경계다 —
+
+      20문항 판형(탐구 전 과목, 통합과목 2023~2025.3): `[3점]` 10개 + 표기 없는 10개.
+        표기 없는 것이 기본 배점(2점)이라는 가정이 성립한다. 계단은 두 개다.
+      25문항 판형(통합과목 2025.6~): `[1.5점]`×8 + `[2점]`×9 + `[2.5점]`×8 = 50.
+        **표기 없는 문항이 하나도 없다.** 계단이 셋이면 '표기 없음 = 기본 배점' 이라고
+        부를 기본이 애초에 없어서, 출제자가 25문항 전부에 표기를 붙였다.
+        (2025·2026 6개 회차 문제지 원본 실측. 세 계단 회차에서 표기 수는 언제나 25/25였다.)
+
+    그래서 역산은 **표기가 없는 문항이 있을 때만** 한다. 그리고 그때는 표기값이 한 가지여야
+    한다 — 표기가 여러 계단인데 표기 없는 문항이 남아 있으면, 그 문항이 어느 계단인지
+    말해 주는 것이 아무것도 없다. 그 자리에서 평균을 채우면 정확히 이번 사고가 된다.
+
+    ★ 이번에 막는 조용한 실패(실측): 옛 정규식이 `[1.5점]`·`[2.5점]` 16개를 못 읽어
+    `[2점]` 9개만 표기로 남았고, 나머지 16문항을 (50-18)/16 = **2점**으로 역산해 채웠다.
+    합 50 · 문항 25 · 표기↔배점 대조까지 전부 통과해서 아무 신호도 안 났다.
+    아래 '역산한 기본 배점이 표기값과 같으면 포기' 규칙이 그 사고를 값싸게 잡는다 —
+    기본 배점과 표기값이 같으면 그 표기는 아무 정보도 없는 표기이고, 그런 문제지는 없다.
+
+    틀린 배점을 채우느니 비워 두는 편이 낫다. 못 세우면 이유를 돌려주고 포기한다.
     """
-    marks: dict[int, int] = {}
+    marks: dict[int, float] = {}
     for number, block in blocks.items():
-        match = POINT_MARK_RE.search(block or "")
-        if match:
-            marks[number] = int(match.group(1))
+        value = read_point_mark(block or "")
+        if value is not None:
+            marks[number] = value
     if not blocks:
         return {}, "문항 블록이 없다"
     if points_total is None:
         return {}, "subject.points_total 이 없어 기본 배점을 역산할 수 없다"
+
+    marked_total = sum(marks.values())
+    # --- (A) 전 문항에 표기가 있는 판형: 역산할 것이 없다 -------------------
+    if len(marks) >= count:
+        if not points_equal(marked_total, points_total):
+            return {}, (f"표기가 {len(marks)}/{count}문항에 다 있는데 합이 총점과 다르다 "
+                        f"({normalize_points(marked_total)} != {points_total}) — 표기를 잘못 읽었다")
+        return {n: normalize_points(marks[n]) for n in sorted(marks)}, ""
+
+    # --- (B) 일부만 표기된 판형: 표기 없는 것을 기본 배점으로 본다 ----------
+    tiers = sorted({normalize_points(v) for v in marks.values()})
+    if len(tiers) > 1:
+        # 표기 계단이 둘 이상인데 표기 없는 문항이 남았다. 그 문항이 어느 계단인지
+        # 알 길이 없다 — 여기서 평균을 채우면 '조용히 틀린 값'이 된다.
+        return {}, (f"표기 계단이 {tiers} 인데 표기 없는 문항이 {count - len(marks)}개 남았다 "
+                    f"— 기본 배점을 정할 근거가 없다")
     remaining_questions = count - len(marks)
-    remaining_points = points_total - sum(marks.values())
+    remaining_points = points_total - marked_total
     if remaining_questions <= 0 or remaining_points <= 0:
-        return {}, f"배점 역산 실패(표기 {len(marks)}개, 합 {sum(marks.values())})"
-    base, rest = divmod(remaining_points, remaining_questions)
-    if rest or base <= 0:
-        return {}, (f"기본 배점이 정수로 떨어지지 않는다 "
-                    f"({remaining_points}/{remaining_questions})")
-    return {n: marks.get(n, base) for n in range(1, count + 1)}, ""
+        return {}, f"배점 역산 실패(표기 {len(marks)}개, 합 {normalize_points(marked_total)})"
+    base = remaining_points / remaining_questions
+    if base <= 0 or not on_point_grid(base):
+        return {}, (f"기본 배점이 배점 격자(0.5점)에 떨어지지 않는다 "
+                    f"({normalize_points(remaining_points)}/{remaining_questions} = {base})")
+    if tiers and points_equal(base, tiers[0]):
+        return {}, (f"역산한 기본 배점이 표기값과 같다({normalize_points(base)}) "
+                    f"— 표기를 못 읽고 있다는 뜻이다(소수 배점 표기를 확인하라)")
+    base = normalize_points(base)
+    return {n: normalize_points(marks.get(n, base)) for n in range(1, count + 1)}, ""

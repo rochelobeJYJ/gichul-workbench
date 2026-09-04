@@ -101,7 +101,17 @@ output/                         최종 산출물 (HTML 문항집 등)
 
 - `layout` 은 크롭·추출 전략 선택자다. 현재 값: `tamgu-1q1block` (검증됨),
   `passage-group` (국어·영어, 실험적), `math-mixed` (수학, 실험적).
-- `question_count` / `points_total` 은 **검증 불변식**이다. 탐구는 20문항 50점.
+- `question_count` / `points_total` 은 **검증 불변식**이다. 탐구 선택과목은 20문항 50점.
+- `overrides`(선택): 회차마다 불변식이 갈리는 과목을 위한 자리.
+  ```json
+  "overrides": [{"when": {"exam_id": "^202[34]_|^2025_고1_3월"}, "question_count": 20}]
+  ```
+  통합과목이 실제로 그렇다 — 2025년 6월 회차부터 20문항에서 **25문항**으로 바뀌었고
+  같은 슬러그 안에 두 판형이 공존한다. **경계가 달이 아니다**(2026년은 3월부터 25문항).
+  이 자리가 없으면 옛 회차에서 `crop` 이 21~25번 앵커를 못 찾아 실패하고,
+  그 실패가 `extract` 로 번져 정답이 통째로 `null` 이 된다(실측).
+- `curriculum.<개정>` 은 **문자열 또는 문자열 목록**이다. 한 과목이 다음 개정에서 둘로 갈릴 수 있다 —
+  2022개정에서 통합과학은 통합과학1·2, 통합사회는 통합사회1·2 두 과목이다.
 - `providers` 가 비어 있으면 다운로드 단계에서 사용자에게 물어야 한다.
 - `providers.ebsi.national` — 전국연합학력평가(학평)용. **키는 학년(`"1"` `"2"`)이다.**
 
@@ -126,6 +136,12 @@ output/                         최종 산출물 (HTML 문항집 등)
   등록된 것만 5개 — economics · society-culture · world-history · world-geography · ethics-thought.
   **`code.startswith(prefix)` 로 개정을 판정하면 이 과목들에서 조용히 틀린다.**
   개정은 데이터 구조에서 읽어라 — `keywords.json` 의 개정 층, `items` 의 `classification.<개정>`.
+- ⚠⚠ **접두사가 다른 개정의 코드를 삼키기도 한다.** 2015 통합과학은 `10통과01-01`,
+  2022 는 `10통과1-01-01` 이라 `startswith("10통과")` 가 **2022 코드까지 잡는다.**
+  실측: 등록된 19과목 전 접두사로 걸린 코드 1,021개 중 **104개가 남의 개정 것**이었다
+  (통합과목 61 · world-geography 15 · ethics-thought 9 · world-history 7 · economics 7 · society-culture 5).
+  **접두사 문자열 비교로 개정을 판정하지 마라.** `curriculum/standards/<개정>.json` 이
+  어느 코드가 어느 개정인지 알고 있다. 판정은 한 곳(`Subject.code_scope`)에서만 한다.
 - `glyph_smells`(선택): 이 과목에만 적용할 손상 탐지 규칙.
   `[{"id": "...", "pattern": "...", "why": "...", "context": "...", "off": true}]`
   검증기의 기본 목록과 **`id` 로 병합**하고 같은 `id` 면 과목 것이 이긴다. `off: true` 는 기본 규칙을 끈다.
@@ -188,6 +204,11 @@ output/                         최종 산출물 (HTML 문항집 등)
   **정상이면 키 자체가 없다.** 멀쩡한 문항까지 `"text"` 로 채우면 380문항이 정보 없는 필드를 갖는다.
   실측 근거: 화학·물리는 선택지가 분수·도형인 문항이 회차당 2~4건이고,
   NFKC 가 ①을 `1` 로 눕히므로 분모 `2` 와 라벨 `②` 를 원리적으로 못 가른다.
+  세 경우를 포함한다 — **선지가 조각만 남은 경우**, **선지가 표라 열을 잃지 않고는 한 줄로 못 펴는 경우**,
+  **선지 자리가 텍스트에 통째로 없는 경우**.
+- `points` 는 **정수가 아닐 수 있다.** 통합과목 25문항 판형은 1.5 / 2 / 2.5 세 계단이다.
+  다만 **정수로 떨어지는 값은 int 로 적는다**(`2.0` 이 아니라 `2`) —
+  안 그러면 이미 확정된 코퍼스의 파일 해시가 값이 같은데도 전부 달라진다.
 - `status` : `scaffold` (자동 생성만) | `verified` (검수 통과).
 - `classification.*.by` : `keyword` | `llm` | `manual`.
 - `classification.*.confidence` : **원점수가 아니라 실측 정확도의 95% 하한**(Wilson).
@@ -324,15 +345,18 @@ LLM 은 판정 결과를 `classify_result.json` 으로 되돌려주고, `gw.py c
 
 `validate` 가 확인하는 것:
 
-1. `sum(points) == subject.points_total` (회차별)
-2. `len(items) == subject.question_count` (회차별)
+1. `sum(points) == subject.points_total` (회차별). **등호가 아니라 허용오차 비교다** —
+   배점이 실수일 수 있다.
+2. `len(items) == subject.question_count` (회차별). `overrides` 가 있으면 회차별 값을 쓴다.
 3. 정답 3중 대조 일치 — 정답지 표 파싱 / 해설지 파싱 / pdfplumber 파싱.
    세 번째 축은 경로가 셋이다: `extract_tables`(괘선 표, 배점도 함께 준다)
    → `extract_words`(원문자 정답표) → layout 텍스트.
    가운데 경로가 학평처럼 **정답지가 PNG 인 회차**의 축을 되살린다 —
    `extract_words` 에는 원문자 ①~⑤ 가 NFKC 에 눕기 전 상태로 남아 있어서
    정답을 원문자로만 인정하면 **배점이 정답 자리에 들어앉는 사고가 원리적으로 불가능해진다.**
-4. `[3점]` 표기 ↔ `points == 3`
+4. `[N점]` 표기 ↔ `points`. 표기는 `[1.5점]` 처럼 소수일 수 있다.
+   ⚠ **'표기 없는 문항 = 기본 배점' 이 성립하지 않는 판형이 있다.**
+   배점 계단이 셋인 판형은 25문항 **전부**에 표기가 붙는다(실측 2025·2026 6개 회차).
 5. `materials` 선언 ↔ 실제 파일 ↔ 본문 링크 3자 일치
 6. 선택지 5개.
    단 `ext.choices_source == "image"` 이고 `choices` 가 비면 **error 가 아니라 warn(전사 대기)**.
