@@ -8,6 +8,14 @@ description: 한국 수능·모의평가 기출문항을 내려받아 문항별�
 기출 PDF에서 문항집까지 한 줄씩 명령으로 간다. 사회탐구·과학탐구 17과목.
 지구과학Ⅰ·Ⅱ는 760문항 전사·매핑이 끝나 있는 레퍼런스 구현이다.
 
+## 경로 두 가지
+
+`uv` 로 설치된 저장소에서는 `uv run gw <명령>` 도 같다. 둘 다 같은 코드를 부른다.
+
+**작업 폴더가 저장소 밖일 수 있다.** 리포트 경로를 상대경로로 짐작하지 마라 —
+명령이 출력한 절대경로를 읽어라. 격리가 필요하면 `--workspace` 를 명시하고,
+안 주면 stderr 첫 줄의 `[작업 폴더] ...` 로 어디에 썼는지 확인해라.
+
 ## 시작할 때 (매번)
 
 ```bash
@@ -31,6 +39,19 @@ python scripts/bootstrap.py
 
 ## 공정
 
+**보통은 한 명령이면 된다.**
+
+```bash
+python scripts/gw.py quickstart --subject earth-science-ii --years 2024-2026 --exams 수능,6월모평,9월모평
+```
+
+download→build 를 한 번에 돌리고 **리포트 하나**(`reports/quickstart.json`)에 전 단계 결과를 담는다.
+명령 8회·리포트 8개가 **1회·1개**가 된다 — 토큰 경제가 이 명령의 존재 이유다.
+비대화형이라 아무것도 묻지 않는다. 인자가 모자라면 무엇이 없는지 말하고 끝난다.
+창을 띄우지 않는다(`--open` 으로만 연다).
+
+단계를 나눠 돌려야 할 때의 순서는 이렇다.
+
 ```
 download → detect → crop → extract → rates → classify → map → validate → build
 ```
@@ -39,6 +60,7 @@ download → detect → crop → extract → rates → classify → map → vali
 ```bash
 S=earth-science-ii
 python scripts/gw.py subjects                    # 등록된 과목과 준비 상태
+python scripts/gw.py where                       # 산출물이 쌓이는 작업 폴더
 python scripts/gw.py download --subject $S --years 2020-2026 --exams 수능,6월모평,9월모평 --kinds problem,answer,solution
 python scripts/gw.py detect   --subject $S
 python scripts/gw.py crop     --subject $S

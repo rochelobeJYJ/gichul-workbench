@@ -37,118 +37,115 @@ AI가 `SKILL.md`(Claude) 또는 `AGENTS.md`(Codex)를 읽고 나머지를 알아
 
 ---
 
-## 설치하기
+## 설치하기 — 한 줄이면 됩니다
 
-### 1단계 — 필요한 것
+시작 메뉴에서 **PowerShell**을 찾아 열고, 아래 한 줄을 붙여넣고 Enter를 누르세요.
+관리자 권한은 필요 없습니다.
 
-- **Python 3.9 이상**이 설치되어 있어야 합니다. ([python.org](https://www.python.org/downloads/)에서 받으실 수 있습니다. 설치할 때 *Add Python to PATH* 를 꼭 체크해 주세요.)
-- **Git**. ([git-scm.com](https://git-scm.com/downloads))
-
-### 2단계 — 내려받기
-
-터미널(윈도우는 PowerShell이나 명령 프롬프트)을 열고 입력하세요.
-
-```bash
-git clone https://github.com/rochelobeJYJ/gichul-workbench
-cd gichul-workbench
+```powershell
+irm https://raw.githubusercontent.com/rochelobeJYJ/gichul-workbench/main/install.ps1 | iex
 ```
 
-### 3단계 — 준비 확인
+**파이썬을 따로 깔지 않으셔도 됩니다.** 필요한 것을 알아서 준비합니다.
+끝나면 화면에 설치된 위치가 적혀 있습니다.
 
-```bash
-python scripts/bootstrap.py
+<details>
+<summary>설치가 거절당하면 (학교 컴퓨터에서 가끔 있습니다)</summary>
+
+설정을 바꾸지 마시고, 이 형태로 한 번만 실행하세요. 이 실행에만 적용됩니다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/rochelobeJYJ/gichul-workbench/main/install.ps1 | iex"
 ```
+</details>
 
-무엇이 있고 무엇이 없는지 알려 드립니다. 빠진 게 있으면 설치 명령까지 함께 보여 드리니, 그대로 복사해서 붙여넣으시면 됩니다. 보통은 이 한 줄입니다.
+<details>
+<summary>설치 위치를 직접 정하고 싶으면</summary>
 
-```bash
-python -m pip install -r requirements.txt
+앞에 한 줄을 붙이면 됩니다. 예를 들어 Codex 쪽으로 넣으시려면:
+
+```powershell
+$env:GW_INSTALL_DIR="$HOME\.codex\skills\gichul-workbench"; irm https://raw.githubusercontent.com/rochelobeJYJ/gichul-workbench/main/install.ps1 | iex
 ```
+</details>
 
-마지막에 `준비됐다`가 나오면 끝입니다.
+### 최신으로 맞추기
+
+설치 폴더의 **`update.cmd`를 더블클릭**하세요. 맨 처음 그 한 줄을 다시 실행하셔도 같습니다.
+어느 쪽이든 **작업하신 내용은 그대로 남습니다.**
 
 ---
 
-## 처음 써보기 — 10분이면 학습지 한 장
+## 처음 써보기 — 명령 하나
 
-지구과학Ⅱ로 해보겠습니다. 다른 과목도 `earth-science-ii` 자리에 그 과목 이름만 바꿔 넣으시면 됩니다.
-(과목 이름 목록은 `python scripts/gw.py subjects` 로 보실 수 있습니다.)
+### AI(Claude Code·Codex)를 쓰고 계시면 — 여기서 끝입니다
 
-> 💡 **⑥ 단원 나누기는 건너뛰셔도 됩니다.** 학습지 한 장이 목적이라면 ⑤까지 하고 바로 ⑧로 가세요.
-> 단원이 정해지지 않은 문항은 **회차별 탭**으로 나옵니다 — "2025학년도 수능 20문항" 을 통째로 고르시면 됩니다.
-> 단원 분류는 *"대기와 해양 단원만 모아서"* 처럼 **단원으로 고르고 싶을 때** 필요합니다.
+외울 것이 없습니다. 그냥 말씀하시면 됩니다.
 
-### ① 기출 내려받기
+> 지구과학2 기출로 단원별 학습지 만들어줘
 
-```bash
-python scripts/gw.py download --subject earth-science-ii --years 2024-2026 --exams 수능,6월모평,9월모평 --kinds problem,answer,solution
+설치할 때 AI가 자동으로 찾는 자리에 넣어 두었으므로, 폴더 위치도 몰라도 됩니다.
+
+### 직접 하시려면 — 한 줄
+
+설치 화면에 적힌 폴더로 이동해서:
+
+```powershell
+.\gw quickstart
 ```
 
-문제지·정답지·해설지를 함께 받습니다. 서버에 부담을 주지 않으려고 파일마다 잠깐씩 쉬면서 받으니, 회차가 많으면 조금 기다리셔야 합니다.
+세 가지만 답하시면 됩니다. **엔터만 쳐도 되는 것이 둘**입니다.
 
-### ② 회차 정리
-
-```bash
-python scripts/gw.py detect --subject earth-science-ii
+```
+  어느 과목인가요?          → 번호를 적습니다 (예: 3)
+  몇 년치를 받을까요?       → 엔터 (최근 3년)
+  어떤 시험을 받을까요?     → 엔터 (수능 + 6·9월 모평)
 ```
 
-받은 파일들이 몇 학년도 무슨 시험인지 알아내서 짝을 지어 줍니다.
+그다음은 기다리시면 됩니다. 다 끝나면 **브라우저 두 창이 저절로 열립니다.**
 
-### ③ 문항별로 자르기
+1. **확인용 이미지 한 장** — 잘라낸 문항이 한눈에 보입니다.
+   ⑤번 선택지가 잘린 문항이 없는지만 봐 주세요. **이것만은 기계가 못 잡습니다.**
+2. **문항집 제작기** — 여기서 학습지를 만드시면 됩니다.
 
-```bash
-python scripts/gw.py crop --subject earth-science-ii
+실제로 걸린 시간입니다 — 생명과학Ⅰ 한 회차 **15초**, 한국지리 두 회차 **76초**.
+
+> 💡 중간에 멈춰도 **받은 것은 지워지지 않습니다.** 화면이 어디서 멈췄고 뭘 하면 되는지 알려 드리고,
+> 다시 돌리시면 이미 받은 것은 건너뜁니다.
+
+<details>
+<summary>단계를 하나씩 보고 싶으시면</summary>
+
+`quickstart`가 이 순서로 돕니다. 따로 돌리셔도 됩니다.
+
+```powershell
+.\gw download --subject earth-science-ii --years 2024-2026 --exams 수능,6월모평,9월모평 --kinds problem,answer,solution
+.\gw detect   --subject earth-science-ii
+.\gw crop     --subject earth-science-ii
+.\gw extract  --subject earth-science-ii
+.\gw rates    --subject earth-science-ii   # 선택 — EBSi 오답률
+.\gw classify --subject earth-science-ii   # 선택 — 단원 나누기
+.\gw validate --subject earth-science-ii
+.\gw build    --subject earth-science-ii
 ```
 
-문항 하나하나를 이미지로 잘라냅니다. 발문, 그림, `<보기>`, 선택지 다섯 개가 온전히 들어갑니다.
+과목 이름 목록은 `.\gw subjects` 로 보실 수 있습니다.
+파이썬을 이미 쓰고 계시면 `python scripts/gw.py ...` 도 그대로 됩니다.
+</details>
 
-> 💡 **여기서 한 번만 눈으로 확인해 주세요.** `workspace/earth-science-ii/crops/questions/` 안에 `_contact_sheet_*.png` 라는 파일이 있습니다. 한 장에 20문항이 모여 있는 확인용 이미지입니다. 열어 보시고 ⑤번 선택지가 잘린 문항이 없는지 봐 주세요. **이것만은 기계가 못 잡습니다.**
+## 작업 폴더
 
-### ④ 정답·배점 읽어내기
+내려받은 PDF와 잘라낸 이미지는 **과목이 늘면 수 GB**가 됩니다.
+그래서 프로그램 폴더가 아니라 **선생님이 정한 곳**에 쌓입니다.
 
-```bash
-python scripts/gw.py extract --subject earth-science-ii
+처음 한 번만 여쭤보고 기억합니다. **엔터만 치시면 `바탕화면\기출작업`** 이 됩니다.
+
+```powershell
+.\gw where                      # 지금 어디에 쌓이고 있는지
+.\gw where --set "D:\기출작업"   # 다른 곳으로 옮기기
 ```
 
-정답을 **세 가지 방법으로 각각 읽어서 서로 대조**합니다. 셋이 다 갈리면 채우지 않고 비워 둡니다. 틀린 답을 채워 넣는 것보다 비어 있는 편이 낫기 때문입니다.
-
-### ⑤ 오답률 가져오기 (선택)
-
-```bash
-python scripts/gw.py rates --subject earth-science-ii
-```
-
-EBSi가 공개한 문항별 오답률을 가져옵니다. 나중에 *"오답률 60% 이상인 문항만"* 같은 학습지를 만드실 수 있습니다.
-
-> 💡 EBSi는 회차마다 **어려운 상위 15문항만** 공개합니다. 20문항 중 다섯 개에 오답률이 없는 건 정상입니다.
-
-> 💡 덤이 하나 있습니다. 오답률 표에는 정답과 배점이 함께 실려 옵니다. 그래서 이 단계가 **우리가 읽어낸 정답이 맞는지 네 번째로 검증**해 줍니다. 실제로 408문항에서 100% 일치했습니다.
-
-### ⑥ 단원 나누기
-
-```bash
-python scripts/gw.py classify --subject earth-science-ii
-```
-
-키워드로 자동 분류하고, 애매한 문항만 따로 모아 둡니다. AI에게 맡기셨다면 그 목록을 읽고 판정해 줄 겁니다.
-
-### ⑦ 확인
-
-```bash
-python scripts/gw.py validate --subject earth-science-ii
-```
-
-배점 합이 50점인지, 문항이 20개인지, 정답이 다 채워졌는지 확인합니다.
-
-### ⑧ 문항집 만들기
-
-```bash
-python scripts/gw.py build --subject earth-science-ii
-```
-
-`workspace/earth-science-ii/output/` 에 HTML 파일이 생깁니다. **더블클릭해서 브라우저로 여시면 됩니다.**
-
----
+> 이미 쓰고 계시던 분은 **아무것도 옮기지 않고 그대로 쓰십니다.** 묻지도 않습니다.
 
 ## 문항집 제작기 사용법
 
