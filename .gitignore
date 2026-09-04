@@ -1,5 +1,16 @@
 # 저작물은 절대 커밋되지 않는다 (docs/CONTRACT.md 0절)
+# 도구가 만들어내는 keywords.json·calibration.json 의 기본 자리도 여기 안이다.
 workspace/
+
+# ── subjects/*/keywords.json 과 calibration.json 을 여기 적지 마라 ──────────
+# 두 파일은 도구가 만들지만 **저장소가 배포하는 데이터**다(CONTRACT 1·7절).
+# 특히 keywords.json 의 `learned` 칸은 사람이 판정한 라벨이 있어야만 다시 만들 수
+# 있어서, 잃으면 되돌리는 비용이 초안과 전혀 다르다.
+# ignore 로 덮으면 git 이 merge·checkout 때 그 파일을 **말없이 덮어쓴다** —
+# 'git pull 이 막힌다'는 막다른 골목이 '조용한 데이터 손실'로 바뀔 뿐이다.
+# 그래서 여기 적는 대신, 도구가 저장소에 파일을 새로 만들지 않도록 했다:
+# 산출물은 작업공간에 쓰고 `--install` 을 준 실행만 subjects/ 에 쓴다
+# (scripts/keywordsio.py 의 '생성물이 앉는 자리' 주석 참조).
 
 # 교육과정 원본 PDF 는 배포하지 않는다(45MB). 추출 결과(standards/*.json, standards/md/)만 배포한다.
 # 다시 받는 법은 curriculum/pdf/README.md 에 있다.

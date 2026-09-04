@@ -452,5 +452,7 @@ def run(args) -> int:
         report.next = (f"reports/rates.json 의 attention 을 확인한 뒤 "
                        f"python scripts/gw.py rates --subject {subject.slug} --only <회차>")
     else:
-        report.next = f"python scripts/gw.py validate --subject {subject.slug}"
+        # 공정 순서(SKILL.md)는 rates → classify → map → validate 다. validate 를 바로
+        # 가리키고 있었는데, 그러면 단원 분류와 성취기준 매핑이 통째로 건너뛰어진다.
+        report.next = f"python scripts/gw.py classify --subject {subject.slug}"
     return _finish(report, args)

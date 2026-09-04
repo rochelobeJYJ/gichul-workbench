@@ -19,12 +19,22 @@
 
 실제 데이터(2015개정_지구과학2, 19회차)에서 실측한 특이 케이스 — 아래 코드 곳곳의 근거:
 - '해설.pdf' 파일명에는 과목명이 안 붙는다 (예: '2021_6월모평_해설.pdf'). → 같은 폴더의
-  문제지에서 과목을 상속받는다 (_apply_solution_inheritance).
+  문제지에서 과목을 상속받는다 (_apply_sibling_inheritance).
 - 평가원이 통째로 뿌리는 '과학탐구영역_정답표(원본).pdf' 는 8과목 정답표를 한 파일에 담고,
   첫 페이지는 그 중 첫 과목(물리학Ⅰ) 것이다. 폴더명에도 특정 과목이 없다. → 파일명/폴더명/
-  첫 페이지 어디에도 우리 과목이 안 걸려서 자연히 건너뛴다. 정답 역할은 이미 있는
-  '..._지구과학Ⅱ_정답.pdf' 가 채운다. (일부러 상속 대상에서 '정답' 역할은 뺐다 — 이 파일이
-  상속을 받아버리면 정답 역할이 중복 배정된다.)
+  **첫 페이지**에는 우리 과목이 안 걸린다. 예전에는 여기서 그냥 버렸는데, 그 대가로
+  지구과학Ⅰ 2021·2022 수능이 정답지 축을 통째로 잃었다(실측: 그 두 회차만 files 에 answer
+  가 없었고, 2022 수능 5문항은 정답 대조가 1축으로 주저앉았다). 이제는 **쪽마다 있는
+  '( 지구과학Ⅰ ) 과목' 머리글**을 찾아 짝짓는다(bundle_subject_page). 단 이 경로로 걸린
+  파일은 **최후 수단**이라, 같은 역할에 파일명/폴더로 걸린 후보가 하나라도 있으면 조용히
+  물러난다 — 위에 적힌 '역할 중복 배정' 사고를 그대로 피하기 위해서다.
+
+내용으로 문제지/정답지/해설지를 가르는 이유 (kind_from_content):
+  README 가 "파일 이름이 제각각이어도 괜찮습니다"라고 약속하는데, 예전 코드는 연도·시험·
+  과목만 표지에서 폴백하고 **kind 는 파일명에만 의존**했다. 그래서 '한국지리 기출 (1).pdf'
+  / '답 모음.pdf' / '해설 파일.pdf' 같은 평범한 이름 묶음이 done=0 으로 끝났다(실측).
+  실패 방향이 중요하다 — 엉뚱한 역할로 배정하면 정답이 통째로 틀린다. 그래서 내용 판별은
+  **확실할 때만 답하고 애매하면 기권**한다. 아래 kind_from_content 참조.
 """
 from __future__ import annotations
 
@@ -39,6 +49,11 @@ import manifest as mf
 from common import Report, Space, load_subject
 from common.ids import GRADE_BEARING, make_exam_id, normalize_exam
 from common.progress import track
+# 정답표의 과목 머리글 패턴과 과목명 정규화는 extract 가 이미 실전에서 벼려 둔 것이다.
+# 여기서 다시 만들면 두 모듈이 같은 파일을 다르게 판단한다 — 그게 manifest.py 가 생긴 이유다.
+# (fold_name 은 가운뎃점 코드포인트·로마숫자 NFKC 사고를 이미 흡수하고 있다.)
+from extractlib.answers import SUBJECT_SECTION_RE
+from extractlib.textnorm import fold_name
 
 # ── 스캔 대상 확장자 ─────────────────────────────────────────────────────
 # 정답만 스캔 이미지로 오는 실전 사례가 흔해 CONTRACT 1절이 answer.png 를 허용한다.
@@ -175,7 +190,7 @@ def parse_signature(text: str) -> Signature:
 # ── 파일 종류(kind) 판정 ─────────────────────────────────────────────────
 
 def detect_kind(path: Path) -> tuple[str | None, str]:
-    """(kind, 판정근거). 파일명에 힌트가 없으면 확장자로 최후 추정한다."""
+    """(kind, 판정근거). 파일명·확장자만 본다. 못 정하면 (None, "unknown")."""
     low = path.stem.lower()
     for kind, keywords in KIND_KEYWORDS:
         if any(kw in low for kw in keywords):
@@ -186,22 +201,176 @@ def detect_kind(path: Path) -> tuple[str | None, str]:
     return None, "unknown"
 
 
-def _first_page_text(path: Path) -> str:
+# --- 내용으로 문제지/정답지/해설지 가르기 -------------------------------
+#
+# ## 무엇을 근거로 골랐나, 왜 그것이 셋을 확실히 가르나
+#
+# 세 문서는 "글자가 무엇으로 채워져 있는가"가 서로 배타적이다. 그래서 세 축을 따로 세고,
+# **정확히 한 축만 켜질 때만** 답한다.
+#
+# 1) 선택지 묶음 (choice_runs) — 원문자가 ①②③④⑤ **순서대로 한 바퀴** 도는 횟수.
+#    문제지는 문항마다 선택지 다섯 개를 이 순서로 찍으므로 문항 수만큼 나온다.
+#    해설지·정답지에도 원문자는 많지만 **정답을 가리키는 낱개**라 순서가 뒤섞여 있어
+#    한 바퀴가 잘 안 돈다. 개수(circled)가 아니라 순서를 세는 이유가 이것이다 —
+#    해설지 원문자 40개와 문제지 원문자 100개는 임계값 하나로 못 가르지만,
+#    한 바퀴 횟수는 20 대 0~1 로 갈린다.
+# 2) 해설 머리글 (solution_marks) — '정답 및 해설' '오답 풀이' '[출제의도]' 같은,
+#    해설지에만 있는 조판 머리글. 문항마다 반복되므로 몇 개인지도 신호가 된다.
+#    **한글 비율이 아니라 이 머리글을 보는 이유**: 2022학년도 수능 해설 PDF 는 본문 한글이
+#    전부 깨진 사설 글리프로 나와 한글이 쪽당 7자뿐이다(PITFALLS 3-1). 그런데도 표지의
+#    '정답 및 해설' 은 멀쩡히 남아 있었다. 한글 밀도로 갈랐으면 이 파일이 '문장 없는 문서'
+#    = 정답지로 배정될 뻔했다 — 바로 그 오배정이 이 저장소가 가장 피하는 실패다.
+# 3) 정답표 머리글 (answer_marks) — '정답표' '문항 번호' '( 과목 ) 과목'.
+#    여기에 **쪽당 글자 수 상한**을 함께 건다. 정답표는 문장이 없는 격자라 쪽당 230자쯤이고,
+#    문제지·해설지는 쪽당 500자 아래로 내려가지 않는다. 위 2)의 글리프 손상 파일도
+#    쪽당 1,269자라 이 상한에 원리적으로 못 들어온다.
+#
+# 임계값은 전부 실측이다 — 지구과학Ⅰ·Ⅱ 원본 104개 + 통합과학·사회탐구·학평 작업공간
+# 145개, **PDF 249개**. 오배정 0건, 기권 7건(전부 텍스트 레이어가 아예 없는 스캔본).
+# 관찰된 범위(문제지 / 정답지 / 해설지):
+#   choice_runs      20 / 0~1 / 0~1
+#   solution_marks   0~1 / 0   / 3~23
+#   answer_marks     0   / 5~48 / 0
+#   쪽당 글자 수     990~1863 / 228~229 / 525~4507
+CHOICE_SEQUENCE = "①②③④⑤"
+CONTENT_SCAN_PAGES = 16        # 합본 정답표가 사회탐구 9과목까지 한 파일에 들어온다
+CHOICE_RUNS_PROBLEM = 10       # 관찰 20 vs 1 — 절반에 걸어도 양쪽 다 여유가 크다
+SOLUTION_MARKS_MIN = 3         # 관찰 3 vs 1
+ANSWER_MARKS_MIN = 2           # 관찰 5 vs 0
+ANSWER_CHARS_PER_PAGE_MAX = 600  # 관찰 229 vs 525
+
+# 이름과 내용이 어긋나 내용을 택했을 때 kind_by 앞에 붙는 꼬리표. 리포트가 이걸 보고
+# 사람에게 알린다 — 문자열을 두 곳에 적으면 언젠가 한쪽만 고쳐진다.
+_OVERRIDE_PREFIX = "content-overrides-filename("
+
+CIRCLED_RE = re.compile(f"[{CHOICE_SEQUENCE}]")
+SOLUTION_HEAD_RE = re.compile(r"정답\s*(?:및|과)\s*해설|해설\s*(?:및|과)\s*정답"
+                              r"|오답\s*(?:풀이|피하기)|정답\s*해설|출제\s*의도"
+                              r"|\[\s*해\s*설\s*\]")
+ANSWER_HEAD_RE = re.compile(r"정\s*답\s*표|문\s*항\s*\n?\s*번\s*호"
+                            r"|\(\s*[^)\n]{1,30}?\s*\)\s*과목")
+
+
+def _choice_runs(text: str) -> int:
+    """원문자가 ①②③④⑤ 순서로 한 바퀴 도는 횟수. 중간에 끊기면 처음부터 다시 센다."""
+    runs = seen = 0
+    for ch in CIRCLED_RE.findall(text):
+        value = CHOICE_SEQUENCE.index(ch)
+        if value == seen:
+            seen += 1
+            if seen == len(CHOICE_SEQUENCE):
+                runs += 1
+                seen = 0
+        else:
+            # ① 이면 새 묶음의 시작으로 보고, 아니면(선택지 아닌 낱개 원문자) 버린다.
+            seen = 1 if value == 0 else 0
+    return runs
+
+
+def kind_from_content(page_texts: list[str]) -> tuple[str | None, str]:
+    """PDF 본문으로 문제지/정답지/해설지를 가른다. (kind, 근거). 못 가르면 (None, 이유).
+
+    **확실할 때만 답한다.** 세 축 중 정확히 하나가 켜졌을 때만 kind 를 주고,
+    0개거나 2개 이상이면 기권한다. 지시사항의 ★ 그대로다 — 엉뚱한 역할로 배정하면
+    정답이 통째로 틀리는 쪽으로 실패하는데, 기권은 사람이 파일 이름만 고치면 되는
+    쪽으로 실패한다. 두 실패의 값이 다르다.
+    """
+    text = "".join(page_texts)
+    pages = max(len(page_texts), 1)
+    if not text.strip():
+        # 스캔본(텍스트 레이어 없음). 쪽수로 정답지/문제지를 찍는 방법이 있긴 하지만
+        # 실측에서 1쪽짜리 스캔 정답지와 4쪽짜리 스캔 문제지가 둘 다 나온다 —
+        # 쪽수는 신호가 아니라 우연이라, 여기서 찍으면 오배정이 된다.
+        return None, "텍스트 레이어가 없어 내용으로는 못 가른다"
+
+    runs = _choice_runs(text)
+    solution_marks = len(SOLUTION_HEAD_RE.findall(text))
+    answer_marks = len(ANSWER_HEAD_RE.findall(text))
+    chars_per_page = len(text) // pages
+
+    votes: list[str] = []
+    if (answer_marks >= ANSWER_MARKS_MIN and solution_marks == 0
+            and runs <= 2 and chars_per_page <= ANSWER_CHARS_PER_PAGE_MAX):
+        votes.append("answer")
+    if solution_marks >= SOLUTION_MARKS_MIN and runs <= 5:
+        votes.append("solution")
+    if (runs >= CHOICE_RUNS_PROBLEM and answer_marks < ANSWER_MARKS_MIN
+            and solution_marks < SOLUTION_MARKS_MIN):
+        votes.append("problem")
+
+    evidence = (f"선택지묶음 {runs} · 해설머리글 {solution_marks} · "
+                f"정답표머리글 {answer_marks} · 쪽당 {chars_per_page}자")
+    if len(votes) == 1:
+        return votes[0], evidence
+    if votes:
+        return None, f"{evidence} — 두 종류 신호가 함께 잡혀 확정하지 않는다"
+    return None, f"{evidence} — 셋 중 어느 쪽에도 확실히 안 걸린다"
+
+
+def resolve_kind(path: Path, page_texts) -> tuple[str | None, str]:
+    """파일 이름과 내용을 함께 보고 종류를 정한다. (kind, 판정근거).
+
+    **내용이 확정을 내면 파일 이름보다 내용을 믿는다.** 이름은 사람이 붙이는 것이고
+    실제로 자주 틀린다(해설지를 '정답.pdf' 로 저장해 둔 더미가 실전에 있다).
+    반대로 내용 판정은 실측 249개에서 오배정 0건이고, 조금이라도 헷갈리면 기권한다 —
+    **기권할 때는 이름이 그대로 이긴다.** 그래서 이 순서가 어느 쪽으로도 손해가 아니다.
+
+    이미지는 내용을 읽을 수 없으니 확장자 규칙에서 끝난다.
+    `page_texts` 는 인자 없는 호출 가능 객체다(느긋한 읽기) — PDF 가 아니면 안 연다.
+    """
+    named, by = detect_kind(path)
     if path.suffix.lower() != ".pdf":
-        return ""
+        return named, by
+    found, why = kind_from_content(page_texts())
+    if found is None:
+        return (named, by) if named else (None, f"unknown({why})")
+    if named is None:
+        return found, f"content({why})"
+    if named == found:
+        return named, by
+    # 이름과 내용이 어긋났다. 내용을 택하되 **반드시 리포트에 남긴다** — 사람이 파일을
+    # 잘못 둔 것일 수도, 우리가 처음 보는 판형일 수도 있어서 조용히 넘기면 안 된다.
+    return found, f"{_OVERRIDE_PREFIX}이름은 {named}, 내용은 {found}: {why})"
+
+
+def bundle_subject_page(page_texts: list[str], aliases: list[str]) -> int | None:
+    """정답표 안에서 우리 과목 머리글이 있는 쪽 번호(1부터). 없으면 None.
+
+    평가원 정답표는 한 교시 8~9과목을 한 파일에 담고 쪽마다 '( 지구과학Ⅰ ) 과목' 을
+    찍는다. 파일명·폴더명에 과목이 없어도 **파일 안에는 있다.**
+
+    대조는 substring 이 아니라 fold_name 완전일치다. 부분열로 비교하면
+    '지구과학Ⅰ' 별칭이 '지구과학Ⅱ' 머리글에 걸려 **남의 과목 정답표를 우리 것으로**
+    가져온다 — 정답이 20개 통째로 틀리는 경로다.
+    """
+    wanted = {fold_name(a) for a in aliases if a}
+    if not wanted:
+        return None
+    for index, text in enumerate(page_texts):
+        for match in SUBJECT_SECTION_RE.finditer(text):
+            if fold_name(match.group(1)) in wanted:
+                return index + 1
+    return None
+
+
+def _doc_texts(path: Path, limit: int = CONTENT_SCAN_PAGES) -> list[str]:
+    """앞쪽 `limit` 쪽의 텍스트를 쪽별로. PDF 가 아니거나 못 열면 빈 목록.
+
+    쪽별로 돌려주는 이유: 합본 정답표는 '몇 쪽이 우리 과목인가'가 답이라 쪽 경계가 필요하고,
+    kind 판별은 합쳐서 쓰기만 하면 된다. 한 번 읽어 두 곳에 쓴다.
+    """
+    if path.suffix.lower() != ".pdf":
+        return []
     try:
         import fitz  # PyMuPDF — requirements.txt 에 이미 있다.
         doc = fitz.open(str(path))
         try:
-            if len(doc) == 0:
-                return ""
-            return doc[0].get_text("text")
+            return [doc[i].get_text("text") for i in range(min(len(doc), limit))]
         finally:
             doc.close()
     except Exception:
-        # 손상된 PDF, 텍스트 레이어 없는 스캔본 등. 표지 텍스트 폴백이 실패할 뿐,
-        # 파이프라인 전체가 죽으면 안 된다.
-        return ""
+        # 손상된 PDF, 텍스트 레이어 없는 스캔본 등. 폴백이 실패할 뿐 파이프라인은 계속 간다.
+        return []
 
 
 def _page_count(path: Path) -> int | None:
@@ -229,9 +398,23 @@ class Hit:
     sig_by: str | None
     subj_ok: bool
     subj_by: str | None
+    # 합본 정답표에서 우리 과목 머리글이 있던 쪽(1부터). 그 경로로 걸렸을 때만 채운다.
+    subj_page: int | None = None
+    # 파일이 제 안에서 과목 이름을 대는데 그게 우리 과목이 아니다 = 확실히 남의 것.
+    # '모른다'와 '남의 것이다'는 다르다 — 상속을 허용할지가 여기서 갈린다.
+    names_other_subject: bool = False
 
 
-_SOURCE_RANK = {"filename": 0, "folder": 1, "cover-text": 2, "inherited": 3, None: 9}
+# 'answer-table' 은 정답표 안의 과목 머리글로 확인한 것이라 표지 폴백보다 뒤,
+# 형제 파일에서 물려받은 것보다는 앞이다(제 파일 안에서 읽은 증거이므로).
+_SOURCE_RANK = {"filename": 0, "folder": 1, "cover-text": 2,
+                "answer-table": 3, "inherited": 4, None: 9}
+
+# 합본 정답표는 **최후 수단**이다. 같은 역할에 다른 경로로 걸린 후보가 있으면 물러난다.
+# 물러날 때 dropped 에 남기지도 않는다 — 실제 원본에서는 과목 전용 정답지와 합본 정답표가
+# 같은 폴더에 늘 함께 있어서, 이걸 '역할 후보 중복' 으로 경고하면 정상 상태가 매 회차
+# warn 이 되고 verified 가 꺼진다(지구과학Ⅱ 19회차 전부가 그렇게 될 뻔했다).
+_LAST_RESORT_SUBJ_BY = "answer-table"
 
 
 def _rank(h: Hit) -> tuple:
@@ -241,14 +424,19 @@ def _rank(h: Hit) -> tuple:
 
 
 def detect_hit(path: Path, aliases: list[str]) -> Hit:
-    kind, kind_by = detect_kind(path)
+    # 쪽 텍스트는 파일당 한 번만 읽는다. kind 폴백·표지 폴백·합본 과목 폴백이 같이 쓴다.
+    cache: list[list[str]] = []
 
-    text_cache: list[str] = []
+    def pages_text() -> list[str]:
+        if not cache:
+            cache.append(_doc_texts(path))
+        return cache[0]
 
     def cover_text() -> str:
-        if not text_cache:
-            text_cache.append(_first_page_text(path))
-        return text_cache[0]
+        pages = pages_text()
+        return pages[0] if pages else ""
+
+    kind, kind_by = resolve_kind(path, pages_text)
 
     # --- 연도/시험/학년: 파일명 → 부모 폴더명 → 표지 텍스트 순으로 겹쳐 채운다 ---
     # sig_by 는 "마지막으로 뭔가를 보태준 출처" 라벨이다. filename 만으로 이미
@@ -269,16 +457,26 @@ def detect_hit(path: Path, aliases: list[str]) -> Hit:
         sig = Signature(year=sig.year, exam=sig.exam, grade=3)
 
     # --- 과목: 파일명 → 부모 폴더명 → 표지 텍스트 ---
-    subj_ok, subj_by = False, None
+    subj_ok, subj_by, subj_page, names_other_subject = False, None, None, False
     if matches_subject(path.stem, aliases):
         subj_ok, subj_by = True, "filename"
     elif matches_subject(path.parent.name, aliases):
         subj_ok, subj_by = True, "folder"
     elif matches_subject(cover_text(), aliases):
         subj_ok, subj_by = True, "cover-text"
+    elif kind == "answer":
+        # 마지막 자리: 여러 과목이 든 정답표. 첫 쪽은 남의 과목이라 위 셋이 전부 빗나간다.
+        # kind 가 answer 로 확정된 파일에만 적용한다 — 문제지·해설지에서 이 머리글을
+        # 찾을 일이 없고, 범위를 좁혀야 오배정 여지도 좁아진다.
+        page = bundle_subject_page(pages_text(), aliases)
+        if page is not None:
+            subj_ok, subj_by, subj_page = True, _LAST_RESORT_SUBJ_BY, page
+        else:
+            names_other_subject = any(SUBJECT_SECTION_RE.search(t) for t in pages_text())
 
     return Hit(path=path, kind=kind, kind_by=kind_by, sig=sig, sig_by=sig_by,
-               subj_ok=subj_ok, subj_by=subj_by)
+               subj_ok=subj_ok, subj_by=subj_by, subj_page=subj_page,
+               names_other_subject=names_other_subject)
 
 
 def _demote_bulk_image_exports(hits: list[Hit]) -> None:
@@ -302,14 +500,32 @@ def _demote_bulk_image_exports(hits: list[Hit]) -> None:
                 h.kind, h.kind_by = None, "bulk-export"
 
 
-def _apply_solution_inheritance(hits: list[Hit]) -> None:
-    """'해설.pdf'류 파일명에는 과목명이 안 붙는 경우가 실전에 있다(모듈 docstring 참조).
-    같은 폴더에 우리 과목으로 확정된 문제지가 있으면 해설만 거기서 상속받는다.
+def _inherit_subject(h: Hit, donor: Hit) -> None:
+    """형제 파일(같은 폴더의 확정된 문제지)에서 과목을, 필요하면 회차까지 물려준다."""
+    h.subj_ok, h.subj_by = True, "inherited"
+    if not h.sig.complete and donor.sig.complete:
+        h.sig, h.sig_by = donor.sig, "inherited"
 
-    정답 파일은 상속 대상에서 뺐다: 평가원이 뿌리는 합본 정답표('과학탐구영역_정답표
-    (원본).pdf')가 같은 폴더에 있을 때 그것까지 상속을 받아버리면, 진짜 정답 파일과
-    역할이 중복돼 버린다. 문제지가 없으면(=이미 정답 역할이 있다는 신호가 없으면)
-    상속하지 않는 편이 안전하다."""
+
+def _apply_sibling_inheritance(hits: list[Hit]) -> list[tuple[str, list[str]]]:
+    """'해설.pdf'류 파일명에는 과목명이 안 붙는 경우가 실전에 있다(모듈 docstring 참조).
+    같은 폴더에 우리 과목으로 확정된 문제지가 있으면 거기서 과목을 물려받는다.
+    돌려주는 것은 **일부러 상속하지 않은** 자리들이다(아래 2번 조건) — 리포트가 알린다.
+
+    해설은 조건 없이, **정답은 조건부로** 물려받는다. 예전에는 정답을 아예 뺐는데,
+    그 대가가 컸다(실측): EBSi 정답지는 텍스트가 0자인 PNG 라 표지 폴백이 원리적으로
+    안 통하고, 파일명(`answer.png`)에도 폴더명(`2025_고3_3월학평`)에도 과목이 없다.
+    그래서 **손대지 않은 원본 파일명으로도** 학평 회차의 정답 축이 통째로 사라졌다.
+
+    정답을 다시 들이면서 원래 걱정하던 사고(합본 정답표가 상속을 받아 역할을 가로챔)는
+    두 가지 조건으로 막는다.
+      1) 그 파일이 **다른 과목을 자기 안에서 이름 대고 있으면** 절대 상속하지 않는다.
+         합본 정답표는 쪽마다 '( 물리학Ⅰ ) 과목' 을 찍는다 — 우리 과목이 그중에 있으면
+         detect_hit 가 이미 subj_ok 로 만들었을 것이고, 없다면 그건 확실히 남의 것이다.
+      2) 주인 없는 정답 후보가 폴더에 **둘 이상이면 아무것도 상속하지 않는다.**
+         8과목 정답 스캔을 한 폴더에 쏟아부은 경우가 여기다. 그때 하나를 고르는 것은
+         동전 던지기이고, 틀리면 20문항 정답이 통째로 남의 과목 것이 된다."""
+    refused: list[tuple[str, list[str]]] = []
     by_dir: dict[Path, list[Hit]] = {}
     for h in hits:
         by_dir.setdefault(h.path.parent, []).append(h)
@@ -320,9 +536,14 @@ def _apply_solution_inheritance(hits: list[Hit]) -> None:
         donor = donors[0]
         for h in group:
             if h.kind == "solution" and not h.subj_ok:
-                h.subj_ok, h.subj_by = True, "inherited"
-                if not h.sig.complete and donor.sig.complete:
-                    h.sig, h.sig_by = donor.sig, "inherited"
+                _inherit_subject(h, donor)
+        orphans = [h for h in group
+                   if h.kind == "answer" and not h.subj_ok and not h.names_other_subject]
+        if len(orphans) == 1:
+            _inherit_subject(orphans[0], donor)
+        elif orphans:
+            refused.append((orphans[0].path.parent.name, [h.path.name for h in orphans]))
+    return refused
 
 
 # ── exam_id 그룹핑 ───────────────────────────────────────────────────────
@@ -361,12 +582,20 @@ def group_hits(hits: list[Hit], report: Report) -> list[ExamGroup]:
         by_kind: dict[str, list[Hit]] = {}
         for h in bucket:
             by_kind.setdefault(h.kind, []).append(h)
-        for kind, kind_hits in by_kind.items():
-            kind_hits.sort(key=_rank)
-            g.files[kind] = kind_hits[0]
-            for dropped in kind_hits[1:]:
+        # 역할 순서를 mf.ROLES 로 고정한다. 예전에는 폴더 스캔 순서가 그대로 manifest 의
+        # 키 순서가 됐다 — 같은 회차를 파일 이름만 바꿔 다시 넣으면 내용이 똑같은데도
+        # manifest 바이트가 달라진다. 재현 대조를 바이트로 하는 저장소에서 이건 잡음이다.
+        ordered = [r for r in mf.ROLES if r in by_kind] + [k for k in by_kind if k not in mf.ROLES]
+        for kind in ordered:
+            kind_hits = by_kind[kind]
+            # 합본 정답표(최후 수단)는 다른 경로로 걸린 후보가 하나도 없을 때만 쓴다.
+            # 물러난 것은 dropped 에 넣지 않는다 — 위 _LAST_RESORT_SUBJ_BY 주석 참조.
+            pool = [h for h in kind_hits if h.subj_by != _LAST_RESORT_SUBJ_BY] or kind_hits
+            pool.sort(key=_rank)
+            g.files[kind] = pool[0]
+            for dropped in pool[1:]:
                 g.dropped.append((dropped, f"{exam_id} 의 {kind} 역할 후보가 여럿이라 "
-                                            f"{kind_hits[0].path.name} 을(를) 선택했다"))
+                                            f"{pool[0].path.name} 을(를) 선택했다"))
         groups.append(g)
 
     return groups
@@ -391,7 +620,11 @@ def _run_from_input(input_dir: Path, subject, space: Space, report: Report,
             for p in track(files, "파일", label="detect", quiet=quiet,
                            detail=lambda x: x.name)]
     _demote_bulk_image_exports(hits)
-    _apply_solution_inheritance(hits)
+    for folder, names in _apply_sibling_inheritance(hits):
+        # 골랐다면 동전 던지기였을 자리다. 무엇을 왜 안 골랐는지는 말해 줘야 한다.
+        report.note(folder, f"과목을 알 수 없는 정답 후보가 {len(names)}개라 어느 것도 쓰지 않았다"
+                            f" ({', '.join(names[:4])}) — 우리 과목 것 하나만 남기거나"
+                            f" 파일명에 과목을 적어라", "warn")
 
     subj_mismatch = sum(1 for h in hits if not h.subj_ok)
     kind_unknown = sum(1 for h in hits if h.subj_ok and h.kind is None)
@@ -400,15 +633,37 @@ def _run_from_input(input_dir: Path, subject, space: Space, report: Report,
                  skipped_signature=sig_incomplete)
 
     # 과목은 맞는데 다른 이유로 걸러진 파일은 사람이 볼 가치가 있다 (30건 상한 안에서).
+    # 단 _demote_bulk_image_exports 가 일부러 접은 변환 산출물은 **한 줄로 묶는다.**
+    # 실측(earth-science-i): 그 파일이 536개였고 파일마다 warn 을 내니 상한 30건을 그것만으로
+    # 다 써서, 정작 사람이 손댈 수 있는 나머지 510건이 통째로 잘려 나갔다. 이미 코드가
+    # 의도적으로 건너뛴 것을 파일 단위로 또 경고하면 리포트가 읽히지 않는다(CONTRACT 5절).
+    bulk_dirs: dict[str, int] = {}
     for h in hits:
         if not h.subj_ok:
             continue
         if h.kind is None:
-            report.note(str(h.path.name), "과목은 맞는 듯한데 문제지/정답/해설 구분이 안 됨", "warn")
+            if h.kind_by == "bulk-export":
+                bulk_dirs[h.path.parent.name] = bulk_dirs.get(h.path.parent.name, 0) + 1
+                continue
+            # 무엇을 보고 못 갈랐는지까지 적는다. 이 한 줄이 곧 사람이 할 일이어야 한다
+            # (CONTRACT 5절) — 여기서 멈춘 사람에게 다음 행동이 남지 않으면 데드엔드다.
+            why = h.kind_by[len("unknown("):-1] if h.kind_by.startswith("unknown(") else h.kind_by
+            report.note(str(h.path.name),
+                        f"과목은 맞는 듯한데 문제지/정답/해설 구분이 안 됨 ({why}). "
+                        f"파일 이름에 '문제'·'정답'·'해설' 중 하나를 넣으면 확정된다", "warn")
         elif not h.sig.complete:
             report.note(str(h.path.name),
                         f"연도/시험 인식 실패 (year={h.sig.year}, exam={h.sig.exam}, grade={h.sig.grade})",
                         "warn")
+        if h.kind_by.startswith(_OVERRIDE_PREFIX):
+            report.note(str(h.path.name), "파일 이름과 내용이 어긋나 내용을 따랐다 — "
+                                          f"{h.kind_by[len(_OVERRIDE_PREFIX):-1]}", "warn")
+
+    if bulk_dirs:
+        sample = ", ".join(sorted(bulk_dirs)[:3])
+        report.note("bulk-export",
+                    f"이미지만 든 변환 산출물 폴더 {len(bulk_dirs)}곳({sum(bulk_dirs.values())}장)을 "
+                    f"건너뛰었다 — 예: {sample}", "info")
 
     groups = group_hits(hits, report)
     if only:
@@ -432,6 +687,14 @@ def _run_from_input(input_dir: Path, subject, space: Space, report: Report,
                 report.note(g.exam_id, f"{missing} 파일을 못 찾음 — 과목 전용 파일이 없거나"
                                         f" 파일명/폴더명에 과목 표기가 없을 수 있다. 직접 확인 필요",
                             "warn")
+
+        # 합본 정답표를 쓴 회차는 사람이 알아야 한다 — 복사된 answer.pdf 를 열면 첫 쪽이
+        # 남의 과목이라 "잘못 짝지었나" 싶어진다. extract 는 과목 머리글로 우리 쪽만 읽는다.
+        for kind, h in g.files.items():
+            if h.subj_by == _LAST_RESORT_SUBJ_BY:
+                report.note(g.exam_id,
+                            f"{h.path.name} 은(는) 여러 과목이 든 정답표다 — "
+                            f"{h.subj_page}쪽의 과목 머리글로 확인하고 {kind} 로 썼다", "info")
 
         dest_dir = space.source_dir(g.exam_id)
         dest_files: dict[str, str] = {}
@@ -527,10 +790,16 @@ def _run_refresh(subject, space: Space, report: Report, only: set[str] | None,
         files = sorted(p for p in d.iterdir() if p.is_file() and p.suffix.lower() in SCAN_EXTS)
         by_kind: dict[str, Path] = {}
         for p in files:
-            kind, _by = detect_kind(p)
+            # sources/ 안이라고 파일 이름이 규약대로라는 보장은 없다(사람이 손으로 넣는다).
+            # --input 모드와 같은 판별기를 쓴다 — 두 경로가 다른 답을 내면 안 된다.
+            kind, by = resolve_kind(p, lambda p=p: _doc_texts(p))
             if kind is None:
-                report.note(d.name, f"종류를 알 수 없는 파일: {p.name}", "info")
+                why = by[len("unknown("):-1] if by.startswith("unknown(") else by
+                report.note(d.name, f"종류를 알 수 없는 파일: {p.name} ({why})", "info")
                 continue
+            if by.startswith(_OVERRIDE_PREFIX):
+                report.note(d.name, f"{p.name} 은(는) 이름과 내용이 어긋나 내용을 따랐다 — "
+                                    f"{by[len(_OVERRIDE_PREFIX):-1]}", "warn")
             if kind in by_kind:
                 report.note(d.name, f"{kind} 역할 파일이 둘 이상: {by_kind[kind].name}, {p.name}"
                                      f" — {by_kind[kind].name} 을(를) 유지한다", "warn")

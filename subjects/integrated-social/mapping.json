@@ -2,8 +2,8 @@
   "slug": "integrated-social",
   "source_revision": "2015",
   "target_revision": "2022",
-  "generated_by": "손 판정 (문항 본문 전수 통독 · 대상 명사 기준) — 2021~2024 고1 학평 16회차(2015개정 기출) + 2025 고1 6·9월 학평(2022개정 시행) 총 370문항. 0문항 성취기준은 어휘 전수 검색으로 감사함(docs/INTEGRATED.md 매핑 절).",
-  "source_count": 370,
+  "generated_by": "손 판정 (문항 본문 전수 통독 · 대상 명사 기준) — 2018~2024 고1 학평 28회차(2015개정 기출) + 2025 고1 6·9월 학평(2022개정 시행) 총 610문항. 2018~2020 12회차 240문항은 이번 단계에서 새로 판정했다. 0문항·얇은 성취기준은 어휘 전수 검색으로 감사함(audit 참조).",
+  "source_count": 610,
   "target_catalog": [
     {
       "standard": "10통사1-01-01",
@@ -127,6 +127,7988 @@
     }
   ],
   "items": {
+    "2018_고1_11월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "통합적 관점으로 본 지구 온난화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-02",
+        "standards": [
+          "10통사1-01-02",
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점",
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "통합적 관점으로 본 지구 온난화"
+        }
+      }
+    },
+    "2018_고1_11월학평_02": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "개발과 보전을 보는 자연관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "개발과 보전을 보는 자연관"
+        }
+      }
+    },
+    "2018_고1_11월학평_03": {
+      "2015": {
+        "standard": "10통사08-01",
+        "standards": [
+          "10통사08-01"
+        ],
+        "unit": "세계화와 평화",
+        "topic": "지역 상품의 세계화(지역화 전략)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-01",
+        "standards": [
+          "10통사2-04-01"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 상품의 세계화(지역화 전략)"
+        }
+      }
+    },
+    "2018_고1_11월학평_04": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "열대 기후 지역의 주민 생활",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-01",
+        "standards": [
+          "10통사1-04-01",
+          "10통사1-03-01"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성",
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "열대 기후 지역의 주민 생활"
+        }
+      }
+    },
+    "2018_고1_11월학평_05": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "고속 열차와 생활공간의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "고속 열차와 생활공간의 변화"
+        }
+      }
+    },
+    "2018_고1_11월학평_06": {
+      "2015": {
+        "standard": "10통사09-01",
+        "standards": [
+          "10통사09-01"
+        ],
+        "unit": "미래와 지속가능한 삶",
+        "topic": "인구 구조와 인구 문제(독일·우간다)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-01",
+        "standards": [
+          "10통사2-05-01"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인구 구조와 인구 문제(독일·우간다)"
+        }
+      }
+    },
+    "2018_고1_11월학평_07": {
+      "2015": {
+        "standard": "10통사07-03",
+        "standards": [
+          "10통사07-03"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "자문화 중심주의와 문화 상대주의",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-03",
+        "standards": [
+          "10통사1-04-03"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자문화 중심주의와 문화 상대주의"
+        }
+      }
+    },
+    "2018_고1_11월학평_08": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "사회권을 추구하는 정책 공약",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사회권을 추구하는 정책 공약"
+        }
+      }
+    },
+    "2018_고1_11월학평_09": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "정보화의 문제점과 해결 방안",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정보화의 문제점과 해결 방안"
+        }
+      }
+    },
+    "2018_고1_11월학평_10": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "합리적 선택과 비용·편익",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "합리적 선택과 비용·편익"
+        }
+      }
+    },
+    "2018_고1_11월학평_11": {
+      "2015": {
+        "standard": "10통사06-03",
+        "standards": [
+          "10통사06-03"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "건강 불평등과 사회·공간 불평등",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-03",
+        "standards": [
+          "10통사2-02-03"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "건강 불평등과 사회·공간 불평등"
+        }
+      }
+    },
+    "2018_고1_11월학평_12": {
+      "2015": {
+        "standard": "10통사05-03",
+        "standards": [
+          "10통사05-03"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "비교 우위와 국제 분업",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-04",
+        "standards": [
+          "10통사2-03-04"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "비교 우위와 국제 분업"
+        }
+      }
+    },
+    "2018_고1_11월학평_13": {
+      "2015": {
+        "standard": "10통사08-02",
+        "standards": [
+          "10통사08-02"
+        ],
+        "unit": "세계화와 평화",
+        "topic": "갈퉁의 소극적 평화와 적극적 평화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-02",
+        "standards": [
+          "10통사2-04-02"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "갈퉁의 소극적 평화와 적극적 평화"
+        }
+      }
+    },
+    "2018_고1_11월학평_14": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "도시 인구 비율의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도시 인구 비율의 변화"
+        }
+      }
+    },
+    "2018_고1_11월학평_15": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "에피쿠로스의 쾌락과 행복",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "에피쿠로스의 쾌락과 행복"
+        }
+      }
+    },
+    "2018_고1_11월학평_16": {
+      "2015": {
+        "standard": "10통사06-02",
+        "standards": [
+          "10통사06-02"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "롤스의 정의의 두 원칙",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-02",
+        "standards": [
+          "10통사2-02-02"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "롤스의 정의의 두 원칙"
+        }
+      }
+    },
+    "2018_고1_11월학평_17": {
+      "2015": {
+        "standard": "10통사09-02",
+        "standards": [
+          "10통사09-02"
+        ],
+        "unit": "미래와 지속가능한 삶",
+        "topic": "석유·석탄의 국가별 생산 비중",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-02",
+        "standards": [
+          "10통사2-05-02"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "석유·석탄의 국가별 생산 비중"
+        }
+      }
+    },
+    "2018_고1_11월학평_18": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "시민 불복종의 정당화 조건",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시민 불복종의 정당화 조건"
+        }
+      }
+    },
+    "2018_고1_11월학평_19": {
+      "2015": {
+        "standard": "10통사06-01",
+        "standards": [
+          "10통사06-01"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "업적에 따른 분배와 그 한계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-01",
+        "standards": [
+          "10통사2-02-01"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "업적에 따른 분배와 그 한계"
+        }
+      }
+    },
+    "2018_고1_11월학평_20": {
+      "2015": {
+        "standard": "10통사07-01",
+        "standards": [
+          "10통사07-01"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "이슬람 문화권의 경관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-01",
+        "standards": [
+          "10통사1-04-01"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이슬람 문화권의 경관"
+        }
+      }
+    },
+    "2018_고1_3월학평_01": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "칸트의 선의지와 도덕 판단",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "칸트의 선의지와 도덕 판단"
+        }
+      }
+    },
+    "2018_고1_3월학평_02": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "도덕적 추론의 형식",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도덕적 추론의 형식"
+        }
+      }
+    },
+    "2018_고1_3월학평_03": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "자유의 한계와 책임",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유의 한계와 책임"
+        }
+      }
+    },
+    "2018_고1_3월학평_04": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "필요에 따른 분배",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-01",
+        "standards": [
+          "10통사2-02-01"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "필요에 따른 분배"
+        }
+      }
+    },
+    "2018_고1_3월학평_05": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "노자의 소국과민 이상 사회",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "노자의 소국과민 이상 사회"
+        }
+      }
+    },
+    "2018_고1_3월학평_06": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "시민 불복종의 정당화 조건",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시민 불복종의 정당화 조건"
+        }
+      }
+    },
+    "2018_고1_3월학평_07": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "롤스의 정의의 원칙",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-02",
+        "standards": [
+          "10통사2-02-02"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "롤스의 정의의 원칙"
+        }
+      }
+    },
+    "2018_고1_3월학평_08": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "다국적 기업의 공간적 분업",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-01",
+        "standards": [
+          "10통사2-04-01"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "다국적 기업의 공간적 분업"
+        }
+      }
+    },
+    "2018_고1_3월학평_09": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "기후와 시차를 고려한 여행지 선택",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후와 시차를 고려한 여행지 선택"
+        }
+      }
+    },
+    "2018_고1_3월학평_10": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "건조 기후 지역의 주민 생활",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01",
+          "10통사1-04-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "건조 기후 지역의 주민 생활"
+        }
+      }
+    },
+    "2018_고1_3월학평_11": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "자원 분포와 경제 발전 수준",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-02",
+        "standards": [
+          "10통사2-05-02"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자원 분포와 경제 발전 수준"
+        }
+      }
+    },
+    "2018_고1_3월학평_12": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "로컬푸드 운동과 지구 온난화",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "로컬푸드 운동과 지구 온난화"
+        }
+      }
+    },
+    "2018_고1_3월학평_13": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "빙하 지형(U자곡)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빙하 지형(U자곡)"
+        }
+      }
+    },
+    "2018_고1_3월학평_14": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "문화의 속성",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "문화의 속성"
+        }
+      }
+    },
+    "2018_고1_3월학평_15": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "사회 집단·지위·역할 갈등",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사회 집단·지위·역할 갈등"
+        }
+      }
+    },
+    "2018_고1_3월학평_16": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "산업 사회와 정보 사회",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산업 사회와 정보 사회"
+        }
+      }
+    },
+    "2018_고1_3월학평_17": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "대통령제와 의원 내각제",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "대통령제와 의원 내각제"
+        }
+      }
+    },
+    "2018_고1_3월학평_18": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "형사 재판 절차",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "형사 재판 절차"
+        }
+      }
+    },
+    "2018_고1_3월학평_19": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "공급 변동 요인",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "공급 변동 요인"
+        }
+      }
+    },
+    "2018_고1_3월학평_20": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "환율 변동의 영향",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "환율 변동의 영향"
+        }
+      }
+    },
+    "2018_고1_6월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "네 가지 관점(커피)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-01",
+        "standards": [
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "네 가지 관점(커피)"
+        }
+      }
+    },
+    "2018_고1_6월학평_02": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "기후 특성과 지역 위치 판별",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후 특성과 지역 위치 판별"
+        }
+      }
+    },
+    "2018_고1_6월학평_03": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "생태 중심주의 자연관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "생태 중심주의 자연관"
+        }
+      }
+    },
+    "2018_고1_6월학평_04": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "산업화·도시화에 따른 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산업화·도시화에 따른 변화"
+        }
+      }
+    },
+    "2018_고1_6월학평_05": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "시민 불복종(간디의 소금 행진)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시민 불복종(간디의 소금 행진)"
+        }
+      }
+    },
+    "2018_고1_6월학평_06": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "고속 열차와 생활권의 확대",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "고속 열차와 생활권의 확대"
+        }
+      }
+    },
+    "2018_고1_6월학평_07": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "지역 조사 과정",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 조사 과정"
+        }
+      }
+    },
+    "2018_고1_6월학평_08": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "아리스토텔레스의 행복",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "아리스토텔레스의 행복"
+        }
+      }
+    },
+    "2018_고1_6월학평_09": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "장애인 차별과 인권 보장 판결",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "장애인 차별과 인권 보장 판결"
+        }
+      }
+    },
+    "2018_고1_6월학평_10": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "스마트 시티와 정보 통신 기술",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "스마트 시티와 정보 통신 기술"
+        }
+      }
+    },
+    "2018_고1_6월학평_11": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "도시의 열섬 현상",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도시의 열섬 현상"
+        }
+      }
+    },
+    "2018_고1_6월학평_12": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "시대와 지역에 따른 행복의 기준",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시대와 지역에 따른 행복의 기준"
+        }
+      }
+    },
+    "2018_고1_6월학평_13": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "충적 평야와 고대 문명 발상지",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "충적 평야와 고대 문명 발상지"
+        }
+      }
+    },
+    "2018_고1_6월학평_14": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "언론 자유 지수와 세계 인권 문제",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "언론 자유 지수와 세계 인권 문제"
+        }
+      }
+    },
+    "2018_고1_6월학평_15": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "황사·지구 온난화·산성비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "황사·지구 온난화·산성비"
+        }
+      }
+    },
+    "2018_고1_6월학평_16": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "파리 기후 협약과 온실가스 감축",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03",
+          "10통사2-05-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "파리 기후 협약과 온실가스 감축"
+        }
+      }
+    },
+    "2018_고1_6월학평_17": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "인권의 의미와 특성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인권의 의미와 특성"
+        }
+      }
+    },
+    "2018_고1_6월학평_18": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "기본권의 유형(자유권·평등권·사회권)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기본권의 유형(자유권·평등권·사회권)"
+        }
+      }
+    },
+    "2018_고1_6월학평_19": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "자연재해와 안전권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01",
+          "10통사1-03-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법",
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자연재해와 안전권"
+        }
+      }
+    },
+    "2018_고1_6월학평_20": {
+      "2015": {
+        "standard": "10통사01-03",
+        "standards": [
+          "10통사01-03"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "행복한 삶을 실현하기 위한 조건",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-02",
+        "standards": [
+          "10통사1-02-02"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "행복한 삶을 실현하기 위한 조건"
+        }
+      }
+    },
+    "2018_고1_9월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "다문화 정책 탐구 주제와 네 가지 관점",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-01",
+        "standards": [
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "다문화 정책 탐구 주제와 네 가지 관점"
+        }
+      }
+    },
+    "2018_고1_9월학평_02": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "연소 근로자의 근로 계약",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "연소 근로자의 근로 계약"
+        }
+      }
+    },
+    "2018_고1_9월학평_03": {
+      "2015": {
+        "standard": "10통사07-01",
+        "standards": [
+          "10통사07-01"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "기후 지역과 전통 가옥(통나무집·고상 가옥)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-01",
+        "standards": [
+          "10통사1-04-01",
+          "10통사1-03-01"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성",
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후 지역과 전통 가옥(통나무집·고상 가옥)"
+        }
+      }
+    },
+    "2018_고1_9월학평_04": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "헌법 조항과 기본권의 유형",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "헌법 조항과 기본권의 유형"
+        }
+      }
+    },
+    "2018_고1_9월학평_05": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "레오폴드와 베이컨의 자연관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "레오폴드와 베이컨의 자연관"
+        }
+      }
+    },
+    "2018_고1_9월학평_06": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "지열·빙하 지형과 관광 산업",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지열·빙하 지형과 관광 산업"
+        }
+      }
+    },
+    "2018_고1_9월학평_07": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "지역 조사와 도시 재생",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 조사와 도시 재생"
+        }
+      }
+    },
+    "2018_고1_9월학평_08": {
+      "2015": {
+        "standard": "10통사01-03",
+        "standards": [
+          "10통사01-03"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "정부 정책과 행복(기근과 복지)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-02",
+        "standards": [
+          "10통사1-02-02"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정부 정책과 행복(기근과 복지)"
+        }
+      }
+    },
+    "2018_고1_9월학평_09": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "자연 보전과 개발을 보는 관점",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자연 보전과 개발을 보는 관점"
+        }
+      }
+    },
+    "2018_고1_9월학평_10": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "수정 자본주의와 신자유주의",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-01",
+        "standards": [
+          "10통사2-03-01"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수정 자본주의와 신자유주의"
+        }
+      }
+    },
+    "2018_고1_9월학평_11": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "도시 열섬 현상의 원인과 대책",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도시 열섬 현상의 원인과 대책"
+        }
+      }
+    },
+    "2018_고1_9월학평_12": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "철도 확대와 통근·통학권의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "철도 확대와 통근·통학권의 변화"
+        }
+      }
+    },
+    "2018_고1_9월학평_13": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "누리 소통망과 정보 사회의 문제",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "누리 소통망과 정보 사회의 문제"
+        }
+      }
+    },
+    "2018_고1_9월학평_14": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "산업 구조 변화와 토지 이용",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산업 구조 변화와 토지 이용"
+        }
+      }
+    },
+    "2018_고1_9월학평_15": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "기회비용과 합리적 선택",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기회비용과 합리적 선택"
+        }
+      }
+    },
+    "2018_고1_9월학평_16": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "도덕성과 행복(칸트)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도덕성과 행복(칸트)"
+        }
+      }
+    },
+    "2018_고1_9월학평_17": {
+      "2015": {
+        "standard": "10통사05-02",
+        "standards": [
+          "10통사05-02"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "공공재와 외부 효과",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-01",
+        "standards": [
+          "10통사2-03-01"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "공공재와 외부 효과"
+        }
+      }
+    },
+    "2018_고1_9월학평_18": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "맹그로브 숲 파괴와 환경 문제",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "맹그로브 숲 파괴와 환경 문제"
+        }
+      }
+    },
+    "2018_고1_9월학평_19": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "1인 가구 소비와 공동체 주택",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "1인 가구 소비와 공동체 주택"
+        }
+      }
+    },
+    "2018_고1_9월학평_20": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "시민 불복종(로자 파크스)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시민 불복종(로자 파크스)"
+        }
+      }
+    },
+    "2019_고1_11월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "사막화를 보는 네 가지 관점",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-01",
+        "standards": [
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사막화를 보는 네 가지 관점"
+        }
+      }
+    },
+    "2019_고1_11월학평_02": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "정보화와 현대 사회의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정보화와 현대 사회의 변화"
+        }
+      }
+    },
+    "2019_고1_11월학평_03": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "건조·열대 기후 지역의 전통 가옥",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01",
+          "10통사1-04-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "건조·열대 기후 지역의 전통 가옥"
+        }
+      }
+    },
+    "2019_고1_11월학평_04": {
+      "2015": {
+        "standard": "10통사06-03",
+        "standards": [
+          "10통사06-03"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "적극적 우대 정책과 역차별",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-03",
+        "standards": [
+          "10통사2-02-03"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "적극적 우대 정책과 역차별"
+        }
+      }
+    },
+    "2019_고1_11월학평_05": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "시민 불복종의 정당화 조건",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시민 불복종의 정당화 조건"
+        }
+      }
+    },
+    "2019_고1_11월학평_06": {
+      "2015": {
+        "standard": "10통사05-02",
+        "standards": [
+          "10통사05-02"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "과시 소비와 합리적 소비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "과시 소비와 합리적 소비"
+        }
+      }
+    },
+    "2019_고1_11월학평_07": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "기본권의 유형(자유권·사회권·청구권)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기본권의 유형(자유권·사회권·청구권)"
+        }
+      }
+    },
+    "2019_고1_11월학평_08": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "기회비용과 합리적 선택",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기회비용과 합리적 선택"
+        }
+      }
+    },
+    "2019_고1_11월학평_09": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "지진의 피해와 대책",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지진의 피해와 대책"
+        }
+      }
+    },
+    "2019_고1_11월학평_10": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "자본주의의 전개 과정",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-01",
+        "standards": [
+          "10통사2-03-01"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자본주의의 전개 과정"
+        }
+      }
+    },
+    "2019_고1_11월학평_11": {
+      "2015": {
+        "standard": "10통사07-04",
+        "standards": [
+          "10통사07-04"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "다문화 정책(용광로·샐러드 볼)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-04",
+        "standards": [
+          "10통사1-04-04"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "다문화 정책(용광로·샐러드 볼)"
+        }
+      }
+    },
+    "2019_고1_11월학평_12": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "도시화율과 산업 구조의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도시화율과 산업 구조의 변화"
+        }
+      }
+    },
+    "2019_고1_11월학평_13": {
+      "2015": {
+        "standard": "10통사06-02",
+        "standards": [
+          "10통사06-02"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "자유주의와 공동체주의 정의관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-02",
+        "standards": [
+          "10통사2-02-02"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유주의와 공동체주의 정의관"
+        }
+      }
+    },
+    "2019_고1_11월학평_14": {
+      "2015": {
+        "standard": "10통사08-01",
+        "standards": [
+          "10통사08-01"
+        ],
+        "unit": "세계화와 평화",
+        "topic": "세계화의 양상과 문제",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-01",
+        "standards": [
+          "10통사2-04-01"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세계화의 양상과 문제"
+        }
+      }
+    },
+    "2019_고1_11월학평_15": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "청소년 근로 계약과 최저 임금",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "청소년 근로 계약과 최저 임금"
+        }
+      }
+    },
+    "2019_고1_11월학평_16": {
+      "2015": {
+        "standard": "10통사07-03",
+        "standards": [
+          "10통사07-03"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "문화 이해의 태도",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-03",
+        "standards": [
+          "10통사1-04-03"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "문화 이해의 태도"
+        }
+      }
+    },
+    "2019_고1_11월학평_17": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "재산권 제한과 기본권 제한의 한계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "재산권 제한과 기본권 제한의 한계"
+        }
+      }
+    },
+    "2019_고1_11월학평_18": {
+      "2015": {
+        "standard": "10통사07-01",
+        "standards": [
+          "10통사07-01"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "라틴 아메리카 문화권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-01",
+        "standards": [
+          "10통사1-04-01"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "라틴 아메리카 문화권"
+        }
+      }
+    },
+    "2019_고1_11월학평_19": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "지역 조사 활동의 단계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 조사 활동의 단계"
+        }
+      }
+    },
+    "2019_고1_11월학평_20": {
+      "2015": {
+        "standard": "10통사08-02",
+        "standards": [
+          "10통사08-02"
+        ],
+        "unit": "세계화와 평화",
+        "topic": "난민 문제와 인간 안보",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-02",
+        "standards": [
+          "10통사2-04-02"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "난민 문제와 인간 안보"
+        }
+      }
+    },
+    "2019_고1_3월학평_01": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "공자의 벗과 배움",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "공자의 벗과 배움"
+        }
+      }
+    },
+    "2019_고1_3월학평_02": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "생태 중심주의(갯벌 보호)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "생태 중심주의(갯벌 보호)"
+        }
+      }
+    },
+    "2019_고1_3월학평_03": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "종교 간 대화와 공존",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-03",
+        "standards": [
+          "10통사1-04-03"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "종교 간 대화와 공존"
+        }
+      }
+    },
+    "2019_고1_3월학평_04": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "플라톤의 이상 국가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "플라톤의 이상 국가"
+        }
+      }
+    },
+    "2019_고1_3월학평_05": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "이황의 수양(경)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이황의 수양(경)"
+        }
+      }
+    },
+    "2019_고1_3월학평_06": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "칸트의 도덕 법칙",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "칸트의 도덕 법칙"
+        }
+      }
+    },
+    "2019_고1_3월학평_07": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "한대 기후 지역의 동물과 환경",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "한대 기후 지역의 동물과 환경"
+        }
+      }
+    },
+    "2019_고1_3월학평_08": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "빙하 지형(피오르)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빙하 지형(피오르)"
+        }
+      }
+    },
+    "2019_고1_3월학평_09": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "위도·경도와 시차",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "위도·경도와 시차"
+        }
+      }
+    },
+    "2019_고1_3월학평_10": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "힌두교 문화권의 생활 모습",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-01",
+        "standards": [
+          "10통사1-04-01"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "힌두교 문화권의 생활 모습"
+        }
+      }
+    },
+    "2019_고1_3월학평_11": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "지구 온난화와 개인적 실천",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지구 온난화와 개인적 실천"
+        }
+      }
+    },
+    "2019_고1_3월학평_12": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "지역 축제와 지역화",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-01",
+        "standards": [
+          "10통사2-04-01"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 축제와 지역화"
+        }
+      }
+    },
+    "2019_고1_3월학평_13": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "도시 내부 구조와 도시 문제",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도시 내부 구조와 도시 문제"
+        }
+      }
+    },
+    "2019_고1_3월학평_14": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "지위와 역할",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지위와 역할"
+        }
+      }
+    },
+    "2019_고1_3월학평_15": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "자유권과 사회권",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유권과 사회권"
+        }
+      }
+    },
+    "2019_고1_3월학평_16": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "인플레이션의 영향",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인플레이션의 영향"
+        }
+      }
+    },
+    "2019_고1_3월학평_17": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "정당·이익 집단·시민 단체",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정당·이익 집단·시민 단체"
+        }
+      }
+    },
+    "2019_고1_3월학평_18": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "문화 이해의 태도",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-03",
+        "standards": [
+          "10통사1-04-03"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "문화 이해의 태도"
+        }
+      }
+    },
+    "2019_고1_3월학평_19": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "뉴 미디어와 쌍방향 소통",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "뉴 미디어와 쌍방향 소통"
+        }
+      }
+    },
+    "2019_고1_3월학평_20": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "수요·공급과 시장 균형",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수요·공급과 시장 균형"
+        }
+      }
+    },
+    "2019_고1_6월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "공간적 관점으로 본 인권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-01",
+        "standards": [
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "공간적 관점으로 본 인권"
+        }
+      }
+    },
+    "2019_고1_6월학평_02": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "기후 지역의 가옥과 음식 문화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01",
+          "10통사1-04-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후 지역의 가옥과 음식 문화"
+        }
+      }
+    },
+    "2019_고1_6월학평_03": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "정보화의 문제점과 해결 방안",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정보화의 문제점과 해결 방안"
+        }
+      }
+    },
+    "2019_고1_6월학평_04": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "지역 조사의 단계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 조사의 단계"
+        }
+      }
+    },
+    "2019_고1_6월학평_05": {
+      "2015": {
+        "standard": "10통사01-03",
+        "standards": [
+          "10통사01-03"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "택리지와 질 높은 정주 환경",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-02",
+        "standards": [
+          "10통사1-02-02"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "택리지와 질 높은 정주 환경"
+        }
+      }
+    },
+    "2019_고1_6월학평_06": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "생태 도시 사례와 지역 발전 방향",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03",
+          "10통사1-03-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회",
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "생태 도시 사례와 지역 발전 방향"
+        }
+      }
+    },
+    "2019_고1_6월학평_07": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "미세 플라스틱과 기업의 노력",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "미세 플라스틱과 기업의 노력"
+        }
+      }
+    },
+    "2019_고1_6월학평_08": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "철도망 구축과 생활공간의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "철도망 구축과 생활공간의 변화"
+        }
+      }
+    },
+    "2019_고1_6월학평_09": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "지진 피해와 자연환경",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지진 피해와 자연환경"
+        }
+      }
+    },
+    "2019_고1_6월학평_10": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "디지털 정보 격차",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "디지털 정보 격차"
+        }
+      }
+    },
+    "2019_고1_6월학평_11": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "베트남의 기후와 지형",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "베트남의 기후와 지형"
+        }
+      }
+    },
+    "2019_고1_6월학평_12": {
+      "2015": {
+        "standard": "10통사06-03",
+        "standards": [
+          "10통사06-03"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "수도권 과밀화와 공간 불평등",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-03",
+        "standards": [
+          "10통사2-02-03",
+          "10통사1-05-01"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등",
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수도권 과밀화와 공간 불평등"
+        }
+      }
+    },
+    "2019_고1_6월학평_13": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "안전권(확장된 인권)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "안전권(확장된 인권)"
+        }
+      }
+    },
+    "2019_고1_6월학평_14": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "인간 중심주의와 생태 중심주의",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인간 중심주의와 생태 중심주의"
+        }
+      }
+    },
+    "2019_고1_6월학평_15": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "마샬의 권리와 인권 세대론",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "마샬의 권리와 인권 세대론"
+        }
+      }
+    },
+    "2019_고1_6월학평_16": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "지역에 따라 다른 행복의 기준",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역에 따라 다른 행복의 기준"
+        }
+      }
+    },
+    "2019_고1_6월학평_17": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "환경 문제와 국제 협약",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "환경 문제와 국제 협약"
+        }
+      }
+    },
+    "2019_고1_6월학평_18": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "행복의 조건(환경과 마음가짐)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "행복의 조건(환경과 마음가짐)"
+        }
+      }
+    },
+    "2019_고1_6월학평_19": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "통합적 관점의 필요성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-02",
+        "standards": [
+          "10통사1-01-02"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "통합적 관점의 필요성"
+        }
+      }
+    },
+    "2019_고1_6월학평_20": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "시기별 도시 분포와 도시 인구",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시기별 도시 분포와 도시 인구"
+        }
+      }
+    },
+    "2019_고1_9월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "반려동물 문제와 네 가지 관점",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-01",
+        "standards": [
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "반려동물 문제와 네 가지 관점"
+        }
+      }
+    },
+    "2019_고1_9월학평_02": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "마음의 평화와 행복",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "마음의 평화와 행복"
+        }
+      }
+    },
+    "2019_고1_9월학평_03": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "폭염·지진 대책과 안전권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01",
+          "10통사2-01-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "폭염·지진 대책과 안전권"
+        }
+      }
+    },
+    "2019_고1_9월학평_04": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "세계 인권 선언",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세계 인권 선언"
+        }
+      }
+    },
+    "2019_고1_9월학평_05": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "기후 특성과 관광 상품 개발",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후 특성과 관광 상품 개발"
+        }
+      }
+    },
+    "2019_고1_9월학평_06": {
+      "2015": {
+        "standard": "10통사01-03",
+        "standards": [
+          "10통사01-03"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "행복 지수가 높은 국가의 조건",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-02",
+        "standards": [
+          "10통사1-02-02"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "행복 지수가 높은 국가의 조건"
+        }
+      }
+    },
+    "2019_고1_9월학평_07": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "양심의 자유와 기본권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "양심의 자유와 기본권"
+        }
+      }
+    },
+    "2019_고1_9월학평_08": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "에피쿠로스의 쾌락과 행복",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "에피쿠로스의 쾌락과 행복"
+        }
+      }
+    },
+    "2019_고1_9월학평_09": {
+      "2015": {
+        "standard": "10통사09-02",
+        "standards": [
+          "10통사09-02"
+        ],
+        "unit": "미래와 지속가능한 삶",
+        "topic": "기후 변화 피해의 불평등",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-02",
+        "standards": [
+          "10통사2-05-02",
+          "10통사1-03-03"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶",
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후 변화 피해의 불평등"
+        }
+      }
+    },
+    "2019_고1_9월학평_10": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "사물인터넷과 정보화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사물인터넷과 정보화"
+        }
+      }
+    },
+    "2019_고1_9월학평_11": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "플라스틱 문제와 주체별 노력",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "플라스틱 문제와 주체별 노력"
+        }
+      }
+    },
+    "2019_고1_9월학평_12": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "인간 중심주의와 생태 중심주의",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인간 중심주의와 생태 중심주의"
+        }
+      }
+    },
+    "2019_고1_9월학평_13": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "지역 조사와 산업 구조의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03",
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회",
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 조사와 산업 구조의 변화"
+        }
+      }
+    },
+    "2019_고1_9월학평_14": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "애덤 스미스와 케인스",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-01",
+        "standards": [
+          "10통사2-03-01"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "애덤 스미스와 케인스"
+        }
+      }
+    },
+    "2019_고1_9월학평_15": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "연소 근로자의 노동권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "연소 근로자의 노동권"
+        }
+      }
+    },
+    "2019_고1_9월학평_16": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "괭이부리마을의 생활공간 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "괭이부리마을의 생활공간 변화"
+        }
+      }
+    },
+    "2019_고1_9월학평_17": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "합리적 선택과 편익 비교",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "합리적 선택과 편익 비교"
+        }
+      }
+    },
+    "2019_고1_9월학평_18": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "거가대교 개통과 지역 조사 주제",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03",
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회",
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "거가대교 개통과 지역 조사 주제"
+        }
+      }
+    },
+    "2019_고1_9월학평_19": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "국가별 도시화율의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "국가별 도시화율의 변화"
+        }
+      }
+    },
+    "2019_고1_9월학평_20": {
+      "2015": {
+        "standard": "10통사05-02",
+        "standards": [
+          "10통사05-02"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "윤리적 소비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "윤리적 소비"
+        }
+      }
+    },
+    "2020_고1_11월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "아동 노동과 네 가지 관점",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-01",
+        "standards": [
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "아동 노동과 네 가지 관점"
+        }
+      }
+    },
+    "2020_고1_11월학평_02": {
+      "2015": {
+        "standard": "10통사07-01",
+        "standards": [
+          "10통사07-01"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "건조·이슬람 문화권의 경관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-01",
+        "standards": [
+          "10통사1-04-01"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "건조·이슬람 문화권의 경관"
+        }
+      }
+    },
+    "2020_고1_11월학평_03": {
+      "2015": {
+        "standard": "10통사07-02",
+        "standards": [
+          "10통사07-02"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "문화 융합과 문화 병존",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-02",
+        "standards": [
+          "10통사1-04-02"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "문화 융합과 문화 병존"
+        }
+      }
+    },
+    "2020_고1_11월학평_04": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "열대 우림 기후 지역의 생활",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "열대 우림 기후 지역의 생활"
+        }
+      }
+    },
+    "2020_고1_11월학평_05": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "참정권과 청구권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "참정권과 청구권"
+        }
+      }
+    },
+    "2020_고1_11월학평_06": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "수정 자본주의와 신자유주의",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-01",
+        "standards": [
+          "10통사2-03-01"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수정 자본주의와 신자유주의"
+        }
+      }
+    },
+    "2020_고1_11월학평_07": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "바이마르 헌법과 프랑스 인권 선언",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "바이마르 헌법과 프랑스 인권 선언"
+        }
+      }
+    },
+    "2020_고1_11월학평_08": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "기회비용과 합리적 선택",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기회비용과 합리적 선택"
+        }
+      }
+    },
+    "2020_고1_11월학평_09": {
+      "2015": {
+        "standard": "10통사08-02",
+        "standards": [
+          "10통사08-02"
+        ],
+        "unit": "세계화와 평화",
+        "topic": "소극적 평화와 적극적 평화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-02",
+        "standards": [
+          "10통사2-04-02"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "소극적 평화와 적극적 평화"
+        }
+      }
+    },
+    "2020_고1_11월학평_10": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "도시화율과 토지 이용의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도시화율과 토지 이용의 변화"
+        }
+      }
+    },
+    "2020_고1_11월학평_11": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "지진 피해와 안전권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01",
+          "10통사2-01-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지진 피해와 안전권"
+        }
+      }
+    },
+    "2020_고1_11월학평_12": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "에피쿠로스의 절제와 행복",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "에피쿠로스의 절제와 행복"
+        }
+      }
+    },
+    "2020_고1_11월학평_13": {
+      "2015": {
+        "standard": "10통사08-01",
+        "standards": [
+          "10통사08-01"
+        ],
+        "unit": "세계화와 평화",
+        "topic": "세계화와 다국적 기업·세계 도시",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-04-01",
+        "standards": [
+          "10통사2-04-01"
+        ],
+        "unit": "(4) 세계화와 평화",
+        "units": [
+          "(4) 세계화와 평화"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세계화와 다국적 기업·세계 도시"
+        }
+      }
+    },
+    "2020_고1_11월학평_14": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "데카르트와 레오폴드의 자연관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "데카르트와 레오폴드의 자연관"
+        }
+      }
+    },
+    "2020_고1_11월학평_15": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "빅데이터를 활용한 정책 결정",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅데이터를 활용한 정책 결정"
+        }
+      }
+    },
+    "2020_고1_11월학평_16": {
+      "2015": {
+        "standard": "10통사06-03",
+        "standards": [
+          "10통사06-03"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "적극적 우대 조치와 능력에 따른 분배",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-03",
+        "standards": [
+          "10통사2-02-03",
+          "10통사2-02-01"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등",
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "적극적 우대 조치와 능력에 따른 분배"
+        }
+      }
+    },
+    "2020_고1_11월학평_17": {
+      "2015": {
+        "standard": "10통사06-03",
+        "standards": [
+          "10통사06-03"
+        ],
+        "unit": "사회 정의와 불평등",
+        "topic": "수도권 집중과 공간 불평등",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-02-03",
+        "standards": [
+          "10통사2-02-03"
+        ],
+        "unit": "(2) 사회 정의와 불평등",
+        "units": [
+          "(2) 사회 정의와 불평등"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수도권 집중과 공간 불평등"
+        }
+      }
+    },
+    "2020_고1_11월학평_18": {
+      "2015": {
+        "standard": "10통사05-04",
+        "standards": [
+          "10통사05-04"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "예금·주식·채권의 특징",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-03",
+        "standards": [
+          "10통사2-03-03"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "예금·주식·채권의 특징"
+        }
+      }
+    },
+    "2020_고1_11월학평_19": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "연소 근로자의 근로 계약",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "연소 근로자의 근로 계약"
+        }
+      }
+    },
+    "2020_고1_11월학평_20": {
+      "2015": {
+        "standard": "10통사07-03",
+        "standards": [
+          "10통사07-03"
+        ],
+        "unit": "문화와 다양성",
+        "topic": "문화 이해의 태도",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-03",
+        "standards": [
+          "10통사1-04-03"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "문화 이해의 태도"
+        }
+      }
+    },
+    "2020_고1_3월학평_01": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "유교의 효(공경)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "유교의 효(공경)"
+        }
+      }
+    },
+    "2020_고1_3월학평_02": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "이주민에 대한 차별과 문화 존중",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-04",
+        "standards": [
+          "10통사1-04-04",
+          "10통사1-04-03"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성",
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이주민에 대한 차별과 문화 존중"
+        }
+      }
+    },
+    "2020_고1_3월학평_03": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "과학 기술의 가치 중립성 논쟁",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "과학 기술의 가치 중립성 논쟁"
+        }
+      }
+    },
+    "2020_고1_3월학평_04": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "소로의 시민 불복종",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "소로의 시민 불복종"
+        }
+      }
+    },
+    "2020_고1_3월학평_05": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "인간 중심주의와 생태 중심주의",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인간 중심주의와 생태 중심주의"
+        }
+      }
+    },
+    "2020_고1_3월학평_06": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "유교의 벗 사귐",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "유교의 벗 사귐"
+        }
+      }
+    },
+    "2020_고1_3월학평_07": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "세계 인권 선언",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세계 인권 선언"
+        }
+      }
+    },
+    "2020_고1_3월학평_08": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "사바나 기후 지역의 자연환경",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사바나 기후 지역의 자연환경"
+        }
+      }
+    },
+    "2020_고1_3월학평_09": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "우리나라의 지형(동굴·사구·화산체)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "우리나라의 지형(동굴·사구·화산체)"
+        }
+      }
+    },
+    "2020_고1_3월학평_10": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "문화 융합(한국식 피자)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-04-02",
+        "standards": [
+          "10통사1-04-02"
+        ],
+        "unit": "(4) 문화와 다양성",
+        "units": [
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "문화 융합(한국식 피자)"
+        }
+      }
+    },
+    "2020_고1_3월학평_11": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "열대 기후 지역의 생활",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "열대 기후 지역의 생활"
+        }
+      }
+    },
+    "2020_고1_3월학평_12": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "지역별 인구 구조의 차이",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-01",
+        "standards": [
+          "10통사2-05-01"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역별 인구 구조의 차이"
+        }
+      }
+    },
+    "2020_고1_3월학평_13": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "지진과 행동 요령",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지진과 행동 요령"
+        }
+      }
+    },
+    "2020_고1_3월학평_14": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "지구 온난화의 영향",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03",
+          "10통사2-05-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지구 온난화의 영향"
+        }
+      }
+    },
+    "2020_고1_3월학평_15": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "문화의 속성",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "문화의 속성"
+        }
+      }
+    },
+    "2020_고1_3월학평_16": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "고령화와 노인 문제",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-01",
+        "standards": [
+          "10통사2-05-01"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "고령화와 노인 문제"
+        }
+      }
+    },
+    "2020_고1_3월학평_17": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "대중문화와 문화 산업",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "대중문화와 문화 산업"
+        }
+      }
+    },
+    "2020_고1_3월학평_18": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "민사 소송 절차",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "민사 소송 절차"
+        }
+      }
+    },
+    "2020_고1_3월학평_19": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "공급 변동과 시장 균형",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "공급 변동과 시장 균형"
+        }
+      }
+    },
+    "2020_고1_3월학평_20": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "혐오 시설 입지 갈등과 주민 참여",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "혐오 시설 입지 갈등과 주민 참여"
+        }
+      }
+    },
+    "2020_고1_6월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "통합적 관점의 필요성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-02",
+        "standards": [
+          "10통사1-01-02"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "통합적 관점의 필요성"
+        }
+      }
+    },
+    "2020_고1_6월학평_02": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "소득과 행복의 관계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "소득과 행복의 관계"
+        }
+      }
+    },
+    "2020_고1_6월학평_03": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "지구 온난화와 극지방의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03",
+          "10통사2-05-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지구 온난화와 극지방의 변화"
+        }
+      }
+    },
+    "2020_고1_6월학평_04": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "기후에 따른 관광 상품과 지역",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후에 따른 관광 상품과 지역"
+        }
+      }
+    },
+    "2020_고1_6월학평_05": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "열대 기후 지역의 의복 문화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01",
+          "10통사1-04-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "열대 기후 지역의 의복 문화"
+        }
+      }
+    },
+    "2020_고1_6월학평_06": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "지역 조사 과정의 활동",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 조사 과정의 활동"
+        }
+      }
+    },
+    "2020_고1_6월학평_07": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "카르스트·빙하 지형과 관광",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "카르스트·빙하 지형과 관광"
+        }
+      }
+    },
+    "2020_고1_6월학평_08": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "에피쿠로스의 검소한 삶과 행복",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "에피쿠로스의 검소한 삶과 행복"
+        }
+      }
+    },
+    "2020_고1_6월학평_09": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "잊힐 권리와 알 권리",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02",
+          "10통사2-01-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회",
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "잊힐 권리와 알 권리"
+        }
+      }
+    },
+    "2020_고1_6월학평_10": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "베이컨과 레오폴드의 자연관",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "베이컨과 레오폴드의 자연관"
+        }
+      }
+    },
+    "2020_고1_6월학평_11": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "정보화와 지적 재산권 보호",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정보화와 지적 재산권 보호"
+        }
+      }
+    },
+    "2020_고1_6월학평_12": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "인민 헌장과 참정권의 확장",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인민 헌장과 참정권의 확장"
+        }
+      }
+    },
+    "2020_고1_6월학평_13": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "기후 지역과 전통 가옥",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01",
+          "10통사1-04-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간",
+          "(4) 문화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후 지역과 전통 가옥"
+        }
+      }
+    },
+    "2020_고1_6월학평_14": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "주거권(확장된 인권)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "주거권(확장된 인권)"
+        }
+      }
+    },
+    "2020_고1_6월학평_15": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "교통 발달과 촌락의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02",
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회",
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "교통 발달과 촌락의 변화"
+        }
+      }
+    },
+    "2020_고1_6월학평_16": {
+      "2015": {
+        "standard": "10통사09-01",
+        "standards": [
+          "10통사09-01"
+        ],
+        "unit": "미래와 지속가능한 삶",
+        "topic": "인구 고령화를 보는 다양한 관점",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-01",
+        "standards": [
+          "10통사2-05-01"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인구 고령화를 보는 다양한 관점"
+        }
+      }
+    },
+    "2020_고1_6월학평_17": {
+      "2015": {
+        "standard": "10통사05-02",
+        "standards": [
+          "10통사05-02"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "기업의 사회적 책임과 환경",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기업의 사회적 책임과 환경"
+        }
+      }
+    },
+    "2020_고1_6월학평_18": {
+      "2015": {
+        "standard": "10통사04-01",
+        "standards": [
+          "10통사04-01"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "세계 인권 선언과 문화권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-01",
+        "standards": [
+          "10통사2-01-01"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세계 인권 선언과 문화권"
+        }
+      }
+    },
+    "2020_고1_6월학평_19": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "전통 사회와 산업 사회의 비교",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전통 사회와 산업 사회의 비교"
+        }
+      }
+    },
+    "2020_고1_6월학평_20": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "도시 인구와 도시화율의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "도시 인구와 도시화율의 변화"
+        }
+      }
+    },
+    "2020_고1_9월학평_01": {
+      "2015": {
+        "standard": "10통사01-01",
+        "standards": [
+          "10통사01-01"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "플라스틱 쓰레기와 네 가지 관점",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-01-01",
+        "standards": [
+          "10통사1-01-01"
+        ],
+        "unit": "(1) 통합적 관점",
+        "units": [
+          "(1) 통합적 관점"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "플라스틱 쓰레기와 네 가지 관점"
+        }
+      }
+    },
+    "2020_고1_9월학평_02": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "자연 재난의 유형과 행동 요령",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자연 재난의 유형과 행동 요령"
+        }
+      }
+    },
+    "2020_고1_9월학평_03": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "평등권과 차별 판단",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "평등권과 차별 판단"
+        }
+      }
+    },
+    "2020_고1_9월학평_04": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "지역 조사 보고서(제주)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지역 조사 보고서(제주)"
+        }
+      }
+    },
+    "2020_고1_9월학평_05": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "함께 누리는 행복의 의미",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "함께 누리는 행복의 의미"
+        }
+      }
+    },
+    "2020_고1_9월학평_06": {
+      "2015": {
+        "standard": "10통사04-02",
+        "standards": [
+          "10통사04-02"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "시민 불복종(홍콩 우산 혁명)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-02",
+        "standards": [
+          "10통사2-01-02"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "시민 불복종(홍콩 우산 혁명)"
+        }
+      }
+    },
+    "2020_고1_9월학평_07": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "근로의 권리와 노동 3권",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "근로의 권리와 노동 3권"
+        }
+      }
+    },
+    "2020_고1_9월학평_08": {
+      "2015": {
+        "standard": "10통사02-01",
+        "standards": [
+          "10통사02-01"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "기후 지역과 주민 생활",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-01",
+        "standards": [
+          "10통사1-03-01"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기후 지역과 주민 생활"
+        }
+      }
+    },
+    "2020_고1_9월학평_09": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "산업화에 따른 생활양식의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산업화에 따른 생활양식의 변화"
+        }
+      }
+    },
+    "2020_고1_9월학평_10": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "기회비용과 합리적 선택",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-02",
+        "standards": [
+          "10통사2-03-02"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기회비용과 합리적 선택"
+        }
+      }
+    },
+    "2020_고1_9월학평_11": {
+      "2015": {
+        "standard": "10통사04-03",
+        "standards": [
+          "10통사04-03"
+        ],
+        "unit": "인권 보장과 헌법",
+        "topic": "세계 인권 문제와 해결 방안",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-01-03",
+        "standards": [
+          "10통사2-01-03"
+        ],
+        "unit": "(1) 인권 보장과 헌법",
+        "units": [
+          "(1) 인권 보장과 헌법"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세계 인권 문제와 해결 방안"
+        }
+      }
+    },
+    "2020_고1_9월학평_12": {
+      "2015": {
+        "standard": "10통사01-03",
+        "standards": [
+          "10통사01-03"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "민주주의와 행복한 삶의 조건",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-02",
+        "standards": [
+          "10통사1-02-02"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "민주주의와 행복한 삶의 조건"
+        }
+      }
+    },
+    "2020_고1_9월학평_13": {
+      "2015": {
+        "standard": "10통사09-02",
+        "standards": [
+          "10통사09-02"
+        ],
+        "unit": "미래와 지속가능한 삶",
+        "topic": "조력 발전소 건설의 찬반",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-05-02",
+        "standards": [
+          "10통사2-05-02"
+        ],
+        "unit": "(5) 미래와 지속가능한 삶",
+        "units": [
+          "(5) 미래와 지속가능한 삶"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "조력 발전소 건설의 찬반"
+        }
+      }
+    },
+    "2020_고1_9월학평_14": {
+      "2015": {
+        "standard": "10통사02-02",
+        "standards": [
+          "10통사02-02"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "대지 윤리(레오폴드)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-02",
+        "standards": [
+          "10통사1-03-02"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "대지 윤리(레오폴드)"
+        }
+      }
+    },
+    "2020_고1_9월학평_15": {
+      "2015": {
+        "standard": "10통사03-01",
+        "standards": [
+          "10통사03-01"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "산업화·도시화와 생활공간의 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-01",
+        "standards": [
+          "10통사1-05-01"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산업화·도시화와 생활공간의 변화"
+        }
+      }
+    },
+    "2020_고1_9월학평_16": {
+      "2015": {
+        "standard": "10통사05-01",
+        "standards": [
+          "10통사05-01"
+        ],
+        "unit": "시장경제와 금융",
+        "topic": "자본주의의 전개 과정",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회2",
+        "standard": "10통사2-03-01",
+        "standards": [
+          "10통사2-03-01"
+        ],
+        "unit": "(3) 시장경제와 지속가능발전",
+        "units": [
+          "(3) 시장경제와 지속가능발전"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자본주의의 전개 과정"
+        }
+      }
+    },
+    "2020_고1_9월학평_17": {
+      "2015": {
+        "standard": "10통사01-02",
+        "standards": [
+          "10통사01-02"
+        ],
+        "unit": "인간, 사회, 환경과 행복",
+        "topic": "아리스토텔레스의 최고선과 행복",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-02-01",
+        "standards": [
+          "10통사1-02-01"
+        ],
+        "unit": "(2) 인간, 사회, 환경과 행복",
+        "units": [
+          "(2) 인간, 사회, 환경과 행복"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "아리스토텔레스의 최고선과 행복"
+        }
+      }
+    },
+    "2020_고1_9월학평_18": {
+      "2015": {
+        "standard": "10통사02-03",
+        "standards": [
+          "10통사02-03"
+        ],
+        "unit": "자연환경과 인간",
+        "topic": "환경 영향 평가와 탄소 배출권 거래제",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-03-03",
+        "standards": [
+          "10통사1-03-03"
+        ],
+        "unit": "(3) 자연환경과 인간",
+        "units": [
+          "(3) 자연환경과 인간"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "환경 영향 평가와 탄소 배출권 거래제"
+        }
+      }
+    },
+    "2020_고1_9월학평_19": {
+      "2015": {
+        "standard": "10통사03-03",
+        "standards": [
+          "10통사03-03"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "교통 변화와 지역 쇠퇴·재생",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-03",
+        "standards": [
+          "10통사1-05-03",
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회",
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "교통 변화와 지역 쇠퇴·재생"
+        }
+      }
+    },
+    "2020_고1_9월학평_20": {
+      "2015": {
+        "standard": "10통사03-02",
+        "standards": [
+          "10통사03-02"
+        ],
+        "unit": "생활공간과 사회",
+        "topic": "정보 격차 지수",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합사회1",
+        "standard": "10통사1-05-02",
+        "standards": [
+          "10통사1-05-02"
+        ],
+        "unit": "(5) 생활공간과 사회",
+        "units": [
+          "(5) 생활공간과 사회"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정보 격차 지수"
+        }
+      }
+    },
     "2021_고1_11월학평_01": {
       "2015": {
         "standard": "10통사01-01",
@@ -12385,16 +20367,21 @@
   "audit": {
     "method": "0문항으로 집계된 2022 성취기준마다 '그 성취기준이 다루는 대상 명사'의 어휘로 전 문항 본문(text.stem + text.boxed + text.choices + ext.text_raw)을 전수 검색해 '진짜 없음'과 '판정 실패'를 갈랐다. 성취기준별 집계는 대표 1개가 아니라 standards 전체 목록으로 센다 — 1:N 재편이 흔해 한 문항이 두 성취기준의 후보로 동시에 오르기 때문이다.",
     "corpus": {
-      "mapped_exams": 18,
-      "mapped_items": 370,
-      "audit_only_exams": 12,
-      "audit_only_items": 220,
-      "audit_only_note": "2018·2019·2020 고1 학평 12회차 — 어휘 검색에만 쓰고 매핑하지 않았다"
+      "mapped_exams": 30,
+      "mapped_items": 610,
+      "audit_only_exams": 0,
+      "audit_only_items": 0,
+      "audit_only_note": "감사 전용 말뭉치는 남아 있지 않다 — 2018·2019·2020 12회차를 전부 판정해 매핑에 넣었다.",
+      "caveats": [
+        "2018_고1_9월학평(통합사회)은 extract 의 문항 분리가 2번 문항 자료(근로 계약서)의 '3.'~'6.' 줄을 문항 시작으로 잘못 잡아 블록 3~6이 어긋난다. 판정은 병합된 블록 원문을 직접 읽어 실제 문항 번호에 맞췄으므로 이 파일의 qid 는 옳지만, 같은 회차를 다시 extract 하면 items 의 3~6번 본문은 여전히 어긋난다(실측).",
+        "2019_고1_11월학평(통합사회)도 1번 문항 자료의 '1. 원인:' 줄 때문에 블록 1·2 가 갈렸다. 3번 이후는 정상이다.",
+        "2020_고1_11월학평(통합과학)은 정답지 PNG 의 OCR·원문자 대조가 둘 다 실패해 정답 축이 0/3 이다. 본문은 온전하므로 매핑에는 영향이 없지만 그 회차 items 의 answer 는 전부 null 이다."
+      ]
     },
     "findings": [
       {
         "standard": "10통사2-05-03",
-        "verdict": "판정 실패(수정함)",
+        "verdict": "판정 실패(수정함) — 1문항",
         "terms": [
           "세계시민",
           "지구촌",
@@ -12405,11 +20392,11 @@
         "evidence": [
           "2025_고1_6월학평_22"
         ],
-        "note": "'세계시민'이라는 낱말이 문항에 없고 '세계는 하나의 공동체'로 풀어 쓰여 있어 놓쳤다. 어휘를 넓혀 재검색해 찾았고 2차 성취기준으로 올렸다."
+        "note": "'세계시민'이라는 낱말이 문항에 없고 '세계는 하나의 공동체'로 풀어 쓰여 있어 놓쳤다. 어휘를 넓혀 재검색해 찾았고 2차 성취기준으로 올렸다. 2018~2020 12회차에는 이 성취기준의 대상(미래 사회 예측·세계시민)을 정면으로 다루는 문항이 없었다 — 여전히 1문항이다."
       },
       {
         "standard": "10통사2-02-01",
-        "verdict": "표본 한계(미해소)",
+        "verdict": "표본 한계(해소) — 3문항",
         "terms": [
           "분배 정의",
           "업적에 따른",
@@ -12419,13 +20406,45 @@
           "실질적 기준"
         ],
         "evidence": [
-          "2018_고1_11월학평_19(감사 말뭉치)",
-          "2020_고1_11월학평_16(감사 말뭉치)",
-          "2018_고1_11월학평_03(감사 말뭉치)"
+          "2018_고1_11월학평_19",
+          "2020_고1_11월학평_16",
+          "2018_고1_3월학평_04"
         ],
-        "note": "매핑 대상 18회차에는 0건이지만 2018·2020년 회차에는 '필요에 따른 분배의 문제점'· '능력에 따른 분배와 적극적 우대 조치' 문항이 실재한다. 즉 2015 기출에 없는 것이 아니라 우리가 매핑한 회차에 안 나온 것이다. 첫 어휘 검색이 '업적'만으로 4건을 잡았는데 전부 '산업적'의 부분 문자열 오탐이었다 — 두 글자 어휘를 검색어로 쓰면 안 된다."
+        "note": "앞 단계에서 유일하게 남아 있던 0문항 자리다. 2018·2020년 회차를 판정해 채웠다 — 2018_고1_11월학평_19(업적에 따른 분배와 그 한계), 2020_고1_11월학평_16(적극적 우대 조치와 능력에 따른 분배), 2018_고1_3월학평_04(필요에 따른 분배). 즉 2015 기출에 없던 것이 아니라 앞 단계가 매핑한 18회차에 안 나온 것이었다. ★ 앞 단계가 근거로 적어 둔 2018_고1_11월학평_03 은 오탐이다 — '분배 정의'가 선지 ④의 '공정 무역을 통한 지구촌 분배 정의 실현'(오답 선지)에만 나오고 문항의 대상은 지역화 전략이다."
       }
-    ]
+    ],
+    "counts_by_standard": {
+      "10통사1-01-01": 21,
+      "10통사1-01-02": 7,
+      "10통사1-02-01": 33,
+      "10통사1-02-02": 18,
+      "10통사1-03-01": 81,
+      "10통사1-03-02": 32,
+      "10통사1-03-03": 35,
+      "10통사1-04-01": 26,
+      "10통사1-04-02": 11,
+      "10통사1-04-03": 14,
+      "10통사1-04-04": 8,
+      "10통사1-05-01": 35,
+      "10통사1-05-02": 45,
+      "10통사1-05-03": 22,
+      "10통사2-01-01": 29,
+      "10통사2-01-02": 41,
+      "10통사2-01-03": 25,
+      "10통사2-02-01": 3,
+      "10통사2-02-02": 11,
+      "10통사2-02-03": 12,
+      "10통사2-03-01": 14,
+      "10통사2-03-02": 19,
+      "10통사2-03-03": 6,
+      "10통사2-03-04": 5,
+      "10통사2-04-01": 11,
+      "10통사2-04-02": 9,
+      "10통사2-04-03": 4,
+      "10통사2-05-01": 8,
+      "10통사2-05-02": 18,
+      "10통사2-05-03": 1
+    }
   },
   "rate_baseline": {
     "source": "gw rates (EBSi 역대 오답률) — 매핑 대상 18회차 실측",

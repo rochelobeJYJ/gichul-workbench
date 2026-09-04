@@ -2,8 +2,8 @@
   "slug": "integrated-science",
   "source_revision": "2015",
   "target_revision": "2022",
-  "generated_by": "손 판정 (문항 본문 전수 통독 · 대상 명사 기준) — 2021~2024 고1 학평 16회차(2015개정 기출) + 2025 고1 6·9월 학평(2022개정 시행) 총 370문항. 0문항 성취기준은 어휘 전수 검색으로 감사함(docs/INTEGRATED.md 매핑 절).",
-  "source_count": 370,
+  "generated_by": "손 판정 (문항 본문 전수 통독 · 대상 명사 기준) — 2018~2024 고1 학평 28회차(2015개정 기출) + 2025 고1 6·9월 학평(2022개정 시행) 총 610문항. 2018~2020 12회차 240문항은 이번 단계에서 새로 판정했다. 0문항·얇은 성취기준은 어휘 전수 검색으로 감사함(audit 참조).",
+  "source_count": 610,
   "target_catalog": [
     {
       "standard": "10통과1-01-01",
@@ -131,6 +131,7892 @@
     }
   ],
   "items": {
+    "2018_고1_11월학평_01": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "알칼리 금속(리튬)의 성질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "알칼리 금속(리튬)의 성질"
+        }
+      }
+    },
+    "2018_고1_11월학평_02": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "별의 진화와 원소 생성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 진화와 원소 생성"
+        }
+      }
+    },
+    "2018_고1_11월학평_03": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "단백질 합성과 아미노산",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "단백질 합성과 아미노산"
+        }
+      }
+    },
+    "2018_고1_11월학평_04": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "염화 나트륨의 이온 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "염화 나트륨의 이온 결합"
+        }
+      }
+    },
+    "2018_고1_11월학평_05": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "초전도체와 전력 케이블",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "초전도체와 전력 케이블"
+        }
+      }
+    },
+    "2018_고1_11월학평_06": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자유 낙하와 수평으로 던진 물체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유 낙하와 수평으로 던진 물체"
+        }
+      }
+    },
+    "2018_고1_11월학평_07": {
+      "2015": {
+        "standard": "10통과05-02",
+        "standards": [
+          "10통과05-02"
+        ],
+        "unit": "생명 시스템",
+        "topic": "감자즙 효소 반응 실험",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "감자즙 효소 반응 실험"
+        }
+      }
+    },
+    "2018_고1_11월학평_08": {
+      "2015": {
+        "standard": "10통과04-02",
+        "standards": [
+          "10통과04-02"
+        ],
+        "unit": "지구 시스템",
+        "topic": "지구 시스템 상호 작용의 예",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지구 시스템 상호 작용의 예"
+        }
+      }
+    },
+    "2018_고1_11월학평_09": {
+      "2015": {
+        "standard": "10통과04-03",
+        "standards": [
+          "10통과04-03"
+        ],
+        "unit": "지구 시스템",
+        "topic": "판 경계와 주변 지형",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-02",
+        "standards": [
+          "10통과1-03-02"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "판 경계와 주변 지형"
+        }
+      }
+    },
+    "2018_고1_11월학평_10": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "식물 세포의 구조와 세포막",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "식물 세포의 구조와 세포막"
+        }
+      }
+    },
+    "2018_고1_11월학평_11": {
+      "2015": {
+        "standard": "10통과05-03",
+        "standards": [
+          "10통과05-03"
+        ],
+        "unit": "생명 시스템",
+        "topic": "전사와 번역",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-06",
+        "standards": [
+          "10통과1-03-06"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전사와 번역"
+        }
+      }
+    },
+    "2018_고1_11월학평_12": {
+      "2015": {
+        "standard": "10통과06-03",
+        "standards": [
+          "10통과06-03"
+        ],
+        "unit": "화학 변화",
+        "topic": "산과 염기의 성질 확인",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-04",
+        "standards": [
+          "10통과2-01-04"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산과 염기의 성질 확인"
+        }
+      }
+    },
+    "2018_고1_11월학평_13": {
+      "2015": {
+        "standard": "10통과06-02",
+        "standards": [
+          "10통과06-02"
+        ],
+        "unit": "화학 변화",
+        "topic": "구리의 산화·환원",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-03",
+        "standards": [
+          "10통과2-01-03"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "구리의 산화·환원"
+        }
+      }
+    },
+    "2018_고1_11월학평_14": {
+      "2015": {
+        "standard": "10통과07-01",
+        "standards": [
+          "10통과07-01"
+        ],
+        "unit": "생물다양성과 유지",
+        "topic": "지질 시대와 생물 과의 수 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-01",
+        "standards": [
+          "10통과2-01-01"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지질 시대와 생물 과의 수 변화"
+        }
+      }
+    },
+    "2018_고1_11월학평_15": {
+      "2015": {
+        "standard": "10통과07-02",
+        "standards": [
+          "10통과07-02"
+        ],
+        "unit": "생물다양성과 유지",
+        "topic": "항생제 내성과 자연 선택",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-02",
+        "standards": [
+          "10통과2-01-02"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "항생제 내성과 자연 선택"
+        }
+      }
+    },
+    "2018_고1_11월학평_16": {
+      "2015": {
+        "standard": "10통과08-03",
+        "standards": [
+          "10통과08-03"
+        ],
+        "unit": "생태계와 환경",
+        "topic": "이산화 탄소 농도와 북극 얼음 면적",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-02-03",
+        "standards": [
+          "10통과2-02-03"
+        ],
+        "unit": "(2) 환경과 에너지",
+        "units": [
+          "(2) 환경과 에너지"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이산화 탄소 농도와 북극 얼음 면적"
+        }
+      }
+    },
+    "2018_고1_11월학평_17": {
+      "2015": {
+        "standard": "10통과09-02",
+        "standards": [
+          "10통과09-02"
+        ],
+        "unit": "발전과 신재생 에너지",
+        "topic": "송전선의 손실 전력(2022에서 빠진 축)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "송전선의 손실 전력(2022에서 빠진 축)"
+        }
+      }
+    },
+    "2018_고1_11월학평_18": {
+      "2015": {
+        "standard": "10통과09-05",
+        "standards": [
+          "10통과09-05"
+        ],
+        "unit": "발전과 신재생 에너지",
+        "topic": "연료 전지와 태양광 발전(신재생 에너지)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-02-06",
+        "standards": [
+          "10통과2-02-06"
+        ],
+        "unit": "(2) 환경과 에너지",
+        "units": [
+          "(2) 환경과 에너지"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "연료 전지와 태양광 발전(신재생 에너지)"
+        }
+      }
+    },
+    "2018_고1_11월학평_19": {
+      "2015": {
+        "standard": "10통과06-04",
+        "standards": [
+          "10통과06-04"
+        ],
+        "unit": "화학 변화",
+        "topic": "중화 반응과 혼합 용액의 최고 온도",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-04",
+        "standards": [
+          "10통과2-01-04"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "중화 반응과 혼합 용액의 최고 온도"
+        }
+      }
+    },
+    "2018_고1_11월학평_20": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "충돌 시간과 평균 힘",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "충돌 시간과 평균 힘"
+        }
+      }
+    },
+    "2018_고1_3월학평_01": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "중력과 힘의 평형·자유 낙하",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "중력과 힘의 평형·자유 낙하"
+        }
+      }
+    },
+    "2018_고1_3월학평_02": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "볼록 렌즈에 의한 상",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "볼록 렌즈에 의한 상"
+        }
+      }
+    },
+    "2018_고1_3월학평_03": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "전자기 유도와 유도 전류",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-02-05",
+        "standards": [
+          "10통과2-02-05"
+        ],
+        "unit": "(2) 환경과 에너지",
+        "units": [
+          "(2) 환경과 에너지"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전자기 유도와 유도 전류"
+        }
+      }
+    },
+    "2018_고1_3월학평_04": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "물의 열팽창",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물의 열팽창"
+        }
+      }
+    },
+    "2018_고1_3월학평_05": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "역학적 에너지와 마찰",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "역학적 에너지와 마찰"
+        }
+      }
+    },
+    "2018_고1_3월학평_06": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "물의 응고열 이용(발열 현상)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-05",
+        "standards": [
+          "10통과2-01-05"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물의 응고열 이용(발열 현상)"
+        }
+      }
+    },
+    "2018_고1_3월학평_07": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "이온의 전자 배치와 화합물",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04",
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이온의 전자 배치와 화합물"
+        }
+      }
+    },
+    "2018_고1_3월학평_08": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "용해도 곡선",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "용해도 곡선"
+        }
+      }
+    },
+    "2018_고1_3월학평_09": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "앙금 생성 반응 실험 설계",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "앙금 생성 반응 실험 설계"
+        }
+      }
+    },
+    "2018_고1_3월학평_10": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "구리의 산화와 환원",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-03",
+        "standards": [
+          "10통과2-01-03"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "구리의 산화와 환원"
+        }
+      }
+    },
+    "2018_고1_3월학평_11": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "증산 작용 실험",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "증산 작용 실험"
+        }
+      }
+    },
+    "2018_고1_3월학평_12": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "소화계의 구조",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "소화계의 구조"
+        }
+      }
+    },
+    "2018_고1_3월학평_13": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "생식 세포 분열",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "생식 세포 분열"
+        }
+      }
+    },
+    "2018_고1_3월학평_14": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "신경계와 흥분 전달",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "신경계와 흥분 전달"
+        }
+      }
+    },
+    "2018_고1_3월학평_15": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "적록 색맹 가계도",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "적록 색맹 가계도"
+        }
+      }
+    },
+    "2018_고1_3월학평_16": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "기온·이슬점과 상대 습도",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기온·이슬점과 상대 습도"
+        }
+      }
+    },
+    "2018_고1_3월학평_17": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "별의 일주 운동",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 일주 운동"
+        }
+      }
+    },
+    "2018_고1_3월학평_18": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "태양계 행성",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "태양계 행성"
+        }
+      }
+    },
+    "2018_고1_3월학평_19": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "암석의 생성과 종류",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "암석의 생성과 종류"
+        }
+      }
+    },
+    "2018_고1_3월학평_20": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "수온·염분과 해수의 순환",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수온·염분과 해수의 순환"
+        }
+      }
+    },
+    "2018_고1_6월학평_01": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "태양의 흡수 스펙트럼과 원소",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "태양의 흡수 스펙트럼과 원소"
+        }
+      }
+    },
+    "2018_고1_6월학평_02": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 38만 년과 우주 배경 복사",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 38만 년과 우주 배경 복사"
+        }
+      }
+    },
+    "2018_고1_6월학평_03": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 우주론과 정상 우주론",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 우주론과 정상 우주론"
+        }
+      }
+    },
+    "2018_고1_6월학평_04": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "우주 원소의 질량비와 물질의 기원",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01",
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "우주 원소의 질량비와 물질의 기원"
+        }
+      }
+    },
+    "2018_고1_6월학평_05": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "지각과 생명체의 구성 원소 질량비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지각과 생명체의 구성 원소 질량비"
+        }
+      }
+    },
+    "2018_고1_6월학평_06": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "태양계의 형성 과정",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "태양계의 형성 과정"
+        }
+      }
+    },
+    "2018_고1_6월학평_07": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "별의 진화와 초신성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 진화와 초신성"
+        }
+      }
+    },
+    "2018_고1_6월학평_08": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "원자가 전자와 전자 껍질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "원자가 전자와 전자 껍질"
+        }
+      }
+    },
+    "2018_고1_6월학평_09": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "제설제와 이온 결합 물질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "제설제와 이온 결합 물질"
+        }
+      }
+    },
+    "2018_고1_6월학평_10": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "전기 전도성과 화학 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전기 전도성과 화학 결합"
+        }
+      }
+    },
+    "2018_고1_6월학평_11": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "알칼리 금속의 성질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "알칼리 금속의 성질"
+        }
+      }
+    },
+    "2018_고1_6월학평_12": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "DNA 모형과 염기 상보 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "DNA 모형과 염기 상보 결합"
+        }
+      }
+    },
+    "2018_고1_6월학평_13": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "별의 내부 구조와 원소 생성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 내부 구조와 원소 생성"
+        }
+      }
+    },
+    "2018_고1_6월학평_14": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "규산염 광물의 결합 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "규산염 광물의 결합 구조"
+        }
+      }
+    },
+    "2018_고1_6월학평_15": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "단백질과 아미노산",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "단백질과 아미노산"
+        }
+      }
+    },
+    "2018_고1_6월학평_16": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "그래핀",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "그래핀"
+        }
+      }
+    },
+    "2018_고1_6월학평_17": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "중력이 자연 현상에 미치는 영향",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "중력이 자연 현상에 미치는 영향"
+        }
+      }
+    },
+    "2018_고1_6월학평_18": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자유 낙하와 수평으로 던진 물체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유 낙하와 수평으로 던진 물체"
+        }
+      }
+    },
+    "2018_고1_6월학평_19": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "질량과 운동 상태 변화(충격량)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "질량과 운동 상태 변화(충격량)"
+        }
+      }
+    },
+    "2018_고1_6월학평_20": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자동차의 안전장치",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자동차의 안전장치"
+        }
+      }
+    },
+    "2018_고1_9월학평_01": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 이후 입자의 생성 순서",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 이후 입자의 생성 순서"
+        }
+      }
+    },
+    "2018_고1_9월학평_02": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "알칼리 금속의 성질로 원소 찾기",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "알칼리 금속의 성질로 원소 찾기"
+        }
+      }
+    },
+    "2018_고1_9월학평_03": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "물과 메테인의 공유 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04",
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물과 메테인의 공유 결합"
+        }
+      }
+    },
+    "2018_고1_9월학평_04": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "알칼리 금속(나트륨)의 반응",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "알칼리 금속(나트륨)의 반응"
+        }
+      }
+    },
+    "2018_고1_9월학평_05": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "전기 전도성과 화학 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전기 전도성과 화학 결합"
+        }
+      }
+    },
+    "2018_고1_9월학평_06": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "탄소의 결합 방식",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "탄소의 결합 방식"
+        }
+      }
+    },
+    "2018_고1_9월학평_07": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "사람과 지각의 구성 원소 질량비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사람과 지각의 구성 원소 질량비"
+        }
+      }
+    },
+    "2018_고1_9월학평_08": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "생명체 구성 물질(단백질·핵산)의 구분",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "생명체 구성 물질(단백질·핵산)의 구분"
+        }
+      }
+    },
+    "2018_고1_9월학평_09": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "초전도체와 마이스너 효과",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "초전도체와 마이스너 효과"
+        }
+      }
+    },
+    "2018_고1_9월학평_10": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "수평으로 던진 물체와 자유 낙하",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수평으로 던진 물체와 자유 낙하"
+        }
+      }
+    },
+    "2018_고1_9월학평_11": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "정지한 물체와 낙하하는 물체의 중력",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "정지한 물체와 낙하하는 물체의 중력"
+        }
+      }
+    },
+    "2018_고1_9월학평_12": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 우주론과 정상 우주론",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 우주론과 정상 우주론"
+        }
+      }
+    },
+    "2018_고1_9월학평_13": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "힘-시간 그래프와 충격량",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "힘-시간 그래프와 충격량"
+        }
+      }
+    },
+    "2018_고1_9월학평_14": {
+      "2015": {
+        "standard": "10통과04-02",
+        "standards": [
+          "10통과04-02"
+        ],
+        "unit": "지구 시스템",
+        "topic": "지구 시스템 권역 간 상호 작용",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지구 시스템 권역 간 상호 작용"
+        }
+      }
+    },
+    "2018_고1_9월학평_15": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "세포막의 구조와 물질 출입",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세포막의 구조와 물질 출입"
+        }
+      }
+    },
+    "2018_고1_9월학평_16": {
+      "2015": {
+        "standard": "10통과05-03",
+        "standards": [
+          "10통과05-03"
+        ],
+        "unit": "생명 시스템",
+        "topic": "유전 정보의 흐름과 코돈",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-06",
+        "standards": [
+          "10통과1-03-06"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "유전 정보의 흐름과 코돈"
+        }
+      }
+    },
+    "2018_고1_9월학평_17": {
+      "2015": {
+        "standard": "10통과05-02",
+        "standards": [
+          "10통과05-02"
+        ],
+        "unit": "생명 시스템",
+        "topic": "카탈레이스(생체 촉매) 실험",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "카탈레이스(생체 촉매) 실험"
+        }
+      }
+    },
+    "2018_고1_9월학평_18": {
+      "2015": {
+        "standard": "10통과04-01",
+        "standards": [
+          "10통과04-01"
+        ],
+        "unit": "지구 시스템",
+        "topic": "기권과 수권의 층상 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기권과 수권의 층상 구조"
+        }
+      }
+    },
+    "2018_고1_9월학평_19": {
+      "2015": {
+        "standard": "10통과04-03",
+        "standards": [
+          "10통과04-03"
+        ],
+        "unit": "지구 시스템",
+        "topic": "판 경계의 유형 구분",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-02",
+        "standards": [
+          "10통과1-03-02"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "판 경계의 유형 구분"
+        }
+      }
+    },
+    "2018_고1_9월학평_20": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "식물 세포의 구조(핵·엽록체·미토콘드리아)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "식물 세포의 구조(핵·엽록체·미토콘드리아)"
+        }
+      }
+    },
+    "2019_고1_11월학평_01": {
+      "2015": {
+        "standard": "10통과04-01",
+        "standards": [
+          "10통과04-01"
+        ],
+        "unit": "지구 시스템",
+        "topic": "지구 시스템의 에너지원",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01",
+          "10통과2-02-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용",
+          "(2) 환경과 에너지"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지구 시스템의 에너지원"
+        }
+      }
+    },
+    "2019_고1_11월학평_02": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "동물 세포의 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "동물 세포의 구조"
+        }
+      }
+    },
+    "2019_고1_11월학평_03": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "주기율표에서 성질이 비슷한 원소",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "주기율표에서 성질이 비슷한 원소"
+        }
+      }
+    },
+    "2019_고1_11월학평_04": {
+      "2015": {
+        "standard": "10통과04-03",
+        "standards": [
+          "10통과04-03"
+        ],
+        "unit": "지구 시스템",
+        "topic": "판 경계와 맨틀 대류",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-02",
+        "standards": [
+          "10통과1-03-02"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "판 경계와 맨틀 대류"
+        }
+      }
+    },
+    "2019_고1_11월학평_05": {
+      "2015": {
+        "standard": "10통과08-04",
+        "standards": [
+          "10통과08-04"
+        ],
+        "unit": "생태계와 환경",
+        "topic": "전기 에너지의 전환과 열 발생",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-02-06",
+        "standards": [
+          "10통과2-02-06"
+        ],
+        "unit": "(2) 환경과 에너지",
+        "units": [
+          "(2) 환경과 에너지"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전기 에너지의 전환과 열 발생"
+        }
+      }
+    },
+    "2019_고1_11월학평_06": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "태양 질량 별의 진화 단계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "태양 질량 별의 진화 단계"
+        }
+      }
+    },
+    "2019_고1_11월학평_07": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "에어백과 충돌 시간·평균 힘",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "에어백과 충돌 시간·평균 힘"
+        }
+      }
+    },
+    "2019_고1_11월학평_08": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "세포막을 통한 물질 이동",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세포막을 통한 물질 이동"
+        }
+      }
+    },
+    "2019_고1_11월학평_09": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자유 낙하와 수평으로 던진 물체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유 낙하와 수평으로 던진 물체"
+        }
+      }
+    },
+    "2019_고1_11월학평_10": {
+      "2015": {
+        "standard": "10통과08-04",
+        "standards": [
+          "10통과08-04"
+        ],
+        "unit": "생태계와 환경",
+        "topic": "열기관의 열효율",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-02-06",
+        "standards": [
+          "10통과2-02-06"
+        ],
+        "unit": "(2) 환경과 에너지",
+        "units": [
+          "(2) 환경과 에너지"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "열기관의 열효율"
+        }
+      }
+    },
+    "2019_고1_11월학평_11": {
+      "2015": {
+        "standard": "10통과05-03",
+        "standards": [
+          "10통과05-03"
+        ],
+        "unit": "생명 시스템",
+        "topic": "전사와 번역",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-06",
+        "standards": [
+          "10통과1-03-06"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전사와 번역"
+        }
+      }
+    },
+    "2019_고1_11월학평_12": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "그래핀의 성질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "그래핀의 성질"
+        }
+      }
+    },
+    "2019_고1_11월학평_13": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "물과 산화 마그네슘의 화학 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물과 산화 마그네슘의 화학 결합"
+        }
+      }
+    },
+    "2019_고1_11월학평_14": {
+      "2015": {
+        "standard": "10통과07-01",
+        "standards": [
+          "10통과07-01"
+        ],
+        "unit": "생물다양성과 유지",
+        "topic": "지질 시대와 표준 화석",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-01",
+        "standards": [
+          "10통과2-01-01"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지질 시대와 표준 화석"
+        }
+      }
+    },
+    "2019_고1_11월학평_15": {
+      "2015": {
+        "standard": "10통과06-04",
+        "standards": [
+          "10통과06-04"
+        ],
+        "unit": "화학 변화",
+        "topic": "염산과 수산화 나트륨의 중화 반응",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-04",
+        "standards": [
+          "10통과2-01-04"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "염산과 수산화 나트륨의 중화 반응"
+        }
+      }
+    },
+    "2019_고1_11월학평_16": {
+      "2015": {
+        "standard": "10통과08-01",
+        "standards": [
+          "10통과08-01"
+        ],
+        "unit": "생태계와 환경",
+        "topic": "생태계 구성 요소의 상호 관계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-02-01",
+        "standards": [
+          "10통과2-02-01"
+        ],
+        "unit": "(2) 환경과 에너지",
+        "units": [
+          "(2) 환경과 에너지"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "생태계 구성 요소의 상호 관계"
+        }
+      }
+    },
+    "2019_고1_11월학평_17": {
+      "2015": {
+        "standard": "10통과06-02",
+        "standards": [
+          "10통과06-02"
+        ],
+        "unit": "화학 변화",
+        "topic": "아연과 황산 구리의 산화·환원",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-03",
+        "standards": [
+          "10통과2-01-03"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "아연과 황산 구리의 산화·환원"
+        }
+      }
+    },
+    "2019_고1_11월학평_18": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "단백질과 DNA의 구성 원소",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "단백질과 DNA의 구성 원소"
+        }
+      }
+    },
+    "2019_고1_11월학평_19": {
+      "2015": {
+        "standard": "10통과08-03",
+        "standards": [
+          "10통과08-03"
+        ],
+        "unit": "생태계와 환경",
+        "topic": "엘니뇨와 적도 태평양의 순환",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-02-03",
+        "standards": [
+          "10통과2-02-03"
+        ],
+        "unit": "(2) 환경과 에너지",
+        "units": [
+          "(2) 환경과 에너지"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "엘니뇨와 적도 태평양의 순환"
+        }
+      }
+    },
+    "2019_고1_11월학평_20": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "충돌 시간과 충격량",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "충돌 시간과 충격량"
+        }
+      }
+    },
+    "2019_고1_3월학평_01": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "힘의 상호 작용과 중력의 방향",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "힘의 상호 작용과 중력의 방향"
+        }
+      }
+    },
+    "2019_고1_3월학평_02": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "대류와 열의 이동",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "대류와 열의 이동"
+        }
+      }
+    },
+    "2019_고1_3월학평_03": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "전기 에너지의 전환(조리 기구)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전기 에너지의 전환(조리 기구)"
+        }
+      }
+    },
+    "2019_고1_3월학평_04": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "빛의 합성",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빛의 합성"
+        }
+      }
+    },
+    "2019_고1_3월학평_05": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "직선 전류가 만드는 자기장",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "직선 전류가 만드는 자기장"
+        }
+      }
+    },
+    "2019_고1_3월학평_06": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "증발과 질량 보존",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "증발과 질량 보존"
+        }
+      }
+    },
+    "2019_고1_3월학평_07": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "원자가 이온이 되는 과정",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04",
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "원자가 이온이 되는 과정"
+        }
+      }
+    },
+    "2019_고1_3월학평_08": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "분자 모형과 화합물의 구성",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "분자 모형과 화합물의 구성"
+        }
+      }
+    },
+    "2019_고1_3월학평_09": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "혼합물의 분리",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "혼합물의 분리"
+        }
+      }
+    },
+    "2019_고1_3월학평_10": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "중화 반응의 이온 모형",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-04",
+        "standards": [
+          "10통과2-01-04"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "중화 반응의 이온 모형"
+        }
+      }
+    },
+    "2019_고1_3월학평_11": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "식물의 관다발 관찰",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "식물의 관다발 관찰"
+        }
+      }
+    },
+    "2019_고1_3월학평_12": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "인슐린과 혈당 조절",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인슐린과 혈당 조절"
+        }
+      }
+    },
+    "2019_고1_3월학평_13": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "소화 기관의 구조",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "소화 기관의 구조"
+        }
+      }
+    },
+    "2019_고1_3월학평_14": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "ABO식 혈액형 가계도",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "ABO식 혈액형 가계도"
+        }
+      }
+    },
+    "2019_고1_3월학평_15": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "세포 주기와 염색체",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세포 주기와 염색체"
+        }
+      }
+    },
+    "2019_고1_3월학평_16": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "현무암과 화강암",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "현무암과 화강암"
+        }
+      }
+    },
+    "2019_고1_3월학평_17": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "해수의 층상 구조(수온 약층)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "해수의 층상 구조(수온 약층)"
+        }
+      }
+    },
+    "2019_고1_3월학평_18": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "우리나라에 영향을 주는 기단",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "우리나라에 영향을 주는 기단"
+        }
+      }
+    },
+    "2019_고1_3월학평_19": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "별의 연주 시차",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 연주 시차"
+        }
+      }
+    },
+    "2019_고1_3월학평_20": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "겉보기 등급과 절대 등급",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "겉보기 등급과 절대 등급"
+        }
+      }
+    },
+    "2019_고1_6월학평_01": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 우주론과 우주 배경 복사",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 우주론과 우주 배경 복사"
+        }
+      }
+    },
+    "2019_고1_6월학평_02": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "질량에 따른 별의 진화 경로",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "질량에 따른 별의 진화 경로"
+        }
+      }
+    },
+    "2019_고1_6월학평_03": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "태양계의 형성 과정",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "태양계의 형성 과정"
+        }
+      }
+    },
+    "2019_고1_6월학평_04": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "우주의 역사(입자·원자·별의 생성 순서)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01",
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "우주의 역사(입자·원자·별의 생성 순서)"
+        }
+      }
+    },
+    "2019_고1_6월학평_05": {
+      "2015": {
+        "standard": "10통과01-04",
+        "standards": [
+          "10통과01-04"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "이온의 전자 배치와 화합물",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03",
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이온의 전자 배치와 화합물"
+        }
+      }
+    },
+    "2019_고1_6월학평_06": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "원소 카드와 주기율표 배치",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "원소 카드와 주기율표 배치"
+        }
+      }
+    },
+    "2019_고1_6월학평_07": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "산소와 물의 공유 결합 모형",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산소와 물의 공유 결합 모형"
+        }
+      }
+    },
+    "2019_고1_6월학평_08": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "알칼리 금속의 성질 실험",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "알칼리 금속의 성질 실험"
+        }
+      }
+    },
+    "2019_고1_6월학평_09": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "탄소의 결합 방식",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "탄소의 결합 방식"
+        }
+      }
+    },
+    "2019_고1_6월학평_10": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "지각과 사람의 구성 원소 질량비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지각과 사람의 구성 원소 질량비"
+        }
+      }
+    },
+    "2019_고1_6월학평_11": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "규산염 사면체와 규산염 광물",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "규산염 사면체와 규산염 광물"
+        }
+      }
+    },
+    "2019_고1_6월학평_12": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "중력이 미치는 영향",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "중력이 미치는 영향"
+        }
+      }
+    },
+    "2019_고1_6월학평_13": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "단백질의 단위체와 펩타이드 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "단백질의 단위체와 펩타이드 결합"
+        }
+      }
+    },
+    "2019_고1_6월학평_14": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "핵산(DNA)의 구조와 염기",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "핵산(DNA)의 구조와 염기"
+        }
+      }
+    },
+    "2019_고1_6월학평_15": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "신소재(초전도체·그래핀)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "신소재(초전도체·그래핀)"
+        }
+      }
+    },
+    "2019_고1_6월학평_16": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "생명체 구성 물질의 구분",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "생명체 구성 물질의 구분"
+        }
+      }
+    },
+    "2019_고1_6월학평_17": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "힘-시간 그래프와 운동량 변화",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "힘-시간 그래프와 운동량 변화"
+        }
+      }
+    },
+    "2019_고1_6월학평_18": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "충돌 안전장치와 충격량",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "충돌 안전장치와 충격량"
+        }
+      }
+    },
+    "2019_고1_6월학평_19": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자유 낙하와 수평으로 던진 물체 실험",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유 낙하와 수평으로 던진 물체 실험"
+        }
+      }
+    },
+    "2019_고1_6월학평_20": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "지진계의 원리(관성)",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지진계의 원리(관성)"
+        }
+      }
+    },
+    "2019_고1_9월학평_01": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 이후 원자의 생성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 이후 원자의 생성"
+        }
+      }
+    },
+    "2019_고1_9월학평_02": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "주기율표와 원소의 성질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "주기율표와 원소의 성질"
+        }
+      }
+    },
+    "2019_고1_9월학평_03": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "물 분자의 공유 결합과 전자 배치",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04",
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물 분자의 공유 결합과 전자 배치"
+        }
+      }
+    },
+    "2019_고1_9월학평_04": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "나트륨과 염소의 이온 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "나트륨과 염소의 이온 결합"
+        }
+      }
+    },
+    "2019_고1_9월학평_05": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "핵산(DNA·RNA)의 단위체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "핵산(DNA·RNA)의 단위체"
+        }
+      }
+    },
+    "2019_고1_9월학평_06": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "우주·지각·생명체의 구성 원소 질량비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05",
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "우주·지각·생명체의 구성 원소 질량비"
+        }
+      }
+    },
+    "2019_고1_9월학평_07": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "전기 전도성과 화학 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전기 전도성과 화학 결합"
+        }
+      }
+    },
+    "2019_고1_9월학평_08": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "원자가 전자 수와 주기성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "원자가 전자 수와 주기성"
+        }
+      }
+    },
+    "2019_고1_9월학평_09": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "별의 진화와 초신성 폭발",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 진화와 초신성 폭발"
+        }
+      }
+    },
+    "2019_고1_9월학평_10": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "인공막을 이용한 삼투 실험",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "인공막을 이용한 삼투 실험"
+        }
+      }
+    },
+    "2019_고1_9월학평_11": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자유 낙하와 수평으로 던진 물체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유 낙하와 수평으로 던진 물체"
+        }
+      }
+    },
+    "2019_고1_9월학평_12": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "그래핀과 초전도체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "그래핀과 초전도체"
+        }
+      }
+    },
+    "2019_고1_9월학평_13": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "진공에서의 낙하 운동",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "진공에서의 낙하 운동"
+        }
+      }
+    },
+    "2019_고1_9월학평_14": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자동차 충돌 모의 실험과 충격량",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자동차 충돌 모의 실험과 충격량"
+        }
+      }
+    },
+    "2019_고1_9월학평_15": {
+      "2015": {
+        "standard": "10통과04-01",
+        "standards": [
+          "10통과04-01"
+        ],
+        "unit": "지구 시스템",
+        "topic": "기권의 층상 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기권의 층상 구조"
+        }
+      }
+    },
+    "2019_고1_9월학평_16": {
+      "2015": {
+        "standard": "10통과04-02",
+        "standards": [
+          "10통과04-02"
+        ],
+        "unit": "지구 시스템",
+        "topic": "물의 순환과 권역 간 상호 작용",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물의 순환과 권역 간 상호 작용"
+        }
+      }
+    },
+    "2019_고1_9월학평_17": {
+      "2015": {
+        "standard": "10통과04-03",
+        "standards": [
+          "10통과04-03"
+        ],
+        "unit": "지구 시스템",
+        "topic": "판 경계와 판의 이동",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-02",
+        "standards": [
+          "10통과1-03-02"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "판 경계와 판의 이동"
+        }
+      }
+    },
+    "2019_고1_9월학평_18": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "동물 세포와 식물 세포의 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "동물 세포와 식물 세포의 구조"
+        }
+      }
+    },
+    "2019_고1_9월학평_19": {
+      "2015": {
+        "standard": "10통과05-02",
+        "standards": [
+          "10통과05-02"
+        ],
+        "unit": "생명 시스템",
+        "topic": "효소 세제와 생체 촉매",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "효소 세제와 생체 촉매"
+        }
+      }
+    },
+    "2019_고1_9월학평_20": {
+      "2015": {
+        "standard": "10통과05-03",
+        "standards": [
+          "10통과05-03"
+        ],
+        "unit": "생명 시스템",
+        "topic": "코돈과 유전 정보의 흐름",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-06",
+        "standards": [
+          "10통과1-03-06"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "코돈과 유전 정보의 흐름"
+        }
+      }
+    },
+    "2020_고1_11월학평_01": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "사람 몸을 구성하는 물질(물·단백질)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사람 몸을 구성하는 물질(물·단백질)"
+        }
+      }
+    },
+    "2020_고1_11월학평_02": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "초전도체와 MRI",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "초전도체와 MRI"
+        }
+      }
+    },
+    "2020_고1_11월학평_03": {
+      "2015": {
+        "standard": "10통과04-03",
+        "standards": [
+          "10통과04-03"
+        ],
+        "unit": "지구 시스템",
+        "topic": "발산형 경계와 보존형 경계",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-02",
+        "standards": [
+          "10통과1-03-02"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "발산형 경계와 보존형 경계"
+        }
+      }
+    },
+    "2020_고1_11월학평_04": {
+      "2015": {
+        "standard": "10통과06-02",
+        "standards": [
+          "10통과06-02"
+        ],
+        "unit": "화학 변화",
+        "topic": "산화·환원 반응식의 판별",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-03",
+        "standards": [
+          "10통과2-01-03"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산화·환원 반응식의 판별"
+        }
+      }
+    },
+    "2020_고1_11월학평_05": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "동물 세포와 식물 세포의 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "동물 세포와 식물 세포의 구조"
+        }
+      }
+    },
+    "2020_고1_11월학평_06": {
+      "2015": {
+        "standard": "10통과01-04",
+        "standards": [
+          "10통과01-04"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "네온과 같은 전자 배치를 갖는 이온",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03",
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "네온과 같은 전자 배치를 갖는 이온"
+        }
+      }
+    },
+    "2020_고1_11월학평_07": {
+      "2015": {
+        "standard": "10통과04-02",
+        "standards": [
+          "10통과04-02"
+        ],
+        "unit": "지구 시스템",
+        "topic": "탄소 순환과 권역 간 상호 작용",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "탄소 순환과 권역 간 상호 작용"
+        }
+      }
+    },
+    "2020_고1_11월학평_08": {
+      "2015": {
+        "standard": "10통과05-02",
+        "standards": [
+          "10통과05-02"
+        ],
+        "unit": "생명 시스템",
+        "topic": "카탈레이스와 활성화 에너지",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "카탈레이스와 활성화 에너지"
+        }
+      }
+    },
+    "2020_고1_11월학평_09": {
+      "2015": {
+        "standard": "10통과07-01",
+        "standards": [
+          "10통과07-01"
+        ],
+        "unit": "생물다양성과 유지",
+        "topic": "지질 시대와 표준 화석",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-01",
+        "standards": [
+          "10통과2-01-01"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지질 시대와 표준 화석"
+        }
+      }
+    },
+    "2020_고1_11월학평_10": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "화학식 카드로 물질 분류하기",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "화학식 카드로 물질 분류하기"
+        }
+      }
+    },
+    "2020_고1_11월학평_11": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 이후 입자의 생성 순서",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 이후 입자의 생성 순서"
+        }
+      }
+    },
+    "2020_고1_11월학평_12": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "주기율표의 영역과 원소의 성질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "주기율표의 영역과 원소의 성질"
+        }
+      }
+    },
+    "2020_고1_11월학평_13": {
+      "2015": {
+        "standard": "10통과07-01",
+        "standards": [
+          "10통과07-01"
+        ],
+        "unit": "생물다양성과 유지",
+        "topic": "스트로마톨라이트와 대기 산소·오존층",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-01",
+        "standards": [
+          "10통과2-01-01",
+          "10통과2-01-03"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성",
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "스트로마톨라이트와 대기 산소·오존층"
+        }
+      }
+    },
+    "2020_고1_11월학평_14": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "휘석과 흑운모의 규산염 결합 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "휘석과 흑운모의 규산염 결합 구조"
+        }
+      }
+    },
+    "2020_고1_11월학평_15": {
+      "2015": {
+        "standard": "10통과05-03",
+        "standards": [
+          "10통과05-03"
+        ],
+        "unit": "생명 시스템",
+        "topic": "전사·번역과 염기",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-06",
+        "standards": [
+          "10통과1-03-06"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전사·번역과 염기"
+        }
+      }
+    },
+    "2020_고1_11월학평_16": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "수평으로 던진 물체와 자유 낙하",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수평으로 던진 물체와 자유 낙하"
+        }
+      }
+    },
+    "2020_고1_11월학평_17": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "질량에 따른 별의 내부 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "질량에 따른 별의 내부 구조"
+        }
+      }
+    },
+    "2020_고1_11월학평_18": {
+      "2015": {
+        "standard": "10통과06-04",
+        "standards": [
+          "10통과06-04"
+        ],
+        "unit": "화학 변화",
+        "topic": "염산과 수산화 나트륨의 중화 반응",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-04",
+        "standards": [
+          "10통과2-01-04"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "염산과 수산화 나트륨의 중화 반응"
+        }
+      }
+    },
+    "2020_고1_11월학평_19": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "충돌 시간과 안전장치",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "충돌 시간과 안전장치"
+        }
+      }
+    },
+    "2020_고1_11월학평_20": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "힘-시간 그래프와 평균 힘",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "힘-시간 그래프와 평균 힘"
+        }
+      }
+    },
+    "2020_고1_3월학평_01": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "속력-시간 그래프",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "속력-시간 그래프"
+        }
+      }
+    },
+    "2020_고1_3월학평_02": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "역학적 에너지와 마찰",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "역학적 에너지와 마찰"
+        }
+      }
+    },
+    "2020_고1_3월학평_03": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "전구의 직렬·병렬 회로",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전구의 직렬·병렬 회로"
+        }
+      }
+    },
+    "2020_고1_3월학평_04": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "바이메탈과 열팽창",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "바이메탈과 열팽창"
+        }
+      }
+    },
+    "2020_고1_3월학평_05": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "거울에 의한 상",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "거울에 의한 상"
+        }
+      }
+    },
+    "2020_고1_3월학평_06": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "물리 변화와 화학 변화",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물리 변화와 화학 변화"
+        }
+      }
+    },
+    "2020_고1_3월학평_07": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "기체 분자의 운동",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "기체 분자의 운동"
+        }
+      }
+    },
+    "2020_고1_3월학평_08": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "원자와 이온의 전자 수",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04",
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "원자와 이온의 전자 수"
+        }
+      }
+    },
+    "2020_고1_3월학평_09": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "산·염기 수용액의 이온 모형",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학2",
+        "standard": "10통과2-01-04",
+        "standards": [
+          "10통과2-01-04"
+        ],
+        "unit": "(1) 변화와 다양성",
+        "units": [
+          "(1) 변화와 다양성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "산·염기 수용액의 이온 모형"
+        }
+      }
+    },
+    "2020_고1_3월학평_10": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "용해도와 포화 용액",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "용해도와 포화 용액"
+        }
+      }
+    },
+    "2020_고1_3월학평_11": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "잎의 조직 구조",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "잎의 조직 구조"
+        }
+      }
+    },
+    "2020_고1_3월학평_12": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "수정과 난할",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "수정과 난할"
+        }
+      }
+    },
+    "2020_고1_3월학평_13": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "귀의 구조",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "귀의 구조"
+        }
+      }
+    },
+    "2020_고1_3월학평_14": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "멘델의 교배 실험",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "멘델의 교배 실험"
+        }
+      }
+    },
+    "2020_고1_3월학평_15": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "소화 기관의 구조",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "소화 기관의 구조"
+        }
+      }
+    },
+    "2020_고1_3월학평_16": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "암석의 순환",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "암석의 순환"
+        }
+      }
+    },
+    "2020_고1_3월학평_17": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "해수의 염류와 염분",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "해수의 염류와 염분"
+        }
+      }
+    },
+    "2020_고1_3월학평_18": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "별의 등급과 색",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 등급과 색"
+        }
+      }
+    },
+    "2020_고1_3월학평_19": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "달의 위상 변화",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "대응없음",
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "units": [],
+        "fit": "불가",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "달의 위상 변화"
+        }
+      }
+    },
+    "2020_고1_3월학평_20": {
+      "2015": {
+        "standard": null,
+        "standards": [],
+        "unit": null,
+        "topic": "해풍이 부는 원리",
+        "confidence": null,
+        "grade": null,
+        "by": "manual",
+        "note": "중학교 과정에서 출제된 회차(표지 과목명이 '(과학)'·'(사회)') — 2015개정 통합 성취기준이 대응하지 않는다"
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "부분",
+        "confidence": null,
+        "grade": "medium",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "해풍이 부는 원리"
+        }
+      }
+    },
+    "2020_고1_6월학평_01": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "초전도체와 자기 부상",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "초전도체와 자기 부상"
+        }
+      }
+    },
+    "2020_고1_6월학평_02": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅부터 태양계 형성까지",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01",
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅부터 태양계 형성까지"
+        }
+      }
+    },
+    "2020_고1_6월학평_03": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "연속 스펙트럼과 흡수 스펙트럼",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "연속 스펙트럼과 흡수 스펙트럼"
+        }
+      }
+    },
+    "2020_고1_6월학평_04": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅 우주론과 우주 배경 복사",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅 우주론과 우주 배경 복사"
+        }
+      }
+    },
+    "2020_고1_6월학평_05": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "우주 초기의 입자와 원자 생성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "우주 초기의 입자와 원자 생성"
+        }
+      }
+    },
+    "2020_고1_6월학평_06": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "별의 내부 구조와 원소 생성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 내부 구조와 원소 생성"
+        }
+      }
+    },
+    "2020_고1_6월학평_07": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "알칼리 금속(리튬)의 성질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "알칼리 금속(리튬)의 성질"
+        }
+      }
+    },
+    "2020_고1_6월학평_08": {
+      "2015": {
+        "standard": "10통과01-04",
+        "standards": [
+          "10통과01-04"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "이온의 전자 배치",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03",
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이온의 전자 배치"
+        }
+      }
+    },
+    "2020_고1_6월학평_09": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "이온 결합 화합물과 전기 전도성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이온 결합 화합물과 전기 전도성"
+        }
+      }
+    },
+    "2020_고1_6월학평_10": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "공유 결합과 이온 결합의 분류",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "공유 결합과 이온 결합의 분류"
+        }
+      }
+    },
+    "2020_고1_6월학평_11": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "사람과 지각의 구성 원소 질량비",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "사람과 지각의 구성 원소 질량비"
+        }
+      }
+    },
+    "2020_고1_6월학평_12": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "전기 전도성과 화학 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전기 전도성과 화학 결합"
+        }
+      }
+    },
+    "2020_고1_6월학평_13": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "충돌 피해를 줄이는 원리",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "충돌 피해를 줄이는 원리"
+        }
+      }
+    },
+    "2020_고1_6월학평_14": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "탄소의 결합 방식",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "탄소의 결합 방식"
+        }
+      }
+    },
+    "2020_고1_6월학평_15": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "DNA의 구조와 단위체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "DNA의 구조와 단위체"
+        }
+      }
+    },
+    "2020_고1_6월학평_16": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "단백질의 합성과 아미노산",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "단백질의 합성과 아미노산"
+        }
+      }
+    },
+    "2020_고1_6월학평_17": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자유 낙하와 수평으로 던진 물체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유 낙하와 수평으로 던진 물체"
+        }
+      }
+    },
+    "2020_고1_6월학평_18": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "중력의 영향을 받는 자연 현상",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "중력의 영향을 받는 자연 현상"
+        }
+      }
+    },
+    "2020_고1_6월학평_19": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "단백질과 핵산의 특성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "단백질과 핵산의 특성"
+        }
+      }
+    },
+    "2020_고1_6월학평_20": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "충격량과 충돌 시간",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "충격량과 충돌 시간"
+        }
+      }
+    },
+    "2020_고1_9월학평_01": {
+      "2015": {
+        "standard": "10통과01-01",
+        "standards": [
+          "10통과01-01"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "빅뱅과 우주의 생성 과정",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-01",
+        "standards": [
+          "10통과1-02-01"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "빅뱅과 우주의 생성 과정"
+        }
+      }
+    },
+    "2020_고1_9월학평_02": {
+      "2015": {
+        "standard": "10통과01-02",
+        "standards": [
+          "10통과01-02"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "별의 내부 구조와 초신성 폭발",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-02",
+        "standards": [
+          "10통과1-02-02"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "별의 내부 구조와 초신성 폭발"
+        }
+      }
+    },
+    "2020_고1_9월학평_03": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "질소 분자의 공유 결합 모형",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "질소 분자의 공유 결합 모형"
+        }
+      }
+    },
+    "2020_고1_9월학평_04": {
+      "2015": {
+        "standard": "10통과01-04",
+        "standards": [
+          "10통과01-04"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "원자의 전자 배치와 이온 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03",
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "원자의 전자 배치와 이온 결합"
+        }
+      }
+    },
+    "2020_고1_9월학평_05": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "세포막을 통한 물질 이동",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "세포막을 통한 물질 이동"
+        }
+      }
+    },
+    "2020_고1_9월학평_06": {
+      "2015": {
+        "standard": "10통과01-05",
+        "standards": [
+          "10통과01-05"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "전기 전도성과 화학 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "전기 전도성과 화학 결합"
+        }
+      }
+    },
+    "2020_고1_9월학평_07": {
+      "2015": {
+        "standard": "10통과02-01",
+        "standards": [
+          "10통과02-01"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "규산염 사면체와 휘석·각섬석",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "규산염 사면체와 휘석·각섬석"
+        }
+      }
+    },
+    "2020_고1_9월학평_08": {
+      "2015": {
+        "standard": "10통과02-02",
+        "standards": [
+          "10통과02-02"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "단백질의 형성과 펩타이드 결합",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-05",
+        "standards": [
+          "10통과1-02-05"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "단백질의 형성과 펩타이드 결합"
+        }
+      }
+    },
+    "2020_고1_9월학평_09": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "중력이 생명체와 자연 현상에 미치는 영향",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "중력이 생명체와 자연 현상에 미치는 영향"
+        }
+      }
+    },
+    "2020_고1_9월학평_10": {
+      "2015": {
+        "standard": "10통과02-03",
+        "standards": [
+          "10통과02-03"
+        ],
+        "unit": "자연의 구성 물질",
+        "topic": "그래핀과 생체 모방 신소재",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-06",
+        "standards": [
+          "10통과1-02-06"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "그래핀과 생체 모방 신소재"
+        }
+      }
+    },
+    "2020_고1_9월학평_11": {
+      "2015": {
+        "standard": "10통과04-02",
+        "standards": [
+          "10통과04-02"
+        ],
+        "unit": "지구 시스템",
+        "topic": "지구 시스템 권역 간 상호 작용",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "지구 시스템 권역 간 상호 작용"
+        }
+      }
+    },
+    "2020_고1_9월학평_12": {
+      "2015": {
+        "standard": "10통과05-01",
+        "standards": [
+          "10통과05-01"
+        ],
+        "unit": "생명 시스템",
+        "topic": "동물 세포의 구조",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "동물 세포의 구조"
+        }
+      }
+    },
+    "2020_고1_9월학평_13": {
+      "2015": {
+        "standard": "10통과04-02",
+        "standards": [
+          "10통과04-02"
+        ],
+        "unit": "지구 시스템",
+        "topic": "물의 순환과 지형의 형성",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-01",
+        "standards": [
+          "10통과1-03-01"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "물의 순환과 지형의 형성"
+        }
+      }
+    },
+    "2020_고1_9월학평_14": {
+      "2015": {
+        "standard": "10통과03-01",
+        "standards": [
+          "10통과03-01"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "자유 낙하와 수평으로 발사한 물체",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-03",
+        "standards": [
+          "10통과1-03-03"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "자유 낙하와 수평으로 발사한 물체"
+        }
+      }
+    },
+    "2020_고1_9월학평_15": {
+      "2015": {
+        "standard": "10통과03-02",
+        "standards": [
+          "10통과03-02"
+        ],
+        "unit": "역학적 시스템",
+        "topic": "야구 장갑과 충격량·평균 힘",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-04",
+        "standards": [
+          "10통과1-03-04"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "야구 장갑과 충격량·평균 힘"
+        }
+      }
+    },
+    "2020_고1_9월학평_16": {
+      "2015": {
+        "standard": "10통과01-03",
+        "standards": [
+          "10통과01-03"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "주기율표와 원소의 성질",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-03",
+        "standards": [
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "주기율표와 원소의 성질"
+        }
+      }
+    },
+    "2020_고1_9월학평_17": {
+      "2015": {
+        "standard": "10통과01-04",
+        "standards": [
+          "10통과01-04"
+        ],
+        "unit": "물질의 규칙성과 결합",
+        "topic": "이온 결합 화합물의 전자 배치",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-02-04",
+        "standards": [
+          "10통과1-02-04",
+          "10통과1-02-03"
+        ],
+        "unit": "(2) 물질과 규칙성",
+        "units": [
+          "(2) 물질과 규칙성",
+          "(2) 물질과 규칙성"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "이온 결합 화합물의 전자 배치"
+        }
+      }
+    },
+    "2020_고1_9월학평_18": {
+      "2015": {
+        "standard": "10통과05-03",
+        "standards": [
+          "10통과05-03"
+        ],
+        "unit": "생명 시스템",
+        "topic": "유전 정보의 흐름과 코돈",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-06",
+        "standards": [
+          "10통과1-03-06"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "유전 정보의 흐름과 코돈"
+        }
+      }
+    },
+    "2020_고1_9월학평_19": {
+      "2015": {
+        "standard": "10통과05-02",
+        "standards": [
+          "10통과05-02"
+        ],
+        "unit": "생명 시스템",
+        "topic": "카탈레이스 효소 반응 실험",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-05",
+        "standards": [
+          "10통과1-03-05"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "카탈레이스 효소 반응 실험"
+        }
+      }
+    },
+    "2020_고1_9월학평_20": {
+      "2015": {
+        "standard": "10통과04-03",
+        "standards": [
+          "10통과04-03"
+        ],
+        "unit": "지구 시스템",
+        "topic": "판 경계와 화산 활동(칼부코)",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": ""
+      },
+      "2022": {
+        "target": "통합과학1",
+        "standard": "10통과1-03-02",
+        "standards": [
+          "10통과1-03-02"
+        ],
+        "unit": "(3) 시스템과 상호작용",
+        "units": [
+          "(3) 시스템과 상호작용"
+        ],
+        "fit": "직접",
+        "confidence": null,
+        "grade": "high",
+        "by": "manual",
+        "note": "",
+        "ext": {
+          "source_curriculum": "2015",
+          "topic": "판 경계와 화산 활동(칼부코)"
+        }
+      }
+    },
     "2021_고1_11월학평_01": {
       "2015": {
         "standard": "10통과04-02",
@@ -12223,11 +20109,16 @@
   "audit": {
     "method": "0문항으로 집계된 2022 성취기준마다 '그 성취기준이 다루는 대상 명사'의 어휘로 전 문항 본문(text.stem + text.boxed + text.choices + ext.text_raw)을 전수 검색해 '진짜 없음'과 '판정 실패'를 갈랐다. 성취기준별 집계는 대표 1개가 아니라 standards 전체 목록으로 센다 — 1:N 재편이 흔해 한 문항이 두 성취기준의 후보로 동시에 오르기 때문이다.",
     "corpus": {
-      "mapped_exams": 18,
-      "mapped_items": 370,
-      "audit_only_exams": 12,
-      "audit_only_items": 220,
-      "audit_only_note": "2018·2019·2020 고1 학평 12회차 — 어휘 검색에만 쓰고 매핑하지 않았다"
+      "mapped_exams": 30,
+      "mapped_items": 610,
+      "audit_only_exams": 0,
+      "audit_only_items": 0,
+      "audit_only_note": "감사 전용 말뭉치는 남아 있지 않다 — 2018·2019·2020 12회차를 전부 판정해 매핑에 넣었다.",
+      "caveats": [
+        "2018_고1_9월학평(통합사회)은 extract 의 문항 분리가 2번 문항 자료(근로 계약서)의 '3.'~'6.' 줄을 문항 시작으로 잘못 잡아 블록 3~6이 어긋난다. 판정은 병합된 블록 원문을 직접 읽어 실제 문항 번호에 맞췄으므로 이 파일의 qid 는 옳지만, 같은 회차를 다시 extract 하면 items 의 3~6번 본문은 여전히 어긋난다(실측).",
+        "2019_고1_11월학평(통합사회)도 1번 문항 자료의 '1. 원인:' 줄 때문에 블록 1·2 가 갈렸다. 3번 이후는 정상이다.",
+        "2020_고1_11월학평(통합과학)은 정답지 PNG 의 OCR·원문자 대조가 둘 다 실패해 정답 축이 0/3 이다. 본문은 온전하므로 매핑에는 영향이 없지만 그 회차 items 의 answer 는 전부 null 이다."
+      ]
     },
     "findings": [
       {
@@ -12249,7 +20140,7 @@
       },
       {
         "standard": "10통과2-02-01",
-        "verdict": "표본 한계(해소)",
+        "verdict": "표본 한계(해소) — 2문항",
         "terms": [
           "생태계",
           "비생물적",
@@ -12259,13 +20150,13 @@
         ],
         "evidence": [
           "2022_고1_11월학평_09",
-          "2019_고1_11월학평_16(감사 말뭉치)"
+          "2019_고1_11월학평_16"
         ],
-        "note": "2023·2024 8회차만 볼 때는 0문항이었다. 2015 통합과학 10통과08-01 이 실재하는 자리라 회차를 더 받아 확인했고 2022년 11월 회차에서 나왔다. 20문항으로 9단원을 다 담을 수 없어 회차마다 통째로 빠지는 단원이 있다는 뜻이다."
+        "note": "2023·2024 8회차만 볼 때는 0문항이었다. 회차를 넓혀 2022_고1_11월학평_09 를 찾았고, 2018~2020 12회차를 판정해 2019_고1_11월학평_16(생태계 구성 요소의 상호 관계)을 더했다. 30회차 610문항에서 2문항이 상한이다 — 20문항으로 9단원을 다 담을 수 없어 회차마다 통째로 빠지는 단원이 있다."
       },
       {
         "standard": "10통과2-02-02",
-        "verdict": "표본 한계(해소)",
+        "verdict": "표본 한계(미해소) — 1문항",
         "terms": [
           "먹이 사슬",
           "먹이 그물",
@@ -12276,7 +20167,7 @@
         "evidence": [
           "2021_고1_11월학평_13"
         ],
-        "note": "위와 같은 이유."
+        "note": "30회차 610문항에서 2021_고1_11월학평_13 하나뿐이다. 2018~2020 12회차 240문항을 '먹이 사슬·먹이 그물·먹이 관계·생태 피라미드·생태계 평형·영양 단계'로 전수 검색한 적중이 0건이다(실측). 회차를 더 받아야 늘어난다."
       },
       {
         "standard": "10통과2-03-01",
@@ -12290,7 +20181,7 @@
           "면역"
         ],
         "evidence": [],
-        "note": "590문항 전수 검색 적중 2건이 모두 '항체는 단백질' 문맥의 오탐이었다. 2015 통합과학 성취기준에 감염병 항목 자체가 없다(2022 신설 '과학과 미래 사회'). 생명과학Ⅰ에서 오답률로 걸러 차용했다 — borrowed 참조."
+        "note": "590문항 전수 검색 적중 2건이 모두 '항체는 단백질' 문맥의 오탐이었다. 2015 통합과학 성취기준에 감염병 항목 자체가 없다(2022 신설 '과학과 미래 사회'). 생명과학Ⅰ에서 오답률로 걸러 차용했다 — borrowed 참조. 2018~2020 12회차 240문항을 같은 어휘로 다시 검색한 적중도 0건이다."
       },
       {
         "standard": "10통과2-03-02",
@@ -12301,7 +20192,7 @@
           "개인 정보"
         ],
         "evidence": [],
-        "note": "590문항 적중 0건. 2015개정 과학 과목 어디에도 대응 성취기준이 없어 차용할 자리도 없다."
+        "note": "590문항 적중 0건. 2015개정 과학 과목 어디에도 대응 성취기준이 없어 차용할 자리도 없다. 2018~2020 12회차 240문항 적중도 0건이다(30회차 610문항 누계 0건)."
       },
       {
         "standard": "10통과2-03-03",
@@ -12314,7 +20205,7 @@
           "자율 주행"
         ],
         "evidence": [],
-        "note": "590문항 적중 0건. 위와 같다."
+        "note": "590문항 적중 0건. 위와 같다. 2018~2020 12회차 240문항 적중도 0건이다."
       },
       {
         "standard": "10통과2-03-04",
@@ -12327,11 +20218,11 @@
           "SSI"
         ],
         "evidence": [],
-        "note": "통합과학 590문항 적중 0건. 그런데 같은 고1 학평의 통합사회 기출에 '과학 기술자의 사회적 책임' 문항이 2건 있다. 고3 생활과 윤리보다 학년이 맞는다 — borrowed 참조."
+        "note": "통합과학 590문항 적중 0건. 그런데 같은 고1 학평의 통합사회 기출에 '과학 기술자의 사회적 책임' 문항이 2건 있다. 고3 생활과 윤리보다 학년이 맞는다 — borrowed 참조. 2018~2020 통합사회 240문항에 후보가 하나 더 있다 — 2020_고1_3월학평_03(과학 기술의 가치 중립성 논쟁). 다만 그 회차는 gw rates 를 돌리지 않아 오답률이 없어서 차용 기준(p25 이하)을 적용할 수 없다. borrowed 에 넣지 않고 후보로만 남긴다."
       },
       {
         "standard": "10통과2-02-05",
-        "verdict": "얇음(0문항 아님)",
+        "verdict": "얇음 — 2문항",
         "terms": [
           "발전기",
           "전자기 유도",
@@ -12339,14 +20230,13 @@
         ],
         "evidence": [
           "2023_고1_11월학평_14",
-          "2018_고1_11월학평_18(감사 말뭉치)",
-          "2018_고1_3월학평_03(감사 말뭉치)"
+          "2018_고1_3월학평_03"
         ],
-        "note": "매핑 대상 18회차에 1문항뿐이다. 감사 말뭉치에 2건이 더 있으므로 회차를 더 받으면 늘어난다."
+        "note": "2023_고1_11월학평_14(발전기와 전자기 유도)에 2018_고1_3월학평_03(막대자석과 원형 도선의 유도 전류)을 더해 2문항이다. 뒤엣것은 발전기 문맥이 없어 fit 을 '부분'으로 두었다. ★ 앞 단계가 2018_고1_11월학평_18 을 이 성취기준의 근거로 적어 두었는데 이는 어휘 검색 오탐이다 — 그 문항에서 '전자기 유도'는 '태양광 발전이 전자기 유도를 이용한다'는 틀린 선지 안에만 나오고, 문항의 대상 명사는 연료 전지·태양광 발전·신재생 에너지다. 그래서 10통과2-02-06 한 곳에만 걸었다."
       },
       {
         "standard": "10통과2-02-06",
-        "verdict": "얇음(0문항 아님)",
+        "verdict": "해소 — 4문항",
         "terms": [
           "에너지 효율",
           "열효율",
@@ -12356,12 +20246,46 @@
         ],
         "evidence": [
           "2023_고1_11월학평_05",
-          "2018_고1_11월학평_18(감사 말뭉치)",
-          "2019_고1_11월학평_10(감사 말뭉치)"
+          "2018_고1_11월학평_18",
+          "2019_고1_11월학평_10",
+          "2019_고1_11월학평_05"
         ],
-        "note": "위와 같다."
+        "note": "2023_고1_11월학평_05(열기관의 열효율)에 2018_고1_11월학평_18(연료 전지·태양광 발전), 2019_고1_11월학평_10(열기관의 열효율), 2019_고1_11월학평_05(전기 에너지 전환과 열 발생)를 더해 4문항이다."
       }
-    ]
+    ],
+    "counts_by_standard": {
+      "10통과1-01-01": 4,
+      "10통과1-01-02": 2,
+      "10통과1-01-03": 2,
+      "10통과1-01-04": 3,
+      "10통과1-02-01": 42,
+      "10통과1-02-02": 35,
+      "10통과1-02-03": 56,
+      "10통과1-02-04": 54,
+      "10통과1-02-05": 58,
+      "10통과1-02-06": 23,
+      "10통과1-03-01": 34,
+      "10통과1-03-02": 21,
+      "10통과1-03-03": 41,
+      "10통과1-03-04": 39,
+      "10통과1-03-05": 43,
+      "10통과1-03-06": 15,
+      "10통과2-01-01": 9,
+      "10통과2-01-02": 5,
+      "10통과2-01-03": 9,
+      "10통과2-01-04": 12,
+      "10통과2-01-05": 3,
+      "10통과2-02-01": 2,
+      "10통과2-02-02": 1,
+      "10통과2-02-03": 5,
+      "10통과2-02-04": 5,
+      "10통과2-02-05": 2,
+      "10통과2-02-06": 4,
+      "10통과2-03-01": 2,
+      "10통과2-03-02": 0,
+      "10통과2-03-03": 0,
+      "10통과2-03-04": 2
+    }
   },
   "rate_baseline": {
     "source": "gw rates (EBSi 역대 오답률) — 매핑 대상 18회차 실측",

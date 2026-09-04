@@ -45,7 +45,13 @@ OWNED_KEYS = ("number", "points", "answer", "answer_symbol", "text",
 # 손실을 담지 못한다. 값은 "image" 하나뿐이고 정상이면 키 자체가 없다 — 멀쩡한 문항까지
 # "text" 로 채워 봐야 읽는 쪽에 정보가 늘지 않는다. 판정 근거는
 # extractlib/tamgu.py 의 image_choice_band() / boxed_source() 주석에 있다.
-OWNED_EXT_KEYS = ("answer_check", "text_raw", "choices_source", "boxed_source")
+#
+# choices_layout 은 그 둘과 **뜻이 반대다.** 값이 있으면 선택지가 온전히 복원됐다는
+# 뜻이고, 다만 줄 단위로 그대로 읽힌 것이 아니라 한 줄에 몰려 있던 라벨을 펴서
+# 얻었다는 표시다("flattened"). 검수할 때 어디를 먼저 볼지 알려주는 자리다 —
+# tamgu.flatten_choice_band() 가 스스로 증명한 것만 이 값을 단다.
+OWNED_EXT_KEYS = ("answer_check", "text_raw", "choices_source", "boxed_source",
+                  "choices_layout")
 NOTE_PREFIX = "extract: "
 
 # 비직접(OCR) 텍스트를 본문으로 인정할 최소 성공률.
@@ -149,6 +155,8 @@ class ExamResult:
         # 부분 vision 문항 번호. 문항마다 note 를 남기면 회차 하나가 attention 상한
         # 30건(CONTRACT 5절)을 혼자 먹으므로 회차 끝에서 한 줄로 모아 알린다.
         self.image_parts: dict[str, list[int]] = {}
+        # 선택지를 '한 줄에 몰린 라벨 펴기'로 복원한 문항 번호. 같은 이유로 모아 알린다.
+        self.layout_parts: dict[str, list[int]] = {}
 
 
 def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> ExamResult:
@@ -317,6 +325,14 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
                     ext[key] = value
                     notes.append(f"{key}={value} — 크롭 이미지가 본체다(전사 대기)")
                     result.image_parts.setdefault(key, []).append(number)
+                # 복원 경로 표시. 내용은 온전하므로 attention 에는 올리지 않는다 —
+                # 이 판형은 회차당 열 문항을 넘길 때가 있어(실측 통합사회 2019 고1 9월
+                # 20문항 중 8건) 문항마다 warn 을 달면 상한 30건을 회차 하나가 먹는다.
+                # 회차 단위 한 줄 알림은 아래 layout_parts 가 맡는다.
+                if item_parsed.choices_layout:
+                    ext["choices_layout"] = item_parsed.choices_layout
+                    result.layout_parts.setdefault(
+                        item_parsed.choices_layout, []).append(number)
             # 파싱에 실패해도 원문은 남긴다. 전사 단계가 붙잡을 유일한 실마리다.
             if item_parsed.raw:
                 ext["text_raw"] = item_parsed.raw
@@ -342,6 +358,11 @@ def _read_exam(space, subject, strategy, exam_id: str, *, use_ocr: bool) -> Exam
         result.notes.append(
             (exam_id, f"{key}=image 문항 {len(numbers)}건 — 텍스트 레이어로 복원 불가, "
                       f"크롭 이미지가 본체다: {', '.join(str(n) for n in numbers)}", "info"))
+    for key, numbers in sorted(result.layout_parts.items()):
+        result.notes.append(
+            (exam_id, f"choices_layout={key} 문항 {len(numbers)}건 — 한 줄에 몰려 있던 "
+                      f"선택지를 라벨로 펴서 복원했다(내용은 온전하다): "
+                      f"{', '.join(str(n) for n in numbers)}", "info"))
 
     # --- 불변식 ----------------------------------------------------------
     if (subject.points_total and total_points
@@ -495,9 +516,14 @@ def run(args) -> int:
         report.next = (f"reports/extract.json 의 attention 을 확인한 뒤 "
                        f"python scripts/gw.py extract --subject {subject.slug} --only <회차> --force")
     elif uncropped:
-        # 크롭이 빠진 회차가 있으면 classify 로 보내면 안 된다 — 되돌아갈 곳을 찍어 준다.
+        # 크롭이 빠진 회차가 있으면 다음 단계로 보내면 안 된다 — 되돌아갈 곳을 찍어 준다.
         report.next = (f"python scripts/gw.py crop --subject {subject.slug} "
                        f"--only {','.join(sorted(uncropped))}")
     else:
-        report.next = f"python scripts/gw.py classify --subject {subject.slug}"
+        # 공정 순서(SKILL.md)는 extract → rates → classify 다. rates 를 건너뛰고 classify 를
+        # 가리키고 있었는데, 그러면 오답률이 영영 안 붙고 정답 네 번째 대조축도 사라진다.
+        # 다만 rates 는 네트워크가 필요한 선택 단계라 건너뛸 이유를 문구에 함께 적는다.
+        report.next = (f"python scripts/gw.py rates --subject {subject.slug}  "
+                       f"# 오답률(선택, 네트워크 필요). 필요 없으면 "
+                       f"classify --subject {subject.slug} 로 바로 간다")
     return _finish(report, args)

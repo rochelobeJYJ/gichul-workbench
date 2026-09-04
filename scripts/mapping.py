@@ -11,6 +11,10 @@ METHOD.md "교육과정 매핑" 절의 핵심 원칙 그대로:
     --import 만 주면: 외부 파일 → mapping.json 정규화만 하고 끝낸다.
     --import 없이 그냥 실행: mapping.json → items/ 적용(기본 동작).
     --report-gaps 를 더하면: 위 동작 뒤에 공백 리포트를 이어붙인다.
+
+**mapping.json 이 없는 것은 실패가 아니다.** 매핑은 미리 배포되는 데이터이고, 그 개정에
+대응 과목 자체가 없는 과목이 등록된 19개 중 12개다(2022개정 기준). 건너뛴 이유를 남기고
+정상 종료한다 — 자세한 사정은 _skip_no_mapping 의 주석.
 """
 from __future__ import annotations
 
@@ -76,12 +80,15 @@ def run(args) -> int:
     report = Report("map", subject.slug, space)
     revision = args.revision
 
+    ran_apply = True
     if args.import_path:
         _do_import(subject, args, report, revision)
     else:
-        _do_apply(subject, args, report, revision, space)
+        ran_apply = _do_apply(subject, args, report, revision, space)
 
-    if args.report_gaps:
+    # 매핑 데이터가 없어서 건너뛴 경우에는 공백 리포트도 낼 수 없다. 여기서 다시
+    # "mapping.json 없다"를 error 로 올리면 방금 '건너뛴다'고 적은 것과 어긋난다.
+    if args.report_gaps and ran_apply:
         _do_report_gaps(subject, args, report, revision)
 
     # --quiet 은 옵션으로 선언만 돼 있고 아무 일도 하지 않았다(통합 검증에서 발견).
@@ -368,13 +375,52 @@ def _target_catalog(code_to_unit: dict, scope) -> tuple[list[dict], list[str]]:
 
 # --- mapping.json → items/*.json 적용 --------------------------------------
 
-def _do_apply(subject, args, report, revision, space: Space) -> None:
+def _skip_no_mapping(subject, report, revision) -> None:
+    """mapping.json 이 없을 때. **'대응 과목이 없다'와 '매핑을 아직 안 만들었다'는 다른 사건이다.**
+
+    `curriculum.<개정>` 이 null 이면 그 개정에 이 과목의 대응 과목이 **없다고 subject.json 이
+    이미 선언**해 둔 것이다. 예: 2022개정에서 '한국지리'는 진로선택 '한국지리 탐구'로 개편돼
+    같은 과목이 존재하지 않는다. 그런 과목에서 "매핑 파일이 없다"는 error 를 내면,
+    없는 대응을 못 찾았다고 실패하는 셈이다.
+
+    이게 실제로 사람을 가뒀다. SKILL.md 가 map 을 표준 공정에 넣어 두어서 **그 과목을
+    만지는 모든 사람이 여기서 멈췄고**, 옛 next 는
+    `--import <외부 매핑 폴더> --taxonomy <taxonomy.json>` 이었다 — 그 폴더는 저장소 밖
+    (CSAT_WIKI)의 LLM 태깅 산출물이라 새 사용자가 만들 수 없다. 빠져나갈 길이 없는 안내였다.
+
+    둘 다 실패가 아니다. 매핑은 **미리 배포되는 데이터**이고(METHOD.md), 없다고 해서 앞선
+    단계의 산출물이 잘못된 것이 아니다. 다만 두 경우는 사람이 할 일이 다르므로 문구를 가른다.
+      · 대응 과목 없음 → 이 과목에서 할 일이 정말 없다. info.
+      · 대응 과목은 있는데 매핑이 아직 없음 → 언젠가 채울 자리가 남아 있다. warn.
+    어느 쪽이든 다음 공정(validate)으로 보낸다.
+    """
+    names = subject.curriculum_names(revision)
+    if names:
+        report.note(
+            "mapping.json",
+            f"{revision}개정 대응 과목({' · '.join(names)})은 있지만 매핑 데이터가 아직 없다 "
+            f"({subject.mapping_path}) — 이 과목의 {revision} 성취기준 분류는 비워 둔 채 "
+            f"건너뛴다. 매핑은 미리 만들어 배포하는 데이터라 여기서 계산하지 않는다",
+            "warn")
+    else:
+        # 조사('은/는')를 붙이지 않는다 — 과목 라벨의 받침에 따라 갈리는데 그걸 코드로
+        # 판정하면 과목 이름을 아는 코드가 된다(CONTRACT 0절).
+        report.note(
+            "curriculum",
+            f"{revision}개정에는 이 과목({subject.label})의 대응 과목이 없다 "
+            f"(subject.json 의 curriculum.{revision} = null) — 매핑할 대상이 없으므로 "
+            f"건너뛴다. 정상이다",
+            "info")
+    report.count(mapping_items=0, applied=0, skipped=1)
+    report.next = f"python scripts/gw.py validate --subject {subject.slug}"
+
+
+def _do_apply(subject, args, report, revision, space: Space) -> bool:
+    """mapping.json 을 items/ 에 반영한다. 매핑이 없어 건너뛰면 False."""
     mapping = subject.mapping()
     if not mapping:
-        report.note("mapping.json", f"없다: {subject.mapping_path}", "error")
-        report.next = (f"python scripts/gw.py map --subject {subject.slug} "
-                        f"--import <외부 매핑 폴더> --taxonomy <taxonomy.json>")
-        return
+        _skip_no_mapping(subject, report, revision)
+        return False
 
     only = set(x.strip() for x in args.only.split(",")) if args.only else None
     mapping_items: dict = mapping.get("items", {})
@@ -464,6 +510,7 @@ def _do_apply(subject, args, report, revision, space: Space) -> None:
         report.next = f"python scripts/gw.py validate --subject {subject.slug}"
     elif total_missing:
         report.next = f"python scripts/gw.py extract --subject {subject.slug}  # items/ 가 비어 있다"
+    return True
 
 
 # --- 공백(0문항 성취기준) 리포트 --------------------------------------------

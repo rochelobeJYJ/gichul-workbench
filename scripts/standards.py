@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import keywordsio  # keywords.json 읽기·쓰기는 전부 이 모듈을 통한다
-from common import CURRICULUM_PDF, CURRICULUM_STANDARDS, Report, Space, SUBJECTS, load_subject
+from common import CURRICULUM_PDF, CURRICULUM_STANDARDS, Report, Space, load_subject
 from common.progress import Progress, track
 
 # ---------------------------------------------------------------------------
@@ -1480,6 +1480,9 @@ def register(parser) -> None:
     parser.add_argument("--subject", help="과목 슬러그 (--draft-keywords 에 필요)")
     parser.add_argument("--pdf", help="특정 PDF 만 처리 (파일명 일부)")
     parser.add_argument("--force", action="store_true", help="기존 결과를 덮어쓴다")
+    parser.add_argument("--install", action="store_true",
+                        help="--draft-keywords 산출물을 작업공간이 아니라 subjects/<slug>/ 에 쓴다. "
+                             "기본은 작업공간이다 — 저장소에 파일이 새로 생기면 git pull 이 막힌다")
     parser.add_argument("--dry-run", action="store_true", help="쓰지 않고 결과만 센다")
     parser.add_argument("--quiet", action="store_true", help="요약 한 줄만 남긴다")
     parser.add_argument("--workspace", help="작업 공간 경로 직접 지정 (기본 workspace/<slug>)")
@@ -1502,6 +1505,16 @@ def _report(args) -> Report:
     """
     slug = args.subject if getattr(args, "subject", None) else "_curriculum"
     return Report("standards", slug, Space(slug, getattr(args, "workspace", None)))
+
+
+def space_of(args, subject) -> Space:
+    """이 실행의 작업공간. `--workspace` 를 안 주면 `workspace/<slug>` 다.
+
+    `_report()` 가 같은 계산을 하지만 그쪽은 Report 만 만들고 Space 를 돌려주지
+    않는다. 경로 계산을 두 군데 두면 언젠가 갈라지므로 한 줄짜리 함수로 묶어 둔다
+    (둘 다 `Space(slug, args.workspace)` 라는 같은 규약이다).
+    """
+    return Space(subject.slug, getattr(args, "workspace", None))
 
 
 def _finish(rep: Report, quiet: bool) -> int:
@@ -1752,29 +1765,45 @@ def cmd_draft_keywords(args, rep: Report, quiet: bool = False) -> int:
               from_vocabulary=n_vocab_hit, thin=len(empty),
               **{f"standards_{rev}": len(codes) for rev, codes in drafts.items()})
 
-    path = subject.keywords_path
+    # ── 초안은 저장소가 아니라 작업공간에 쓴다 ────────────────────────────
+    # 실측 사고: 이 명령이 `subjects/<slug>/keywords.json` 을 만들면 그 파일은
+    # git 이 추적하지 않는 상태로 남는다. 상류가 같은 경로에 파일을 추가한 뒤
+    # 사용자가 README 대로 `git pull` 하면 git 이 멈춘다 —
+    #   "The following untracked working tree files would be overwritten by merge"
+    # 새 과목을 시작한 사람이 바로 그 첫 명령에서 저장소를 잠그는 셈이라,
+    # 기본값을 작업공간으로 내리고 `--install` 을 명시했을 때만 저장소에 쓴다.
+    # classify 는 작업공간 사본을 먼저 읽으므로 순환은 그대로 돈다.
+    install = bool(getattr(args, "install", False))
+    path = keywordsio.write_target(space_of(args, subject), subject.keywords_path, install)
     if path.exists() and not args.force and not args.dry_run:
-        rep.note(path.name, "이미 있다 — --force 로 덮어쓴다", "error")
+        rep.note(path.name, f"이미 있다({path}) — --force 로 덮어쓴다", "error")
         rep.next = f"python scripts/gw.py standards --draft-keywords --subject {args.subject} --force"
         return _finish(rep, quiet)
     # --force 로 덮어쓰더라도 `classify --learn` 이 라벨된 문항에서 배운 용어는 살린다.
     # 초안은 교육과정 문장에서 뽑은 것이라 언제든 다시 만들 수 있지만, 학습분은
     # 사람이 판정한 라벨이 있어야만 다시 만들 수 있다. 잃으면 되돌리기 비싸다.
-    book, kept = _preserve_learned(subject, drafts)
+    book, kept = _preserve_learned(subject, drafts, space_of(args, subject), rep)
     for ident, why, severity in book.notes:
         rep.note(ident, why, severity)
     if kept:
         rep.count(learned_kept=kept)
         rep.note(path.name, f"학습된 용어 {kept}개를 보존했다 (classify --learn 산출물)", "info")
+    path.parent.mkdir(parents=True, exist_ok=True)
     keywordsio.save(path, book, dry_run=bool(args.dry_run))
-    rep.artifact(str(path.relative_to(SUBJECTS.parent).as_posix()))
-    rep.next = (f"subjects/{args.subject}/keywords.json 를 사람이 훑은 뒤 "
-                f"python scripts/gw.py classify --subject {args.subject}")
+    rep.artifact(str(path))
+    if not install:
+        rep.note("keywords.json",
+                 keywordsio.install_hint(space_of(args, subject), subject.keywords_path,
+                                         f"standards --draft-keywords --subject {args.subject}"),
+                 "info")
+    rep.next = (f"{path} 를 사람이 훑은 뒤 "
+                f"python scripts/gw.py classify --subject {args.subject}"
+                + ("" if install else
+                   f" --workspace {space_of(args, subject).root}"))
     return _finish(rep, quiet)
 
 
-
-def _preserve_learned(subject, drafts: dict[str, dict[str, list[str]]]):
+def _preserve_learned(subject, drafts: dict[str, dict[str, list[str]]], space=None, rep=None):
     """초안으로 덮어쓸 때 기존 파일의 학습분(learned)과 그 밖의 칸을 **지킨다.**
 
     → (keywordsio.KeywordBook, 지켜낸 학습 용어 수)
@@ -1787,7 +1816,14 @@ def _preserve_learned(subject, drafts: dict[str, dict[str, list[str]]]):
       문장에서 언제든 다시 뽑을 수 있지만, 학습분은 사람이 판정한 라벨이 있어야만
       다시 만들 수 있다. 잃으면 되돌리는 비용이 전혀 다르다.
     """
-    book = keywordsio.load(subject.keywords_path, subject.standard_prefixes or {})
+    # 읽는 쪽도 작업공간 사본이 우선이다 — 그러지 않으면 작업공간에서 --learn 으로
+    # 배운 용어를 저장소 사본만 보고 '없다'고 판단해 조용히 날려버린다.
+    src = subject.keywords_path
+    if space is not None:
+        src, why = keywordsio.resolve_read(space, subject.keywords_path)
+        if why and rep is not None:
+            rep.note("keywords.json", why, "warn")
+    book = keywordsio.load(src, subject.standard_prefixes or {})
     kept = 0
     for rev, terms_by_code in drafts.items():
         for code, terms in terms_by_code.items():

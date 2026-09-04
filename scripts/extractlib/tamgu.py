@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from functools import lru_cache
 
 from .points import (POINT_MARK_RE, normalize_points, on_point_grid,  # noqa: F401
                      points_equal, read_point_mark)
@@ -46,6 +47,11 @@ class ParsedQuestion:
     # ext.choices_source / ext.boxed_source 로 실린다 (extract.py 참조).
     choices_source: str = ""
     boxed_source: str = ""
+    # 선택지를 **평범하지 않은 경로로 복원했다**는 표시. 값은 "flattened" 하나뿐이고
+    # 정상(줄 단위로 그대로 읽힘)은 빈 문자열이다. items 에서는 ext.choices_layout 으로
+    # 실린다. choices_source 와 달리 **내용은 온전하다** — 검수할 때 어디를 먼저 볼지
+    # 알려주는 자리다(flatten_choice_band 참조).
+    choices_layout: str = ""
 
 
 # --------------------------------------------------------------------------
@@ -230,28 +236,115 @@ def trim_block(block: str) -> str:
 # 문항 분리
 # --------------------------------------------------------------------------
 
+def _block_score(text: str, start: int, end: int) -> int:
+    """이 구간이 '문항 하나' 답게 생겼는가. 0~2점.
+
+    두 근거 모두 **과목이 아니라 5지선다 문항의 성질**이다(absent_choice_band 와 같은 논리).
+      +1 발문이 있다 — 물음표. 실측 2040문항 중 이 조건을 어긴 블록은 아래 사고로
+         잘못 잘린 세 개뿐이었다.
+      +1 선택지가 있다 — 라벨 1~5 가 오름차순으로 나온다.
+    한쪽만으로는 못 가른다. 자료 상자 안의 번호 목록으로 잘린 조각도 뒤 문항의
+    물음표나 선택지를 통째로 삼켜 한 조건은 우연히 통과한다(실측, 아래 두 사고).
+    """
+    block = text[start:end]
+    score = 1 if "?" in block else 0
+    need = 1
+    for line in block.splitlines():
+        for value in _inline_labels(line):
+            if value == need:
+                need += 1
+        if need > 5:
+            break
+    return score + (1 if need > 5 else 0)
+
+
+# 후보 조합 탐색을 포기하는 상한. 넘으면 옛 그리디로 떨어진다 —
+# 느려지느니 예전과 같은 답을 내는 편이 낫다.
+_SPLIT_SEARCH_BUDGET = 20000
+
+
+def _pick_starts(text: str, count: int) -> list[int] | None:
+    """번호 1..count 의 시작 위치를 고른다. 못 고르면 None.
+
+    ★ 이 함수가 있는 이유(실측 사고 두 건):
+      자료 상자 안의 번호 목록이 문항 시작으로 오인된다.
+        2018 고1 9월 통합사회 — 근로 계약서의 '3.'~'6.' 때문에 블록 3~6 이 통째로 어긋났다.
+        2019 고1 11월 통합사회 — 사막화 정리표의 '1. 원인:' 때문에 블록 1·2 가 갈렸다.
+      옛 규칙('기대 번호와 같은 첫 후보를 받는다')은 이 둘을 원리적으로 못 막는다.
+      가짜 번호도 기대 번호와 같기 때문이다. 크롭 쪽 컬럼 오검출과 뿌리가 같다.
+
+    그래서 '첫 후보'가 아니라 **블록이 문항답게 생기는 조합**을 고른다.
+    점수가 같으면 예전과 같은 답(가장 이른 위치)을 낸다 — 후보가 하나뿐인
+    회차에서는 계산 결과가 옛 규칙과 글자 그대로 같다.
+    """
+    candidates: dict[int, list[int]] = {n: [] for n in range(1, count + 1)}
+    total = 0
+    for match in QUESTION_START_RE.finditer(text):
+        number = int(match.group(1))
+        if 1 <= number <= count:
+            candidates[number].append(match.start())
+            total += 1
+    if any(not positions for positions in candidates.values()):
+        return None
+    if total * total > _SPLIT_SEARCH_BUDGET:
+        return None
+
+    @lru_cache(maxsize=None)
+    def best(number: int, index: int) -> tuple[int, tuple[int, ...]]:
+        """(number 부터 끝까지의 점수 합, 고른 위치들). 점수가 같으면 이른 쪽."""
+        start = candidates[number][index]
+        if number == count:
+            return _block_score(text, start, len(text)), (start,)
+        top: tuple[int, tuple[int, ...]] | None = None
+        for next_index, next_start in enumerate(candidates[number + 1]):
+            if next_start <= start:
+                continue
+            tail = best(number + 1, next_index)
+            if not tail[1]:
+                continue
+            score = _block_score(text, start, next_start) + tail[0]
+            # 엄격 부등호라 점수가 같으면 먼저 본 것(=더 이른 위치)이 남는다.
+            if top is None or score > top[0]:
+                top = (score, (start,) + tail[1])
+        return top if top is not None else (-1, ())
+
+    picked: tuple[int, tuple[int, ...]] | None = None
+    for index in range(len(candidates[1])):
+        found = best(1, index)
+        if found[1] and (picked is None or found[0] > picked[0]):
+            picked = found
+    best.cache_clear()
+    return list(picked[1]) if picked and picked[1] else None
+
+
 def split_questions(text: str, count: int) -> dict[int, str]:
     """1..count 가 순서대로 나오는 것만 문항 시작으로 인정한다.
 
-    본문 속 '3. ' 같은 문자열이 문항 시작으로 오인되는 것을 막는 유일한 방법이
+    본문 속 '3. ' 같은 문자열이 문항 시작으로 오인되는 것을 막는 첫 걸음이
     '기대 번호와 같을 때만 받는다'였다. 정규식만으로는 절대 안 걸러진다.
+    그것만으로는 부족해서 후보가 여럿일 때 **블록이 문항답게 생기는 조합**을
+    고른다 — `_pick_starts` 주석의 사고 두 건 참조.
     """
-    matches = []
-    expected = 1
-    for match in QUESTION_START_RE.finditer(text):
-        if int(match.group(1)) == expected:
-            matches.append(match)
-            expected += 1
-            if expected > count:
-                break
-    if len(matches) != count:
-        raise ValueError(f"문항 분리가 {count}개가 아니다: {len(matches)}개")
+    starts = _pick_starts(text, count)
+    if starts is None:
+        # 조합 탐색이 답을 못 냈다. 옛 그리디로 떨어져 같은 실패 메시지를 낸다 —
+        # 새 경로가 못 푸는 회차를 예전보다 나쁘게 만들지 않는다.
+        matches = []
+        expected = 1
+        for match in QUESTION_START_RE.finditer(text):
+            if int(match.group(1)) == expected:
+                matches.append(match.start())
+                expected += 1
+                if expected > count:
+                    break
+        if len(matches) != count:
+            raise ValueError(f"문항 분리가 {count}개가 아니다: {len(matches)}개")
+        starts = matches
 
     blocks: dict[int, str] = {}
-    for index, match in enumerate(matches):
-        start = match.start()
-        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-        blocks[int(match.group(1))] = trim_block(text[start:end])
+    for index, start in enumerate(starts):
+        end = starts[index + 1] if index + 1 < len(starts) else len(text)
+        blocks[index + 1] = trim_block(text[start:end])
     return blocks
 
 
@@ -474,10 +567,6 @@ def image_choice_band(lines: list[str]) -> int | None:
 # 뒤가 줄 끝이어도 라벨로 본다 — 표 판형에서는 라벨만 있고 칸 내용은 다음 줄에 오는 줄이 섞인다
 # (실측 통합과학 2025 고1 9월 10번: '3' 한 글자짜리 줄. 줄 끝을 안 받으면 이 줄에서 밴드가 끊긴다).
 _INLINE_LABEL_RE = re.compile(r"(?:^|(?<=\s))([1-5])(?=\D|$)")
-# 표 판형 밴드가 성립하려면 라벨이 몇 개나 보여야 하는가. 5지선다에서 4 는 '하나가 통째로
-# 사라진' 실측 사례(통합사회 2024 고1 6월 18번은 ③ 줄이 텍스트 레이어에 아예 없다)까지 덮되,
-# 3 이하로 내리면 본문 숫자 몇 개가 선택지로 둔갑할 수 있는 하한이다.
-TABLE_BAND_MIN_LABELS = 4
 
 
 def _inline_labels(line: str) -> list[int]:
@@ -485,47 +574,179 @@ def _inline_labels(line: str) -> list[int]:
     return [int(m.group(1)) for m in _INLINE_LABEL_RE.finditer(compact(line))]
 
 
-def table_choice_band(lines: list[str]) -> int | None:
-    """선택지가 **표**로 짜여 텍스트로 복원할 수 없는 문항의 밴드 시작 줄. 아니면 None.
+# ---- 한 줄에 라벨이 여럿인 선지 밴드 ---------------------------------------
+#
+# 이 밴드에는 **두 판형이 겹쳐 있다.** 겉모습이 같아서 예전에는 둘을 한꺼번에
+# '그림'으로 덮었다.
+#   (A) 단일 열인데 지면이 좁아 한 줄에 선지가 둘씩 들어간 것 — 한국 탐구 시험지에서
+#       가장 흔한 판형이다(ㄱㄴㄷ 조합형). 라벨과 내용이 텍스트에 전부 남아 있으므로
+#       **복원해야 맞다.** 이걸 '그림'이라고 적으면 고칠 수 있는 파싱 실패가 조용해진다.
+#   (B) 2~3열 표 — 열마다 뜻이 다르다(A열/B열, ㄱ/ㄴ). 한 줄로 펴면 열 경계가 사라져
+#       **틀린 선지 다섯 개**가 만들어진다. 이쪽만 복원 불가다.
+#
+# 아래 세 함수가 그 경계다. `_cut_choice_band` 가 밴드를 조각내고,
+# `flatten_choice_band` 가 (A)임을 **증명될 때만** 편다. `table_choice_band` 는
+# (B)라는 **적극적 증거**가 있을 때만 표시한다. 어느 쪽도 증명이 안 되면
+# 복원도 표시도 하지 않는다 — error 로 남는 편이 낫다.
 
-    (실측) 통합과학·통합사회에는 선택지가 2~3열 표인 문항이 있다. 텍스트 레이어에서는
-    한 줄에 선택지가 둘씩 들어오거나(`1 염화 나트륨 설탕 2 염화 나트륨 염화 칼륨`,
-    `1감소 감소 2감소 증가`) 한 칸이 통째로 사라진다(2024 고1 6월 18번은 ③ 줄이 없다).
-    라벨이 '연속한 다섯 줄'로도 '순서만 지키는 줄머리'로도 서지 않아 기존 두 경로가 다 실패한다.
+# 조합·나열형 선지의 항목 이름. 'ㄱ' 'A' '갑' '(가)' 처럼 **한 글자짜리 지시 기호**만 받는다.
+# 이 좁음이 곧 증명이다 — 표의 한 칸은 낱말이지 지시 기호가 아니고,
+# 표의 한 행은 칸을 **공백**으로 잇지 쉼표나 화살표로 잇지 않는다.
+_ITEM_TOKEN = r"(?:\([가-힣]\)|[ㄱ-ㅎ]|[A-Za-z]|[가-힣])"
+# 'ㄱ' 'ㄱ, ㄴ' '갑, 을' 'A' — 쉼표(가운뎃점)로 이은 조합형.
+_COMBINATION_RE = re.compile(rf"^{_ITEM_TOKEN}(?:\s*[,·]\s*{_ITEM_TOKEN})*$")
+# '(가) → (나) → (다)' — 화살표로 이은 순서 나열형.
+_SEQUENCE_RE = re.compile(rf"^{_ITEM_TOKEN}(?:\s*[→⇒]\s*{_ITEM_TOKEN})+$")
+# 표의 열 이름 줄('A B C A B C', 'A B', 낱줄로 흩어진 'ㄱ' 'ㄴ' 'ㄱ' 'ㄴ')의 토큰.
+_HEADER_TOKEN_RE = re.compile(rf"^{_ITEM_TOKEN}$")
 
-    표는 열마다 뜻이 다르다(A열/B열, ㄱ/ㄴ). 그것을 한 줄 문자열로 펴면 열이 사라져
-    **틀린 선택지 다섯 개**가 만들어진다. 그래서 복원하지 않고 크롭 이미지를 본체로 삼는다.
 
-    판정 근거:
-      1. 블록 **끝**이 라벨을 품은 줄로만 이어질 것. 선택지 표는 언제나 문항 맨 끝이다.
-         (답안지 안내 꼬리글은 건너뛴다 — image_choice_band 와 같은 이유다.)
-      2. 그 줄들에서 읽은 라벨이 **1 로 시작해 5 로 끝나는 오름차순**일 것.
-         오름차순을 요구하는 것이 이 규칙의 안전장치다. 자료 상자의 숫자들은 순서가 없다.
-      3. 라벨이 TABLE_BAND_MIN_LABELS 개 이상일 것.
-      4. 그 앞에 발문이 남아 있을 것(start > 0).
+def _cut_choice_band(lines: list[str]) -> tuple[int, list[str]] | None:
+    """블록 끝의 선지 밴드를 (시작 줄, 조각 다섯) 으로 자른다. 못 자르면 None.
 
-    ⚠ 일부러 안 덮는 것: 라벨과 칸 내용이 **줄마다 따로** 떨어지는 표
-       (지구과학Ⅱ 2027 6월모평 2번 — `1` / `조력 발전` / `파력 발전` / … 3열 표).
-       이 판형은 마지막 줄이 라벨을 품지 않아 1번 근거에서 걸린다. 표시하지 않으면
-       기존대로 error 로 남는다. 넓히면 지구과학Ⅱ 380문항의 회귀 기준선이 움직이는데,
-       그 문항은 **라벨 간격이 일정해 표 파서로 복원할 여지가 남아 있다** — 복원할 수 있는
-       것을 '그림'이라고 적으면 고칠 수 있는 버그를 덮는다(boxed_source 주석과 같은 원칙).
+    자르기가 옳다는 것을 **스스로 증명하는 조건**만 통과시킨다. 하나라도 어긋나면
+    None 이다 — 잘못 편 선지 다섯 개는 표시 오탐보다 훨씬 나쁘기 때문이다.
+      1. 밴드는 블록 **끝**에서 라벨을 품은 줄로만 이어진다(답안지 꼬리글은 건너뛴다).
+      2. 밴드를 한 줄로 이었을 때 라벨 1~5 가 **순서대로 정확히 한 번씩** 나온다.
+         한 번이라도 더 나오거나('④ 2배' 의 2 같은 것) 빠지면 어디서 끊을지 알 수 없다.
+      3. 밴드는 라벨 1 로 시작한다. 앞에 글자가 남아 있으면 그건 선지가 아닌 무언가다.
+      4. 다섯 조각이 모두 비어 있지 않다.
+      5. 조각을 도로 이으면 원문과 **글자 그대로** 같다 — 없던 글자를 만들지 않는다.
     """
     start = len(lines)
-    labels: list[int] = []
     while start > 0:
         line = lines[start - 1]
-        hits = _inline_labels(line)
-        if hits:
-            labels = hits + labels
-        elif not is_trailer_line(line):
+        if not _inline_labels(line) and not is_trailer_line(line):
             break
         start -= 1
-    if start == 0 or len(labels) < TABLE_BAND_MIN_LABELS:
+    if start == 0 or start == len(lines):
         return None
-    if labels[0] != 1 or labels[-1] != 5:
+    blob = " ".join(lines[start:]).strip()
+    marks = list(_INLINE_LABEL_RE.finditer(blob))
+    if [int(m.group(1)) for m in marks] != [1, 2, 3, 4, 5]:
         return None
-    if any(b <= a for a, b in zip(labels, labels[1:])):
+    if marks[0].start() != 0:
+        return None
+    parts, rebuilt = [], ""
+    for index, mark in enumerate(marks):
+        end = marks[index + 1].start() if index + 1 < len(marks) else len(blob)
+        rebuilt += blob[mark.start():end]
+        parts.append(blob[mark.end():end].strip())
+    if rebuilt != blob or not all(parts):
+        return None
+    # 조각은 원문을 **자른 것**이지 만든 것이 아니다. 자르기만 하는 한 이 검사는
+    # 언제나 통과한다 — 그래서 두는 것이다. 나중에 누가 조각에 손질(띄어쓰기 보정 따위)을
+    # 넣으면 여기서 곧바로 걸린다. 틀린 선지 다섯 개는 조용히 만들어지기 때문이다.
+    if any(part not in blob for part in parts):
+        return None
+    return start, parts
+
+
+def _column_header_above(lines: list[str], band_start: int) -> bool:
+    """밴드 바로 위가 표의 **열 이름 줄**인가 — 열 구조의 적극적 증거.
+
+    (실측) 2~3열 선지 표는 열 이름을 밴드 바로 위에 찍고, 좌우로 나란히 놓인
+    묶음 수만큼 그것을 되풀이한다.
+      통합과학 2022 고1 9월 4번  : `A B C A B C`      (3열 × 2묶음)
+      통합과학 2025 고1 9월 10번 : `A` `B` `A B`      (2열, 줄이 쪼개져 나온다)
+      통합과학 2025 고1 9월 17번 : `ㄱ` `ㄴ` `ㄱ` `ㄴ` (2열 × 2묶음)
+    그래서 '한 글자 지시 기호가 주기적으로 되풀이된다'를 근거로 삼는다. 되풀이가
+    핵심이다 — 그림 범례의 `A B C D E` 한 줄은 주기가 없어 여기서 걸러진다.
+    """
+    tokens: list[str] = []
+    index = band_start
+    while index > 0:
+        parts = lines[index - 1].split()
+        if not parts or not all(_HEADER_TOKEN_RE.match(p) for p in parts):
+            break
+        tokens = parts + tokens
+        index -= 1
+    if len(tokens) < 2:
+        return False
+    for size in range(2, len(tokens) + 1):
+        if len(tokens) % size:
+            continue
+        base = tokens[:size]
+        if len(set(base)) == size and tokens == base * (len(tokens) // size):
+            return True
+    return False
+
+
+def _shares_vocabulary(parts: list[str]) -> bool:
+    """다섯 조각이 **모두** 다른 조각과 낱말을 공유하는가 — 순열표의 지문.
+
+    2~3열 표는 작은 낱말 묶음의 순열이다(수권/지권/생물권, 감소/증가/일정).
+    그래서 어느 행을 집어도 다른 행과 낱말이 겹친다. 단일 열 선지 다섯 개가
+    다섯 개 모두 서로 낱말을 겹치는 일은 조합형(ㄱ/ㄴ/ㄷ)뿐인데, 그쪽은
+    `_COMBINATION_RE` 가 먼저 '한 칸짜리'임을 증명해 준다.
+    """
+    # 낱말에 붙은 구두점은 떼고 센다. 안 떼면 'ㄱ,' 과 'ㄱ' 이 남남이 되어
+    # **겹침을 놓치고**, 놓친 쪽이 곧 '복원해도 된다'는 판정이라 위험한 방향으로 틀린다.
+    vocab = [{w.strip(",.·;:()[]") for w in part.split()} - {""} for part in parts]
+    return all(any(this & other for index2, other in enumerate(vocab) if index2 != index)
+               for index, this in enumerate(vocab))
+
+
+def flatten_choice_band(lines: list[str]) -> tuple[int, list[str]] | None:
+    """한 줄에 라벨이 여럿인 **단일 열** 선지를 원문 그대로 편다. 못 펴면 None.
+
+    `_cut_choice_band` 의 다섯 조건에 더해, 그 밴드가 표가 **아니라는** 증명을 요구한다.
+    둘 중 하나면 된다.
+      (a) 다섯 조각이 전부 조합형·나열형이다(`ㄱ, ㄴ` `갑, 을` `A` `(가) → (나) → (다)`).
+          표의 한 행은 칸을 공백으로 잇는다 — 쉼표·화살표로 이어진 조각은 통째로 한 칸이다.
+      (b) 열 이름 줄이 없고(`_column_header_above`) 조각들이 순열표의 지문
+          (`_shares_vocabulary`)을 보이지 않는다. 열 구조의 증거가 양쪽 다 없다.
+    둘 다 못 세우면 편집하지 않는다. 틀린 선지 다섯 개를 조용히 만드는 것보다
+    error 로 남기는 편이 낫다.
+    """
+    cut = _cut_choice_band(lines)
+    if cut is None:
+        return None
+    start, parts = cut
+    if all(_COMBINATION_RE.match(p) or _SEQUENCE_RE.match(p) for p in parts):
+        return start, parts
+    if not _column_header_above(lines, start) and not _shares_vocabulary(parts):
+        return start, parts
+    return None
+
+
+def table_choice_band(lines: list[str]) -> int | None:
+    """선택지가 **2~3열 표**라 텍스트로 복원할 수 없는 문항의 밴드 시작 줄. 아니면 None.
+
+    (실측) 통합과학에는 선택지가 2~3열 표인 문항이 있다. 텍스트 레이어에서는 한 줄에
+    선택지가 둘씩 들어온다(`1 염화 나트륨 설탕 2 염화 나트륨 염화 칼륨`, `1감소 감소 2감소 증가`).
+    표는 열마다 뜻이 다르므로 한 줄 문자열로 펴면 열이 사라져 **틀린 선택지 다섯 개**가
+    만들어진다. 그래서 복원하지 않고 크롭 이미지를 본체로 삼는다.
+
+    ★ 이 규칙은 한 번 넓게 잡혔다가 좁혀진 자리다(실측). 예전 판은 '블록 끝이 라벨을
+    품은 줄로 이어지고 라벨이 오름차순'이면 표시했는데, 그 모양은 **단일 열 선지가
+    한 줄에 둘씩 들어간 흔한 판형**과 구별되지 않는다. 통합과목 1,220문항에서 표시 36건
+    중 28건이 그 오탐이었고, 잃을 열이 없는 문항들이 error 에서 warn 으로 내려앉아
+    **고칠 수 있는 파싱 실패가 조용해졌다.** 표시는 넓히면 결국 아무도 안 본다.
+
+    그래서 이제 **열 구조의 적극적 증거 둘을 모두** 요구한다. 어느 하나만으로는 못 가른다 —
+    열 이름처럼 보이는 짧은 줄은 그림 범례일 수 있고, 낱말이 겹치는 것은 ㄱㄴㄷ 조합형도
+    마찬가지다.
+      1. 밴드가 라벨 1~5 로 정확히 잘린다(`_cut_choice_band`).
+      2. 밴드 바로 위에 **열 이름 줄**이 있다(`_column_header_above`).
+      3. 다섯 조각이 **작은 낱말 묶음의 순열**이다(`_shares_vocabulary`).
+
+    ⚠ 일부러 안 덮는 것 둘.
+      · 라벨과 칸 내용이 **줄마다 따로** 떨어지는 표(지구과학Ⅱ 2027 6월모평 2번 —
+        `1` / `조력 발전` / `파력 발전` / … 3열 표). 라벨이 다섯 번 이상 나와 1번에서 걸린다.
+        그 문항은 **라벨 간격이 일정해 표 파서로 복원할 여지가 남아 있다** — 복원할 수 있는
+        것을 '그림'이라고 적으면 고칠 수 있는 버그를 덮는다(boxed_source 주석과 같은 원칙).
+      · 라벨 한 칸이 텍스트 레이어에서 통째로 사라진 문항(통합사회 2024 고1 6월 18번은
+        ③ 줄이 없다). 나머지 넷은 멀쩡한 텍스트라 '이 칸의 본체가 그림'이라는 말이 거짓이 된다.
+        error 로 남겨 사람이 보게 한다.
+    """
+    cut = _cut_choice_band(lines)
+    if cut is None:
+        return None
+    start, parts = cut
+    if not _column_header_above(lines, start):
+        return None
+    if not _shares_vocabulary(parts):
         return None
     return start
 
@@ -557,8 +778,11 @@ def choices_image_band(lines: list[str]) -> int | None:
 
     세 판정을 **좁은 것부터** 차례로 본다. 앞의 것이 답을 주면 뒤를 보지 않는다.
       1. image_choice_band  — 분수·도형 조각만 남은 판형 (화학·물리)
-      2. table_choice_band  — 선택지가 표라 라벨이 한 줄에 몰리거나 칸이 빠진 판형 (통합과목)
+      2. table_choice_band  — 선택지가 2~3열 표인 판형 (통합과학)
       3. absent_choice_band — 선택지 자리가 통째로 텍스트에 없는 판형
+
+    ★ 부르는 쪽(parse_question)은 이 함수보다 **먼저** flatten_choice_band 를 시도한다.
+      복원할 수 있는 것을 '그림'이라고 적으면 고칠 수 있는 파싱 실패가 조용해진다.
     """
     for finder in (image_choice_band, table_choice_band, absent_choice_band):
         band = finder(lines)
@@ -634,6 +858,16 @@ def parse_question(block: str, choice_count: int = 5) -> ParsedQuestion:
     lines = [compact(line) for line in body.splitlines() if compact(line)]
     choices, stem_lines, relaxed = extract_choices_from_lines(lines)
     choices_source = ""
+    choices_layout = ""
+    if len(choices) != choice_count:
+        # ★ 복원을 먼저 시도한다. 그림 판정보다 앞이어야 한다 —
+        #   순서가 뒤집히면 '텍스트에 다 남아 있는 선지'가 그림으로 덮여
+        #   고칠 수 있는 파싱 실패가 조용해진다(table_choice_band 주석의 그 사고).
+        flat = flatten_choice_band(lines)
+        if flat is not None:
+            band, parts = flat
+            choices = [f"{INT_TO_CHOICE[index]} {part}" for index, part in enumerate(parts, 1)]
+            stem_lines, relaxed, choices_layout = lines[:band], False, "flattened"
     if len(choices) != choice_count:
         # 선택지가 그림·표인 문항이면 실패가 아니다 — 선택지 자리만 비우고 발문은 살린다.
         # 발문까지 버리면 '[N점] 표기가 없음' 같은 파생 오탐이 문항마다 하나씩 더 붙는다.
@@ -643,6 +877,7 @@ def parse_question(block: str, choice_count: int = 5) -> ParsedQuestion:
                                   error=f"선택지 {choice_count}개를 추출하지 못했다({len(choices)}개)")
         choices, stem_lines, relaxed = [], lines[:band], False
         choices_source = "image"
+        choices_layout = ""
 
     stem_blob = compact(" ".join(stem_lines))
     stem, boxed = stem_blob, ""
@@ -653,6 +888,7 @@ def parse_question(block: str, choice_count: int = 5) -> ParsedQuestion:
     warning = "선택지를 완화 규칙(표 판형)으로 뽑았다 — 검수 필요" if relaxed else ""
     return ParsedQuestion(stem=stem, boxed=boxed, choices=choices, raw=body,
                           warning=warning, choices_source=choices_source,
+                          choices_layout=choices_layout,
                           boxed_source=boxed_source(stem, boxed))
 
 

@@ -63,6 +63,70 @@ FALLBACK_REVISIONS = ("2015", "2022")
 SCHEMA = "revision -> code -> {curriculum: [term], learned: [{term, weight, df, lor}]}"
 
 
+# ══════════════════════════════════════════════════════════════════════════
+# 생성물이 앉는 자리 — 저장소가 아니라 작업공간이 기본이다
+#
+# `keywords.json` 과 `calibration.json` 은 **도구가 만들어내는** 파일이면서
+# `subjects/<slug>/` 아래, 즉 git 이 관리하는 자리에 사는 파일이다. 그 조합이
+# 실제로 막다른 골목을 만들었다.
+#
+# 실측(빈 저장소 두 개로 재현): 새 과목에서 `standards --draft-keywords` 가
+# `subjects/korean-geography/keywords.json` 을 만든다. 이 파일은 추적되지 않는
+# 상태로 남고, 상류가 같은 경로에 파일을 추가한 뒤 사용자가 README 대로
+# `git pull` 하면 git 이 멈춘다.
+#     error: The following untracked working tree files would be overwritten
+#            by merge: subjects/korean-geography/keywords.json
+#     Aborting
+# 추적되는 파일이어도 로컬 수정이 남아 있으면 같은 자리에서 멈춘다.
+#
+# 그래서 규칙을 하나로 못박는다.
+#   **도구는 저장소에 파일을 새로 쓰지 않는다. 작업공간에 쓰고, 사용자가
+#     `--install` 로 명시적으로 저장소에 옮긴다.**
+# 읽을 때는 작업공간 사본이 저장소 사본을 이긴다 — 그래야 새 과목이 저장소를
+# 한 번도 건드리지 않고 초안 → 분류 → 학습 → 보정 순환을 끝까지 돌 수 있다.
+# 대신 두 사본이 동시에 있으면 **반드시 리포트에 올린다.** 조용히 가리면
+# `git pull` 로 갱신된 저장소 사전이 낡은 작업공간 사본에 가려지는, 방금 고친
+# 것과 같은 종류의 '에러 없이 틀리는' 자리가 새로 생긴다.
+#
+# 왜 .gitignore 로 덮지 않았나: `learned` 칸은 사람이 판정한 라벨이 있어야만
+# 다시 만들 수 있다(CONTRACT 7절). git 은 ignore 된 파일을 merge 때 **말없이
+# 덮어쓴다** — 막다른 골목이 조용한 데이터 손실로 바뀔 뿐이라 더 나쁘다.
+# ══════════════════════════════════════════════════════════════════════════
+
+def workspace_copy(space, repo_path: Path | str) -> Path:
+    """작업공간에 두는 사본의 경로. 파일명은 저장소 것과 같게 유지한다 —
+    이름이 갈리면 사용자가 `--install` 뒤에 어느 쪽이 무엇인지 못 알아본다."""
+    return Path(space.root) / Path(repo_path).name
+
+
+def resolve_read(space, repo_path: Path | str) -> tuple[Path, str | None]:
+    """읽을 경로를 정한다. → (경로, 경고 사유|None)
+
+    작업공간 사본이 있으면 그쪽이다(없으면 저장소). 둘 다 있으면 경고를 함께
+    돌려준다 — 부르는 쪽이 그대로 `Report.note(..., "warn")` 에 넘긴다.
+    """
+    ws = workspace_copy(space, repo_path)
+    repo = Path(repo_path)
+    if ws.exists():
+        if repo.exists():
+            return ws, (f"작업공간 사본 {ws} 이 저장소 사본 {repo} 을 가린다 — "
+                        f"저장소 쪽을 쓰려면 작업공간 사본을 지워라")
+        return ws, None
+    return repo, None
+
+
+def write_target(space, repo_path: Path | str, install: bool = False) -> Path:
+    """쓸 경로. 기본은 작업공간, `--install` 일 때만 저장소."""
+    return Path(repo_path) if install else workspace_copy(space, repo_path)
+
+
+def install_hint(space, repo_path: Path | str, command: str) -> str:
+    """리포트에 실을 '저장소에 넣는 법' 한 줄. 경로를 사람이 그대로 복사할 수 있게."""
+    return (f"저장소에는 쓰지 않았다(git pull 이 막히는 자리라서) — "
+            f"{workspace_copy(space, repo_path)} 에 있다. "
+            f"저장소({repo_path})에 넣으려면 {command} 에 --install 을 붙여라")
+
+
 # ---------------------------------------------------------------- 한 칸의 모양
 def normalize_entry(value) -> dict:
     """어떤 형태로 적혀 있든 `{"curriculum": [...], "learned": [...]}` 로 만든다.

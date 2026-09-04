@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 의존성
+        run: python -m pip install -r requirements.txt
+
+      - name: 임포트·구문 검사
+        run: python -m compileall -q scripts
+
+      - name: 모든 명령의 --help 가 뜨는가
+        # 명령 하나가 깨지면 나머지가 멀쩡해도 사용자는 거기서 막힌다.
+        run: |
+          for c in subjects download detect crop extract rates classify map build validate standards standards-md; do
+            python scripts/gw.py "$c" --help > /dev/null || { echo "FAIL: $c"; exit 1; }
+          done
+
+      - name: 단위 테스트
+        run: python -m unittest discover -s tests -v
+
+      - name: 과목 레지스트리가 전부 로드되는가
+        run: python scripts/gw.py subjects
+
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 저작물이 추적되고 있지 않은가
+        # 기출문제·해설의 저작권은 평가원·EBS 에 있다. 저장소에 들어가면 안 된다(NOTICE 참조).
+        run: |
+          hits=$(git ls-files | grep -iE '\.(pdf|png|jpe?g|zip|hwp x?)$' || true)
+          if [ -n "$hits" ]; then echo "저작물 의심 파일:"; echo "$hits"; exit 1; fi
+          ws=$(git ls-files | grep -E '^workspace/' || true)
+          if [ -n "$ws" ]; then echo "workspace 가 추적되고 있다:"; echo "$ws"; exit 1; fi
+
+      - name: 개인정보·절대경로가 새지 않았는가
+        run: |
+          mail=$(git grep -IE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}' -- . \
+                 | grep -v 'noreply@\|creativecommons\|example\.com\|@users\.' || true)
+          if [ -n "$mail" ]; then echo "이메일 주소:"; echo "$mail"; exit 1; fi
+          abs=$(git grep -In 'C:/Users/\|C:\\Users\\' -- . || true)
+          if [ -n "$abs" ]; then echo "절대경로:"; echo "$abs"; exit 1; fi

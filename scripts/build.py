@@ -7,7 +7,7 @@ DATA 를 items/ 에서 조립해 템플릿의 `/*__DATA__*/null` 자리에 박�
 
 DATA 모양(템플릿이 그대로 기대한다):
     {
-      "subjects": [ {"name": str, "kind": revision, "units": [
+      "subjects": [ {"name": str, "kind": revision | "unclassified", "units": [
           {"unit": str, "standards": [ {"code": str, "text": str, "questions": [row, ...]} ]}
       ]} , ... ],
       "subjectOrder": [문항 출처 과목 label, ...],   # --subject 순서. 탭(name/kind) 순서와는 별개다.
@@ -32,6 +32,13 @@ row 모양은 builder/worksheet_builder.html 의 qHtml()/render() 가 읽는 필
 탭은 그냥 "(선택한 과목) × (선택한 개정)" 조합이면 된다. 크로스워크가 필요해지면(예: 2022 신설
 과목이 여러 2015 과목의 후신인 경우) subjects/<slug>/mapping.json 을 읽는 별도 조립 경로를
 추가해야 한다 — 지금은 그 요구가 없어서 만들지 않았다.
+
+**분류는 build 의 전제 조건이 아니다.** 단원이 안 정해진 문항은 과목마다 '미분류' 탭 하나로
+회차별로 묶여 나간다(_build_unclassified_units). 예전엔 분류된 문항이 0개면 여기서
+실패하고 next 로 classify 를 가리켰는데, 보정 안 된 과목에서는 classify 가 auto=0 으로
+끝나 build 로 되돌아와 다시 실패하는 무한 루프였다 — 사람이 빠져나갈 길이 없었다.
+문항 이미지·정답·배점은 분류와 무관하게 이미 다 있고, "이 회차 20문항으로 학습지 한 장"은
+단원을 몰라도 성립한다.
 """
 from __future__ import annotations
 
@@ -205,6 +212,9 @@ def _make_row(subject, qid: str, item: dict, img_rel: str, semantics: str = "aca
     grade = grade or None  # exam_sort_key 는 학평이 아니면 0을 돌려준다 — JSON에는 없는 편이 깔끔하다
     kind = exam_id.split("_")[-1]  # '2024_수능' → '수능', '2025_고2_3월학평' → '3월학평'
     grade_txt = f" 고{grade}" if grade else ""
+    # 회차 라벨(문항 번호를 뺀 앞부분). 미분류 탭이 이 문자열을 단원 자리에 쓴다.
+    # 두 곳에서 따로 만들면 학년도/년 규칙(_year_semantics)이 언젠가 갈라진다 — 여기서 한 번만 만든다.
+    exam_label = f"{year}{'년' if semantics == 'calendar' else '학년도'}{grade_txt} {kind}"
     return {
         "key": f"{subject.slug}:{qid}",
         "subject": subject.label,
@@ -215,12 +225,15 @@ def _make_row(subject, qid: str, item: dict, img_rel: str, semantics: str = "aca
         "exam": kind,
         "grade": grade,
         # 학평은 달력연도라 '학년도' 가 아니다(_year_semantics 참조).
-        "label": f"{year}{'년' if semantics == 'calendar' else '학년도'}{grade_txt} {kind} {number}번",
+        "label": f"{exam_label} {number}번",
         "number": number,
         "points": item.get("points") or 0,
         "answer": item.get("answer_symbol") or "",
         "topic": "",
         "img": img_rel,
+        # 밑줄로 시작하는 키는 _public_row 가 떼어낸다 — HTML 에 실리는 바이트는 그대로다.
+        "_exam_id": exam_id,
+        "_exam_label": exam_label,
     }
 
 
@@ -305,6 +318,57 @@ def _build_units(rows: list[dict], revision: str, std_texts: dict[str, str]) -> 
                 "questions": [_public_row(r) for r in buckets[unit_text][code]],
             })
         units.append({"unit": unit_text, "standards": stds})
+    return units
+
+
+# 미분류 탭의 성취기준 코드 접두. 앱은 코드를 **전역 키**로 쓰므로(선택 상태 Set, META 조회,
+# findStd) 진짜 성취기준 코드와도, 다른 과목·회차의 미분류 줄과도 겹치면 안 된다.
+# 콜론만으로 잇는 이유: 앱이 이 값을 `onclick="toggleStd('...')"` 안에 escape 없이 끼워 넣는다
+# — 따옴표·역슬래시·꺾쇠가 들어가면 사이드바가 통째로 죽는다.
+UNCLASSIFIED_CODE = "미분류"
+
+
+def _exam_order(exam_id: str):
+    """회차 정렬 키. 읽을 수 없는 회차명은 뒤로 밀고 이름순으로 둔다.
+
+    exam_sort_key 는 `2024_수능` 모양을 전제로 int() 를 부른다. 여기 오는 값은 이미
+    split_qid 를 통과한 것이라 정상이지만, 정렬 하나 때문에 문항집 전체가 죽는 것보다
+    '이상한 회차가 맨 뒤에 있다'가 낫다.
+    """
+    try:
+        return (0,) + tuple(exam_sort_key(exam_id))
+    except (ValueError, IndexError):
+        return (1, exam_id)
+
+
+def _build_unclassified_units(rows: list[dict], slug: str) -> list[dict]:
+    """어느 탭에도 못 들어간 문항을 **회차별로** 묶어 '미분류' 탭의 트리를 만든다.
+
+    ── 왜 회차를 단원 자리에 두는가 ──
+    분류가 안 된 문항에는 '단원'이라고 부를 축이 하나도 없다. 그런데 여기 오는 사람이
+    실제로 원하는 것은 "이 회차 20문항으로 학습지 한 장"이다 — 보정 안 된 과목의 첫 실행이
+    늘 이 자리로 온다. 회차는 그 요구에 정확히 맞는 유일한 축이고 items 에 이미 들어 있다.
+    사이드바에서 회차 한 줄을 누르면 그 회차가 통째로 담긴다.
+    전부를 한 줄로 뭉뚱그리면 19회차 380문항이 한 번에 담겨 고를 수가 없다.
+
+    정렬은 트리의 나머지와 같은 축(과거→현재)이다. 사람이 예상하는 순서는 하나여야 한다.
+    """
+    by_exam: dict[str, list[dict]] = defaultdict(list)
+    for row in rows:
+        by_exam[row["_exam_id"]].append(row)
+
+    units = []
+    for exam_id in sorted(by_exam, key=_exam_order):
+        group = by_exam[exam_id]
+        units.append({
+            # 단원 자리 = 회차 이름. 제작기의 autoTitle 이 이 값을 제목에 쓴다.
+            "unit": group[0]["_exam_label"],
+            "standards": [{
+                "code": f"{UNCLASSIFIED_CODE}:{slug}:{exam_id}",
+                "text": "단원 미분류",
+                "questions": [_public_row(r) for r in group],
+            }],
+        })
     return units
 
 
@@ -435,10 +499,12 @@ def run(args) -> int:
                 if s.curriculum_names(rev) and rev not in requested:
                     requested.append(rev)
     if not requested:
+        # 예전엔 여기서 죽었다. 교육과정이 안 채워졌다는 것은 '단원 트리를 못 만든다'는 뜻이지
+        # '문항집을 못 만든다'는 뜻이 아니다 — 아래 미분류 탭으로 전부 나간다.
+        # 고칠 곳은 알려 주되(next) 학습지 한 장은 손에 쥐여 준다.
         report.note("revision", "선택한 과목 어디에도 등록된 교육과정 개정이 없다 "
-                                 "(subject.json.curriculum 확인)", "error")
-        report.next = "subjects/<slug>/subject.json 의 curriculum 필드를 채운다"
-        return finish(False)
+                                 "(subject.json.curriculum 확인) — 단원 트리 없이 "
+                                 "회차별 '미분류' 탭으로만 내보낸다", "warn")
 
     out_path = Path(args.out) if args.out else (
         _space(args, slugs[0], many).output / "문항집제작기.html" if not many
@@ -474,16 +540,20 @@ def run(args) -> int:
 
     included = sum(len(v) for v in rows_by_slug.values())
     if included == 0:
-        report.note("items", "포함할 문항이 0개다", "error")
-        report.next = ("python scripts/gw.py extract --subject " + args.subject +
-                        " && python scripts/gw.py classify --subject " + args.subject)
+        # 여기까지 왔는데 행이 0개면 items/ 가 비었거나 크롭 이미지가 없다. 분류는 상관이
+        # 없다(미분류도 이제 나간다) — classify 를 next 로 주면 아무것도 안 고쳐진다.
+        report.note("items", "포함할 문항이 0개다 — items/ 가 비었거나 crops/questions/ 에 "
+                             "이미지가 없다", "error")
+        report.next = f"python scripts/gw.py extract --subject {args.subject}"
         return finish(False)
 
     # ── 탭 조립: (선택한 과목 × 선택한 개정) 조합. subject.json 에 그 개정이 없으면(null) 건너뛴다 ──
     std_texts_cache: dict[str, dict[str, str]] = {}
     subject_entries = []
+    unclassified_by_slug: dict[str, int] = {}
     for subject in subjects:
         rows = rows_by_slug[subject.slug]
+        placed_keys: set[str] = set()
         for revision in requested:
             # 한 개정에서 과목이 둘로 갈린 경우(2022 통합과학1·통합과학2) 탭 이름에는
             # 둘을 함께 적는다. 탭을 둘로 쪼개지는 않는다 — 문항의 classification 은
@@ -496,13 +566,45 @@ def run(args) -> int:
             units = _build_units(rows, revision, std_texts)
             n = sum(len(st["questions"]) for u in units for st in u["standards"])
             if n == 0:
+                # 빈 탭은 만들지 않는다. 제작기는 열자마자 **0번 탭**을 그리는데, 그게 빈
+                # 탭이면 새 사용자가 처음 보는 화면이 백지가 된다(분류 안 된 과목에서 실제로
+                # 그랬다). 문항이 사라진 게 아니라 아래 미분류 탭으로 간다는 것은 리포트가 말한다.
                 report.note(f"{subject.slug}:{revision}",
-                            f"{curriculum_name} — 이 개정으로 분류된 문항이 없음(items/의 "
-                            f"classification.{revision} 확인)", "info")
+                            f"{curriculum_name} — 이 개정으로 분류된 문항이 없어 탭을 만들지 "
+                            f"않았다(items/의 classification.{revision} 확인). 문항은 "
+                            f"'미분류' 탭으로 나간다", "info")
+                continue
+            placed_keys.update(q["key"] for u in units for st in u["standards"]
+                               for q in st["questions"])
             subject_entries.append({
                 "name": f"{curriculum_name} · {revision}개정" if len(requested) > 1 else curriculum_name,
                 "kind": revision,
                 "units": units,
+            })
+
+        # ── 미분류 탭 ──
+        # 남은 문항은 **실제로 어느 탭에도 안 들어간 것**으로 센다. "requested 개정에
+        # classification 이 없는 것"으로 세면 구멍이 난다 — 그 개정에 대응 과목이 없어
+        # (curriculum.<개정>=null) 탭 자체가 안 만들어졌는데 classification 만 채워져 있으면
+        # 분류된 것으로 세어져 문항이 통째로 사라진다.
+        #
+        # 탭을 따로 두는 이유(단원 하나로 섞지 않는 이유): 분류된 문항과 안 된 문항은
+        # 고르는 방식이 다르다. 섞어 두면 '단원별로 골랐다'고 믿은 학습지에 아무 단원도
+        # 아닌 문항이 조용히 섞여 들어간다.
+        leftover = [r for r in rows if r["key"] not in placed_keys]
+        unclassified_by_slug[subject.slug] = len(leftover)
+        if leftover:
+            subject_entries.append({
+                # 분류된 탭이 함께 있을 때만 '· 미분류' 를 붙인다. 탭 이름은 제작기의
+                # autoTitle 이 학습지 제목에 그대로 쓰는 값이라, 분류가 아예 없는 과목에서는
+                # 제목이 "한국지리 · 미분류 2025학년도 수능" 이 된다 — 학생에게 나눠 줄
+                # 인쇄물에 굳이 찍힐 말이 아니다. 같이 있을 때는 두 탭 이름이 같아지면
+                # 안 되므로 반드시 붙인다.
+                "name": f"{subject.label} · 미분류" if placed_keys else subject.label,
+                # kind 는 원래 개정 이름이 들어가는 칸이다. 미분류 탭에는 개정이 없으므로
+                # 개정 하나를 골라 적지 않고 이 값으로 표시한다(제작기 앱은 kind 를 읽지 않는다).
+                "kind": "unclassified",
+                "units": _build_unclassified_units(leftover, subject.slug),
             })
 
     if not subject_entries:
@@ -510,30 +612,18 @@ def run(args) -> int:
         report.next = f"python scripts/gw.py build --subject {args.subject} --revision <가능한 개정>"
         return finish(False)
 
-    total_placed = sum(len(st["questions"]) for e in subject_entries
-                        for u in e["units"] for st in u["standards"])
-    if total_placed == 0:
-        # 탭은 생겼지만(과목·개정 조합 자체는 유효) 그 안에 문항이 하나도 안 들어갔다 — 크롭은
-        # 있는데 classification 이 전부 비어 있는 경우다. 이대로 HTML을 만들면 "성공"이라고
-        # 보고하면서 빈 페이지를 내놓는 꼴이라 여기서 확실히 실패로 끊는다.
-        report.note("classification", "탭은 만들어졌지만 분류된 문항이 0개다 — items/의 "
-                    "classification 이 비어 있다", "error")
-        report.next = f"python scripts/gw.py classify --subject {args.subject}"
-        return finish(False)
-
-    # 크롭은 있지만(그래서 rows 에는 들어갔지만) 요청한 개정 어디로도 분류되지 않은 문항은
-    # 어떤 탭에도 나타나지 않는다. items_included 와 total_questions 가 크게 벌어지는데
-    # 이유를 리포트에 안 남기면 "문항이 사라졌다"로 오인하기 쉽다. 문항별로 적으면 380문항
-    # 규모에서 attention 30건 상한을 그냥 다 태우므로, 하나로 합쳐 남긴다.
-    unclassified = sum(
-        1 for rows in rows_by_slug.values() for r in rows
-        if not any((r["_classification"] or {}).get(rev, {}).get("standard") for rev in requested)
-    )
+    # 미분류 문항은 이제 빠지지 않고 '미분류' 탭으로 나간다. 그래도 몇 개인지는 반드시
+    # 말해야 한다 — 사이드바에 단원이 없는 이유이자, 분류를 돌릴지 말지의 유일한 판단 근거다.
+    # 문항별로 적으면 380문항 규모에서 attention 30건 상한을 그냥 다 태우므로 하나로 합친다.
+    unclassified = sum(unclassified_by_slug.values())
     if unclassified:
+        scope = f"선택한 개정({','.join(requested)})" if requested else "등록된 개정"
         report.note(
             "classification",
-            f"크롭은 있지만 선택한 개정({','.join(requested)})으로 분류되지 않은 문항 {unclassified}개 "
-            f"— 문항집에서 빠졌다. gw classify 진행 상황을 확인한다",
+            f"{scope}으로 단원이 정해지지 않은 문항 {unclassified}/{included}개 — 빼지 않고 "
+            f"과목별 '미분류' 탭에 회차별로 실었다. 학습지를 만드는 데는 지장이 없다"
+            f"(문항 이미지·정답·배점은 그대로다). 분류하면 단원·성취기준으로 골라 담을 수 "
+            f"있고 성취기준 문장을 학습지에 함께 찍을 수 있다",
             "info",
         )
 
@@ -545,13 +635,13 @@ def run(args) -> int:
         "meta": _git_meta(),
     }
 
-    # 실제로 어느 탭에든 걸린 문항만 이미지를 복사한다 — 크롭은 있어도 분류가 안 돼 탭에서
-    # 빠진 문항(items_unclassified)까지 복사하면 output/assets/ 에 못 쓰는 이미지만 쌓인다.
+    # 실제로 어느 탭에든 걸린 문항만 이미지를 복사한다 — 탭에 없는 문항까지 복사하면
+    # output/assets/ 에 못 쓰는 이미지만 쌓인다. 미분류 문항도 이제 탭에 있으므로 함께 복사된다.
     used_keys = {q["key"] for e in subject_entries for u in e["units"]
                  for st in u["standards"] for q in st["questions"]}
 
     # ── 부속 옆표: 실제로 탭에 걸린 문항 것만 싣는다 ──
-    # 분류가 안 돼 어느 탭에도 안 들어간 문항의 본문까지 싣는 건 순수한 낭비다.
+    # 어느 탭에도 안 들어간 문항의 본문까지 싣는 건 순수한 낭비다.
     texts, nboxes, errs = {}, {}, {}
     for rows in rows_by_slug.values():
         for r in rows:
@@ -598,8 +688,22 @@ def run(args) -> int:
         with_number_box=len(nboxes),
         with_error_rate=len(errs),
     )
-    report.next = None if not args.dry_run else (
-        f"python scripts/gw.py build --subject {args.subject} --out \"{out_path}\"")
+    # build 는 공정의 끝이라 성공하면 next 가 없는 게 원칙이다. 미분류가 남았을 때만
+    # **선택 사항**으로 분류를 가리킨다 — 학습지는 이미 나왔다는 것을 문구에 못박는다.
+    # (예전엔 이 자리에서 실패하며 next 로 classify 를 줬고, 보정 안 된 과목에서는
+    #  classify 가 auto=0 으로 끝나 build 로 되돌아와 다시 실패하는 무한 루프였다.)
+    if args.dry_run:
+        report.next = (f"python scripts/gw.py build --subject {args.subject} "
+                       f"--out \"{out_path}\"")
+    elif unclassified:
+        report.next = (f"python scripts/gw.py classify --subject {args.subject}  "
+                       f"# 선택 — 학습지는 이미 만들어졌다. 단원·성취기준으로 고르고 싶을 때만")
+    else:
+        report.next = None
     if not args.dry_run:
         report.extra["open"] = str(out_path)
+    if unclassified:
+        # 과목이 여럿이면 합계만으로는 어느 과목을 분류해야 하는지 알 수 없다.
+        report.extra["unclassified_by_subject"] = {
+            s: n for s, n in unclassified_by_slug.items() if n}
     return finish(not report.has_error)

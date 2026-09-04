@@ -52,9 +52,15 @@ argmax **정확도가 40%** 였고, 자동확정 구간에서도 최고 67% 였�
 코퍼스에서 드물어 IDF 가 높고, 그래서 **엉뚱한 형제 코드에 높은 점수를 만든다.**
 
 그래서 이 모듈은 두 가지를 한다.
-1. `--calibrate` : 사람 라벨을 정답지로 놓고 스스로 채점해 정확도-자동확정률 곡선을
+1. `--calibrate` : 라벨을 정답지로 놓고 스스로 채점해 정확도-자동확정률 곡선을
    그리고, 목표 정확도를 지키는 가장 낮은 임계값을 권장한다. 그런 임계값이 없으면
-   "자동확정 불가"라고 정직하게 적는다. 결과는 subjects/<slug>/calibration.json.
+   "자동확정 불가"라고 정직하게 적는다. 결과는 calibration.json(기본 자리는 작업공간).
+   정답지로 쓰는 라벨은 `manual`(사람 검수)과 `llm`(큐 판정) 둘 다다.
+   ★ manual 만 받던 시절에는 순환이 원리적으로 끊겨 있었다 — `--apply` 가 쓰는 값은
+     `llm` 이고 `manual` 을 만드는 경로는 `gw map` + mapping.json(4과목에만 존재)뿐이라,
+     새 과목은 무엇을 해도 보정에 도달할 수 없었다. 대신 **표본 구성을 숨기지 않는다**:
+     `gold_mix` 에 manual/llm 건수를 적고, manual 이 0건이면 `self_graded: true` 와
+     경고를 남긴다. 그 수치는 '정답과의 일치율'이 아니라 'LLM 판정과의 일치율'이다.
 2. calibration.json 이 없으면 **자동확정을 아예 하지 않는다.** 전부 큐로 보낸다.
    보정 전 점수를 items 의 confidence 에 싣지 않는다 — CONTRACT 4절상 confidence 는
    숫자|null 이므로 null 을 쓰고, 원점수는 `score` 필드에 따로 둔다.
@@ -97,6 +103,17 @@ argmax **정확도가 40%** 였고, 자동확정 구간에서도 최고 67% 였�
 
 **이 도구는 쓸수록 정확해진다.** 새 과목도 큐 판정 30~50문항을 `--apply` 한 뒤
 `--learn` 을 돌리면 사전이 그 과목의 실제 어휘로 갈아탄다. 교육과정 초안은 출발점일 뿐이다.
+다만 **적은 라벨로는 손해일 수 있다.** 실측(한국지리, 라벨 20건 = 한 회차):
+성취기준이 18개로 흩어져 문항 2건 이상이 모인 코드가 2개뿐이었고, 용어 17개가
+그 2개에만 붙어 홀드아웃 정확도가 0.10 → 0.05 로 내려갔다(top-3 은 0.10 → 0.20).
+그래서 `--learn` 은 사전이 몇 개 코드에만 붙으면 경고하고, 이득 여부는
+`--calibrate` 를 홀드아웃 회차로 돌려 확인하라고 말한다.
+
+## 산출물은 저장소가 아니라 작업공간에 쓴다
+`keywords.json` · `calibration.json` 의 기본 자리는 `<workspace>/` 다. 읽을 때는
+작업공간 사본이 저장소 사본을 이기고, `--install` 을 준 실행만 `subjects/<slug>/` 에
+쓴다. 이유(git pull 이 막히는 실측 사고)는 `scripts/keywordsio.py` 의
+'생성물이 앉는 자리' 주석에 있다. 두 사본이 동시에 있으면 리포트에 warn 을 남긴다.
 
 ## 점수 정규화를 바꾼 이유 (share × noisy-OR)
 학습 사전을 붙이자 문항당 매칭 용어가 늘어 noisy-OR 점수가 거의 전부 1.0 으로
@@ -156,6 +173,10 @@ DEFAULT_REVISIONS = ("2015", "2022")
 DEFAULT_IDF = 1.0          # 코퍼스에서 아예 못 찾은 키워드(이론상 없어야 함)의 안전망
 EXCERPT_LIMIT = 400        # CONTRACT 7절: 문항당 본문 400자 상한. LLM 컨텍스트 방어.
 QUEUE_CANDIDATES = 3       # CONTRACT 7절: 후보 성취기준 3개 상한.
+# 큐 최상위에 싣는 성취기준 목록의 상한. 한 과목의 한 개정은 실측 15~45개다
+# (지구과학Ⅱ 37 · 한국지리 28). 이보다 크면 과목 범위가 안 좁혀진 상태라는 뜻이라
+# 목록 대신 그 사실을 싣는다 — `_standards_catalog` 주석 참조.
+STANDARDS_CATALOG_LIMIT = 120
 
 # ── --learn 하이퍼파라미터 ───────────────────────────────────────────────
 # 지구과학Ⅱ 8회차로 28가지 6/2 회차 분할을 전부 돌려 정한 값이다. 아래 범위
@@ -493,6 +514,80 @@ def _unit_label(meta_by_rev: dict[str, dict], rev: str, code: str) -> str | None
     return row.get("unit") or row.get("title")
 
 
+def _standard_text(meta_by_rev: dict[str, dict], rev: str, code: str) -> str | None:
+    """성취기준 문장. 없으면 None — 지어내지 않는다."""
+    row = meta_by_rev.get(rev, {}).get(code) or {}
+    text = row.get("text")
+    return _normalize(text) if text else None
+
+
+def _standards_catalog(subject, meta_by_rev: dict[str, dict], rev: str) -> list[dict]:
+    """이 과목·이 개정의 성취기준 전체 목록. 큐 최상위에 한 번만 실린다.
+
+    범위 판정은 `subject.code_scope(rev)` 한 곳에서만 한다(CONTRACT 3절) —
+    접두사 문자열 비교로 거르면 통합과목처럼 접두사가 겹치는 자리에서 남의 개정
+    코드가 목록에 섞이고, 큐를 읽은 LLM 이 그 코드를 골라 `--apply` 로 들어온다.
+
+    상한을 두는 이유: 아직 `curriculum`·`standard_prefixes` 를 안 채운 과목은
+    scope 의 basis 가 `any` 라 **개정 파일 전체**(2022 는 2,537개)를 통과시킨다.
+    그대로 실으면 큐 하나가 교육과정 전서가 된다 — 토큰 방어가 이 모듈의 존재
+    이유다(CONTRACT 7절). 넘치면 싣지 않고 왜 안 실었는지만 남긴다.
+    """
+    scope = subject.code_scope(rev)
+    codes = sorted(scope.filter(meta_by_rev.get(rev, {})))
+    if len(codes) > STANDARDS_CATALOG_LIMIT:
+        return [{"_omitted": len(codes),
+                 "why": f"이 과목의 {rev} 성취기준 범위가 {len(codes)}개로 상한"
+                        f"({STANDARDS_CATALOG_LIMIT})을 넘어 목록을 싣지 않았다 — "
+                        f"subject.json 의 curriculum.{rev}/standard_prefixes.{rev} 가 "
+                        f"비어 범위가 좁혀지지 않은 상태다. 후보 3개로 판정하거나 "
+                        f"curriculum/standards/{rev}.json 을 직접 봐라"}]
+    return [{"code": c, "unit": _unit_label(meta_by_rev, rev, c),
+             "text": _standard_text(meta_by_rev, rev, c)} for c in codes]
+
+
+# ── 큐에 실리는 지침 ────────────────────────────────────────────────────
+# ★ 과목 이름을 쓰지 않는다. 예전 문구에는 '행성우주과학'·'허블 법칙'·'적색편이'
+#   가 그대로 박혀 있어서, 한국지리 큐를 읽는 LLM 이 지구과학 사례를 판정 지침으로
+#   받았다. 레퍼런스 구현이 문자열로 새어 나온 자리다(CONTRACT 0절: 과목별 차이는
+#   데이터로만). 교훈 자체는 과목과 무관하므로 사례를 지우고 규칙만 남긴다.
+QUEUE_GUIDANCE = (
+    "성취기준은 학습 활동의 동사(이해한다/설명한다/토론한다/조사한다)가 아니라 "
+    "그 성취기준이 다루는 **대상(명사)**으로 판정하라. 문항이 그 대상을 소재로 쓰면, "
+    "동사가 안 맞아도 부분 대응으로 잡는다. 동사 위주로 좁게 읽어 한 단원의 성취기준 "
+    "여럿이 '해당 문항 0건'으로 잘못 나오고 100문항 넘게 재검토한 사고가 실제로 있었다. "
+    "candidates 는 키워드 점수 상위 3개일 뿐이다 — 맞는 것이 없으면 standards 목록에서 "
+    "직접 고르고, 그래도 하나로 못 정하겠으면 그 문항은 results 에서 **빼라**. "
+    "빈 채로 두는 편이 틀린 코드를 박는 것보다 언제나 낫다(빠진 문항은 큐에 남는다)."
+)
+
+# ── classify_result.json 의 모양 ────────────────────────────────────────
+# 큐 파일이 이 스키마를 함께 싣는다. 이유는 queue_payload 주석 참조.
+RESULT_SCHEMA = {
+    "file": "classify_result.json (이름은 자유. --apply 에 그 경로를 준다)",
+    "shape": "최상위는 배열이거나 {\"results\": [...]} 객체. 둘 다 받는다.",
+    "fields": {
+        "qid": "필수. 큐 항목의 qid 를 그대로.",
+        "revision": "필수. 큐 항목의 revision 을 그대로(\"2015\"/\"2022\").",
+        "standard": "필수. 성취기준 코드. candidates 나 standards 목록에 있는 코드여야 한다 — "
+                    "목록에 없는 코드는 errors 로 거부된다.",
+        "unit": "선택. 비우면 curriculum/standards 에서 코드로 채운다. "
+                "직접 적을 거면 standards 목록의 unit 문자열을 글자 그대로 써라 — "
+                "다르게 적으면 제작기 사이드바에서 같은 단원이 두 칸으로 갈린다.",
+        "notes": "선택. 판정 근거·망설인 이유. items 의 notes 에 남는다.",
+        "confidence": "선택. 적어도 items 의 confidence 에는 실리지 않는다 — "
+                      "그 칸은 보정으로 실측한 정확도의 95% 하한 자리다(CONTRACT 4절). "
+                      "네가 적은 값은 ext.llm_confidence 로만 남는다.",
+    },
+    "example": {"results": [
+        {"qid": "<큐의 qid>", "revision": "2015", "standard": "<큐의 candidates[0].code>",
+         "notes": "발문의 대상이 이 성취기준의 소재와 같다"},
+    ]},
+    "apply": "python scripts/gw.py classify --subject <slug> --apply <이 파일 경로> "
+             "[--workspace <작업공간>]",
+}
+
+
 # ------------------------------------------------------------ 공용: 문항 적재
 def _load_items(space: Space, report: Report) -> dict[str, dict]:
     items: dict[str, dict] = {}
@@ -535,32 +630,54 @@ def _selected(qid: str, only: set[str] | None) -> bool:
 
 
 def _gold_labels(subject, items: dict[str, dict], rev: str,
-                 accept_by: tuple[str, ...]) -> tuple[dict[str, str], dict[str, int]]:
-    """정답지 역할을 할 라벨을 모은다. {qid: 성취기준코드}.
+                 accept_by: tuple[str, ...]) -> tuple[dict[str, str], dict[str, str]]:
+    """정답지 역할을 할 라벨을 모은다. → ({qid: 성취기준코드}, {qid: 라벨 출처})
 
     두 곳을 본다.
       1) items/<qid>.json 의 classification.<rev> 중 by 가 accept_by 에 든 것
-      2) subjects/<slug>/mapping.json 의 같은 문항 (by=manual 인 것만)
+      2) subjects/<slug>/mapping.json 의 같은 문항 (by 가 accept_by 에 든 것)
     mapping.json 을 함께 보는 이유: `gw map` 을 아직 안 돌린 작업공간에서도 채점이
     되어야 하기 때문이다. 사람이 만든 매핑 파일은 이미 저장소에 커밋돼 있다.
+
+    ★ 두 번째 반환값을 집계(Counter)가 아니라 **qid별 출처**로 바꾼 이유:
+      부르는 쪽이 `--only` 로 표본을 자른 뒤 다시 세야 하는데, 예전에는 items 만
+      되짚어 세느라 mapping.json 에서 온 라벨이 집계에서 통째로 사라졌다.
+      그리고 아래 `_calibrate` 가 **채점 표본에 사람 라벨이 몇 건, LLM 라벨이 몇
+      건인지**를 파일과 리포트에 그대로 실어야 한다 — 그 수치 없이는 정확도를
+      얼마나 믿을지 읽는 쪽이 판단할 수 없다.
     """
     gold: dict[str, str] = {}
-    src = collections.Counter()
+    source: dict[str, str] = {}
     for qid, item in items.items():
         entry = (item.get("classification") or {}).get(rev) or {}
         if entry.get("by") in accept_by and entry.get("standard"):
             gold[qid] = entry["standard"]
-            src[f"items(by={entry['by']})"] += 1
+            source[qid] = str(entry["by"])
 
     mapping = subject.mapping() or {}
     for qid, entry in (mapping.get("items") or {}).items():
         if qid in gold or qid not in items:
             continue
         row = (entry or {}).get(rev) or {}
-        if row.get("by") == "manual" and row.get("standard"):
+        if row.get("by") in accept_by and row.get("standard"):
             gold[qid] = row["standard"]
-            src["mapping.json"] += 1
-    return gold, dict(src)
+            # 출처를 파일 단위로 구분해 둔다. mapping.json 은 사람이 만든
+            # 매핑이라 by=manual 이지만, 어느 파일에서 왔는지는 남겨야
+            # "이 정확도를 뭘로 쟀나"를 되짚을 수 있다.
+            source[qid] = f"mapping.json({row.get('by')})"
+    return gold, source
+
+
+def _label_mix(source: dict[str, str], qids) -> dict[str, int]:
+    """{라벨 출처: 건수}. 사람 라벨과 LLM 라벨의 비율을 리포트가 그대로 싣는다."""
+    counted = collections.Counter(source.get(q, "unknown") for q in qids)
+    return {k: counted[k] for k in sorted(counted)}
+
+
+def _human_share(source: dict[str, str], qids) -> tuple[int, int]:
+    """(사람 라벨 수, LLM 라벨 수). 'manual' 이 들어간 출처만 사람으로 센다."""
+    human = sum(1 for q in qids if "manual" in source.get(q, ""))
+    return human, len(list(qids)) - human
 
 
 # ------------------------------------------------------------ 공용: 용어 캐기
@@ -596,8 +713,19 @@ def _terms_of(text: str) -> set[str]:
     return terms
 
 
-def _mine_terms(docs: dict[str, set[str]], labels: dict[str, str]) -> dict[str, list[dict]]:
-    """라벨된 문항에서 성취기준별 변별 용어를 캔다. 근거는 모듈 docstring 참조."""
+def _mine_terms(docs: dict[str, set[str]],
+                labels: dict[str, str]) -> tuple[dict[str, list[dict]], dict]:
+    """라벨된 문항에서 성취기준별 변별 용어를 캔다. → (사전, 깔때기 진단)
+
+    두 번째 반환값이 있는 이유: **아무것도 못 배웠을 때 왜 못 배웠는지**를
+    리포트가 말할 수 있어야 한다. 실측 사고 — 한국지리 라벨 20건을 주고
+    `--learn` 을 돌렸더니 `learned_terms=0` 으로 조용히 끝났다. 리포트에는
+    "배운 것이 없다"만 있었고, 사용자는 라벨이 모자란 건지·본문이 없는 건지·
+    임계값에 걸린 건지 알 방법이 없었다. 실제 원인은 **라벨이 성취기준마다
+    1건씩 흩어져 있어서** `a >= LEARN_MIN_DF(2)` 를 만족하는 코드가 거의 없었던
+    것인데, 그건 사용자가 회차를 하나 더 판정하면 바로 풀리는 문제다.
+    어느 관문에서 몇 개가 떨어졌는지 세어 돌려준다.
+    """
     n_docs = len(docs)
     df = collections.Counter()
     for terms in docs.values():
@@ -608,6 +736,20 @@ def _mine_terms(docs: dict[str, set[str]], labels: dict[str, str]) -> dict[str, 
         if qid in docs:
             by_code[code].append(qid)
 
+    diag = {
+        "labeled_docs": n_docs,
+        "codes": len(by_code),
+        "max_items_per_code": max((len(v) for v in by_code.values()), default=0),
+        "codes_meeting_min_df": sum(1 for v in by_code.values() if len(v) >= LEARN_MIN_DF),
+        "candidate_terms": 0,     # 코드×용어 쌍으로 검사한 총 후보 수
+        "dropped_rare": 0,        # 그 성취기준 문항 중 1건에만 나온 용어 (min_df 미달)
+        "dropped_common": 0,      # 전체 라벨의 max_df_ratio 를 넘게 나온 상투어
+        "dropped_low_lor": 0,     # 변별력(로그 오즈비) 하한 미달
+        "dropped_substring": 0,   # 더 긴 용어에 흡수됨
+        "over_cap": 0,            # 코드당 상한(top_per_code) 초과
+        "kept": 0,
+    }
+
     learned: dict[str, list[dict]] = {}
     for code, qids in by_code.items():
         n_c = len(qids)
@@ -617,12 +759,18 @@ def _mine_terms(docs: dict[str, set[str]], labels: dict[str, str]) -> dict[str, 
 
         rows = []
         for term, a in in_class.items():
-            if a < LEARN_MIN_DF or df[term] > LEARN_MAX_DF_RATIO * n_docs:
+            diag["candidate_terms"] += 1
+            if a < LEARN_MIN_DF:
+                diag["dropped_rare"] += 1
+                continue
+            if df[term] > LEARN_MAX_DF_RATIO * n_docs:
+                diag["dropped_common"] += 1
                 continue
             b = df[term] - a
             lor = (math.log((a + LEARN_ALPHA) / (n_c - a + LEARN_ALPHA))
                    - math.log((b + LEARN_ALPHA) / (n_docs - n_c - b + LEARN_ALPHA)))
             if lor < LEARN_MIN_LOR:
+                diag["dropped_low_lor"] += 1
                 continue
             weight = (1.0 / (1.0 + math.exp(-lor))) * (a / (a + LEARN_SHRINK_K))
             rows.append({"term": term, "weight": round(weight, 4),
@@ -634,13 +782,45 @@ def _mine_terms(docs: dict[str, set[str]], labels: dict[str, str]) -> dict[str, 
         kept: list[dict] = []
         for row in rows:
             if any(row["term"] != k["term"] and row["term"] in k["term"] for k in kept):
+                diag["dropped_substring"] += 1
+                continue
+            if len(kept) >= LEARN_TOP_PER_CODE:
+                diag["over_cap"] += 1
                 continue
             kept.append(row)
-            if len(kept) >= LEARN_TOP_PER_CODE:
-                break
         if kept:
             learned[code] = kept
-    return learned
+            diag["kept"] += len(kept)
+    return learned, diag
+
+
+def _learn_why_zero(diag: dict) -> str:
+    """깔때기 진단 → 사람이 읽는 한 문장. **왜 0인지**를 먼저 말한다.
+
+    리포트만 읽는 쪽(CONTRACT 2절)이 다음 행동을 정할 수 있어야 하므로,
+    원인마다 '그래서 뭘 하면 되는지'를 붙인다.
+    """
+    if not diag.get("labeled_docs"):
+        return ("학습에 쓸 본문이 한 건도 없다 — 라벨은 있으나 items 의 text 가 비어 있다"
+                "(vision 회차이거나 extract 가 아직 안 돌았다)")
+    if diag.get("codes_meeting_min_df", 0) == 0:
+        return (f"라벨 {diag['labeled_docs']}건이 성취기준 {diag['codes']}개에 흩어져 있다 — "
+                f"한 성취기준에 모인 문항이 최대 {diag['max_items_per_code']}건이라 "
+                f"최소 문서빈도 {LEARN_MIN_DF}건을 넘는 성취기준이 하나도 없다. "
+                f"용어는 '같은 성취기준 문항 {LEARN_MIN_DF}건 이상에 나온 말'만 뽑는다"
+                f"(1건짜리는 우연이라). **회차를 하나 더 판정해 --apply 하면 열린다** — "
+                f"같은 성취기준이 회차마다 다시 출제되기 때문이다")
+    parts = []
+    if diag.get("dropped_rare"):
+        parts.append(f"그 성취기준 문항 1건에만 나온 용어 {diag['dropped_rare']}개")
+    if diag.get("dropped_common"):
+        parts.append(f"라벨의 {int(LEARN_MAX_DF_RATIO * 100)}% 넘게 나오는 상투어 "
+                     f"{diag['dropped_common']}개")
+    if diag.get("dropped_low_lor"):
+        parts.append(f"변별력(로그 오즈비 {LEARN_MIN_LOR}) 미달 {diag['dropped_low_lor']}개")
+    return (f"후보 용어 {diag.get('candidate_terms', 0)}개가 전부 걸러졌다 — "
+            + ", ".join(parts) + ". 라벨을 늘리면 같은 용어가 여러 문항에 걸리며 살아난다"
+            if parts else "후보 용어가 없다")
 
 
 # ------------------------------------------------------------ 공용: 보정 파일
@@ -664,20 +844,40 @@ def _wilson_lower(hits: int, n: int, z: float = CALIB_Z) -> float | None:
     return round(max(0.0, (centre - margin) / denom), 4)
 
 
-def _calibration_path(subject) -> Path:
+def _calibration_repo_path(subject) -> Path:
     # Subject 에 calibration 경로 속성이 없다(common/ 은 다른 사람 소관이라 안 건드린다).
     # keywords.json 과 같은 폴더 규약을 그대로 따른다.
     return subject.keywords_path.parent / CALIBRATION_FILE
 
 
-def _load_calibration(subject) -> dict:
-    path = _calibration_path(subject)
+def _load_calibration(subject, space, report=None) -> dict:
+    """보정 파일을 읽는다. 작업공간 사본이 저장소 사본을 이긴다(keywordsio 주석 참조)."""
+    path, why = keywordsio.resolve_read(space, _calibration_repo_path(subject))
+    if why and report is not None:
+        report.note(CALIBRATION_FILE, why, "warn")
     if not path.exists():
         return {}
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return {}
+    # 어느 파일에서 읽었는지 리포트가 밝힐 수 있게 실어 보낸다. 보정값은 자동확정
+    # 여부를 가르는 값이라 "어느 파일의 0.35 인가"를 되짚을 수 있어야 한다.
+    if isinstance(data, dict):
+        data.setdefault("_read_from", str(path))
+    return data
+
+
+def _keyword_book(subject, space, report):
+    """keywords.json 을 읽는다. 작업공간 사본 우선 — 새 과목이 저장소를 건드리지
+    않고도 순환을 돌 수 있어야 하기 때문이다(keywordsio 주석 참조)."""
+    path, why = keywordsio.resolve_read(space, subject.keywords_path)
+    if why:
+        report.note("keywords.json", why, "warn")
+    book = keywordsio.load(path, subject.standard_prefixes or {})
+    for ident, reason, severity in book.notes:
+        report.note(ident, reason, severity)
+    return book, path
 
 
 def _calibration_for(calib: dict, rev: str) -> dict | None:
@@ -757,11 +957,9 @@ def _classify(args) -> int:
 
     only = _selection(getattr(args, "only", None))
 
-    book = subject.keyword_book()
-    for ident, why, severity in book.notes:
-        report.note(ident, why, severity)
+    book, book_path = _keyword_book(subject, space, report)
     if book.is_empty():
-        report.note("keywords", f"{subject.keywords_path} 가 없거나 비어 있다 — 전부 큐로 보낸다", "warn")
+        report.note("keywords", f"{book_path} 가 없거나 비어 있다 — 전부 큐로 보낸다", "warn")
 
     # --- items/ 전체를 한 번 읽어 코퍼스 텍스트(IDF용)와 캐시를 동시에 만든다 ---
     items_cache = _load_items(space, report)
@@ -797,7 +995,7 @@ def _classify(args) -> int:
     # 교육과정 초안 사전으로 자동확정한 판정의 정확도가 40% 였는데 그 오답에
     # 0.94 짜리 점수가 붙어 있었다. 점수를 confidence 로 읽는 순간 items 에
     # 틀린 성취기준이 by=keyword 로 박히고, 아무도 다시 안 본다.
-    calib_all = _load_calibration(subject)
+    calib_all = _load_calibration(subject, space, report)
     calib_by_rev: dict[str, dict | None] = {}
     for rev in revisions:
         row = _calibration_for(calib_all, rev)
@@ -812,6 +1010,17 @@ def _classify(args) -> int:
                        f"{raw_row.get('target_accuracy', CALIB_TARGET_ACCURACY)} 를 지키는 임계값이 없었다. "
                        f"{raw_row.get('note') or ''}").strip()
             report.note("calibration", why, "warn")
+        elif row.get("self_graded"):
+            # 자동확정을 켠 그 임계값이 **LLM 라벨만으로** 매겨졌다는 사실은
+            # classify 를 돌리는 사람에게도 보여야 한다. calibration.json 안에만
+            # 적어 두면 리포트만 읽는 쪽(=이 도구의 유일한 독자, CONTRACT 2절)은
+            # "정확도 0.9" 를 사람이 검수한 0.9 로 읽는다.
+            report.note("calibration",
+                        f"{rev}: 자동확정에 쓰는 임계값 {row['recommended']['threshold']} 은 "
+                        f"**LLM 판정 라벨만으로** 매겨졌다(사람 검수 0건). 이 정확도는 "
+                        f"'정답과의 일치율'이 아니라 'LLM 판정과의 일치율'이다 — "
+                        f"자동확정된 문항을 표본으로 검수해 by=manual 라벨을 늘린 뒤 "
+                        f"다시 --calibrate 하면 수치의 뜻이 강해진다", "warn")
 
     total = auto = queued = skipped = 0
     changed_qids: set[str] = set()
@@ -867,8 +1076,14 @@ def _classify(args) -> int:
                 auto += 1
                 changed_qids.add(stem)
             else:
+                # ★ 후보에 성취기준 **문장**을 함께 싣는다.
+                #   제작기 화면은 성취기준 전문을 보여주는데 큐를 읽는 LLM 은
+                #   코드와 단원명만 받고 있었다 — 판정하는 쪽이 사람보다 적은
+                #   정보로 판정하는 상태였다. 문장 없이 `12한지02-02` 만 보고
+                #   '대상(명사)으로 판정하라'는 지침을 따를 방법이 없다.
                 cand_list = [
-                    {"code": c, "unit": _unit_label(meta_by_rev, rev, c), "score": s}
+                    {"code": c, "unit": _unit_label(meta_by_rev, rev, c),
+                     "text": _standard_text(meta_by_rev, rev, c), "score": s}
                     for c, s in ranked[:QUEUE_CANDIDATES] if matched.get(c, 0) > 0
                 ]
                 excerpt = _build_excerpt(item)
@@ -895,13 +1110,21 @@ def _classify(args) -> int:
     queue_payload = {
         "step": "classify_queue",
         "slug": subject.slug,
-        "guidance": (
-            "성취기준은 동사(이해한다/설명한다/토론한다)가 아니라 명사(대상)로 판정하라. "
-            "예: '탐사의 성과를 이해한다'를 동사 위주로 좁게 읽으면 그 성과를 '활용'만 하는 "
-            "문항(예: 허블 법칙으로 적색편이 계산)을 전부 놓친다. 실제로 2015→2022 매핑에서 "
-            "이렇게 읽어 행성우주과학 15개 성취기준 중 9개가 '0문항'으로 잘못 나왔고 130문항을 "
-            "재검토해야 했다. 소재(대상)가 같으면 동사가 안 맞아도 부분 대응으로 판정하라."
-        ),
+        "guidance": QUEUE_GUIDANCE,
+        # ★ 판정 결과 파일의 스키마를 큐가 직접 들고 다닌다.
+        #   `classify_result.json` 의 모양이 --help·README·SKILL.md·CONTRACT.md
+        #   어디에도 없었다. 그런데 SKILL.md 는 '소스를 먼저 뒤지지 마라'고 못박는다 —
+        #   큐를 읽는 LLM 이 계약대로 행동하면 답을 만들 방법이 원리적으로 없었다.
+        #   그래서 예시 한 덩이와 필드 설명을 큐 안에 함께 싣는다. 이 파일 하나로
+        #   판정 결과를 만들 수 있어야 한다.
+        "result_schema": RESULT_SCHEMA,
+        # 후보 3개 밖의 코드를 고를 수 있어야 한다. 실측: 지구과학Ⅱ 큐 235건 중
+        # 21건은 매칭이 0이라 후보 목록이 **비어 있었다** — 그 문항을 받은 LLM 은
+        # 고를 코드 자체를 못 봤다. 문항마다 반복하면 토큰을 먹으니 개정별로
+        # 한 번만 싣는다(한국지리 28개 · 지구과학Ⅱ 37개 규모).
+        "standards": {
+            rev: _standards_catalog(subject, meta_by_rev, rev) for rev in revisions
+        },
         "count": len(queue_items),
         "items": queue_items,
     }
@@ -912,14 +1135,25 @@ def _classify(args) -> int:
     report.count(total=total, auto=auto, queued=queued, skipped=skipped)
     report.artifact(space.rel(queue_path))
     report.extra["queue_file"] = space.rel(queue_path)
+    # 큐를 통째로 읽을지 나눠 읽을지 정하려면 크기를 알아야 한다. 리포트만 읽는
+    # 쪽에게 "열어 보고 판단해라"는 답이 될 수 없다(CONTRACT 2절).
+    report.extra["queue_bytes"] = queue_path.stat().st_size
     # 리포트만 읽는 LLM 이 "왜 자동확정이 0인가"를 되묻지 않도록 상태를 실어 보낸다.
     report.extra["calibration"] = {
         rev: ({"threshold": row["recommended"]["threshold"],
                "measured_accuracy": row["recommended"].get("standard_accuracy"),
+               # 그 정확도를 무엇으로 쟀는지 없이 숫자만 보이면 사람 검수 결과로 읽힌다.
+               "gold_mix": row.get("gold_mix"),
+               "self_graded": bool(row.get("self_graded")),
                "calibrated_at": row.get("calibrated_at")} if row else None)
         for rev, row in calib_by_rev.items()
     }
     report.extra["keywords"] = kw_stats
+    # 어느 파일을 읽었는지 리포트가 밝힌다 — 작업공간 사본과 저장소 사본이 갈릴 수
+    # 있는 이상, "이 판정이 어느 사전에서 나왔나"를 되짚을 수 없으면 안 된다.
+    report.extra["keywords_file"] = str(book_path)
+    if calib_all.get("_read_from"):
+        report.extra["calibration_file"] = calib_all["_read_from"]
 
     # ── 본문 없는 큐를 조용히 내보내지 않는다 ──────────────────────────────
     # 통합 검증에서 crop 만 돌고 extract 는 안 돈 작업공간에 classify 를 걸었더니
@@ -939,10 +1173,15 @@ def _classify(args) -> int:
     elif queued:
         # 사전은 쓸수록 좋아진다 — 큐 판정을 --apply 한 뒤 --learn 을 돌리면
         # 다음 회차부터 큐가 줄어든다. 그 순환을 next 에 명시한다.
+        # 보정 안 된 과목은 auto=0 으로 전부 큐에 담긴다(정상 동작). 그 사람이 원한 게
+        # 학습지 한 장이면 여기서 판정을 기다릴 이유가 없다는 것도 함께 적는다 —
+        # build 는 미분류 문항을 회차별 '미분류' 탭으로 내보낸다.
         report.next = (
             f"LLM 이 {space.rel(queue_path)} 을 읽고 classify_result.json 을 만든 뒤 "
             f"python scripts/gw.py classify --subject {subject.slug} --apply classify_result.json "
-            f"→ 이어서 --learn 과 --calibrate 를 돌리면 사전과 임계값이 이 과목에 맞게 갱신된다"
+            f"→ 이어서 --learn 과 --calibrate 를 돌리면 사전과 임계값이 이 과목에 맞게 갱신된다. "
+            f"단원 분류 없이 학습지만 필요하면 "
+            f"python scripts/gw.py build --subject {subject.slug} 로 바로 가도 된다"
         )
     else:
         report.next = f"python scripts/gw.py map --subject {subject.slug}"
@@ -973,32 +1212,36 @@ def _learn(args) -> int:
         return report.finish()
 
     only = _selection(getattr(args, "only", None))
-    book = subject.keyword_book()
-    for ident, why, severity in book.notes:
-        report.note(ident, why, severity)
+    book, book_path = _keyword_book(subject, space, report)
     learned_from_all: dict[str, list[str]] = dict((book.meta.get("learned_from") or {}))
 
     n_terms = 0
+    diag_by_rev: dict[str, dict] = {}
+    mix_by_rev: dict[str, dict] = {}
     for rev in revisions:
         scope = subject.code_scope(rev)
         _note_scope(report, scope)
-        # 학습 라벨은 manual(사람) 과 llm(큐 판정) 을 모두 받는다 — 미션 지시.
-        # 채점(--calibrate)은 manual 만 받는다. 배우는 것과 채점하는 것의 기준이
-        # 같으면 자기가 만든 답으로 자기를 채점하는 꼴이 된다.
+        # 학습 라벨은 manual(사람) 과 llm(큐 판정) 을 모두 받는다.
+        # 채점(--calibrate)도 이제 둘 다 받되, **표본의 구성을 밝히고** 사람 라벨이
+        # 0건이면 '자기 채점'이라고 경고한다 — 아래 `_calibrate` 주석 참조.
         # 라벨 코드를 scope 로 거르는 이유: 다른 개정의 코드가 라벨에 섞여 있으면
         # 그 용어가 이 개정 사전에 학습돼 다음 실행부터 **에러 없이** 남의 개정
         # 성취기준을 추천하게 된다. 접두사 비교로는 통합과목처럼 접두사가 겹치는
         # 자리에서 못 걸러냈다.
-        gold, _sources_before_filter = _gold_labels(subject, items, rev, ("manual", "llm"))
+        gold, label_source = _gold_labels(subject, items, rev, ("manual", "llm"))
+        out_of_scope = sorted({q for q, c in gold.items()
+                               if _selected(q, only) and c not in scope})
         gold = {q: c for q, c in gold.items()
                 if _selected(q, only) and c in scope}
+        if out_of_scope:
+            # 조용히 버리면 "라벨 40건 넣었는데 왜 20건만 배웠나"를 못 되짚는다.
+            report.note(rev, f"{rev}: 라벨 {len(out_of_scope)}건은 이 개정 성취기준이 아니라 "
+                             f"제외했다({', '.join(out_of_scope[:4])}"
+                             f"{'…' if len(out_of_scope) > 4 else ''})", "warn")
         # 출처 집계는 --only 로 걸러낸 **뒤** 다시 센다. 필터 전 숫자를 리포트에 실으면
         # "라벨 120건(items(by=manual)=160)" 처럼 앞뒤가 안 맞는 문장이 나온다.
-        counted = collections.Counter()
-        for qid in gold:
-            entry = (items[qid].get("classification") or {}).get(rev) or {}
-            counted[f"items(by={entry['by']})" if entry.get("by") else "mapping.json"] += 1
-        sources = dict(counted)
+        sources = _label_mix(label_source, gold)
+        mix_by_rev[rev] = sources
         if not gold:
             report.note(rev, f"{rev}: 라벨된 문항이 없다 — 큐 판정을 --apply 하거나 "
                              f"gw map 으로 mapping.json 을 주입한 뒤 다시 돌려라", "warn")
@@ -1017,7 +1260,16 @@ def _learn(args) -> int:
             report.note(rev, f"{rev}: 본문이 비어 학습에서 제외한 문항 {skipped_blank}건 "
                              f"(vision 모드는 크롭 이미지가 본체라 정상이다)", "info")
 
-        learned = _mine_terms(docs, gold)
+        learned, diag = _mine_terms(docs, gold)
+        diag["labels"] = len(gold)
+        diag["blank_text"] = skipped_blank
+        diag_by_rev[rev] = diag
+        if not learned:
+            # ★ 조용한 무동작 금지. 라벨이 있는데 배운 게 0이면 **왜 0인지** 말한다.
+            #   실측: 한국지리 라벨 20건에서 learned_terms=0 이 나왔고, 리포트에는
+            #   "배운 것이 없다"만 있어서 다음에 뭘 해야 할지 알 수 없었다.
+            report.note(rev, f"{rev}: 라벨 {len(gold)}건을 봤지만 배운 용어가 0개다 — "
+                             + _learn_why_zero(diag), "warn")
 
         # --- 병합: 교육과정 유래는 보존하고, learned 만 통째로 갈아끼운다 ---
         # 덧붙이지 않고 교체하는 이유: --learn 은 언제든 다시 돌 수 있어야 하고,
@@ -1032,6 +1284,19 @@ def _learn(args) -> int:
         for code, rows in learned.items():
             if code not in book.revision(rev):
                 book.set_entry(rev, code, {"curriculum": [], "learned": rows})
+
+        # ── 사전이 몇 개 코드에만 붙으면 그쪽으로 쏠린다 ──────────────────
+        # 실측(한국지리, 라벨 20건): 18개 성취기준 중 문항이 2건 이상 모인 코드가
+        # 2개뿐이라 용어 17개가 그 2개에만 붙었고, 홀드아웃 20건 성취기준 정확도가
+        # 0.10 → 0.05 로 **내려갔다**(top-3 은 0.10 → 0.20 으로 올랐다).
+        # 학습이 항상 이득이라고 말하면 안 된다 — 라벨이 얇으면 손해일 수 있고,
+        # 그 판정은 --calibrate 가 홀드아웃에서 재는 것이 유일한 근거다.
+        if learned and len(learned) * 3 < diag["codes"]:
+            report.note(rev, f"{rev}: 배운 용어가 성취기준 {len(learned)}개에만 붙었다"
+                             f"(라벨이 걸린 성취기준은 {diag['codes']}개). 그 몇 개 코드로 "
+                             f"판정이 쏠릴 수 있다 — --calibrate 를 홀드아웃 회차로 돌려 "
+                             f"정확도가 실제로 올랐는지 확인해라. 내려가면 라벨을 더 모은 뒤 "
+                             f"다시 --learn 하는 편이 낫다", "warn")
 
         learned_from_all[rev] = sorted(docs)
         n_terms += sum(len(v) for v in learned.values())
@@ -1060,6 +1325,10 @@ def _learn(args) -> int:
         },
     })
 
+    # 깔때기 진단은 성공했을 때도 싣는다 — "왜 이만큼만 배웠나"도 같은 숫자로 읽힌다.
+    report.extra["learn_funnel"] = diag_by_rev
+    report.extra["label_sources"] = mix_by_rev
+
     if not learned_from_all:
         # 아무것도 못 배웠는데 파일을 만들면 `gw subjects` 의 readiness 가 "keywords 있음"
         # 으로 켜진다 — 내용이 _meta 뿐인 껍데기를 사전이 있다고 보고하는 셈이다.
@@ -1069,10 +1338,19 @@ def _learn(args) -> int:
                        f"python scripts/gw.py classify --subject {subject.slug} --learn 를 다시 돌려라")
         return report.finish()
 
-    keywordsio.save(subject.keywords_path, book, dry_run=bool(args.dry_run))
+    # 저장소가 아니라 작업공간에 쓴다(keywordsio 주석: git pull 이 막히는 자리).
+    out_path = keywordsio.write_target(space, subject.keywords_path,
+                                       bool(getattr(args, "install", False)))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    keywordsio.save(out_path, book, dry_run=bool(args.dry_run))
 
-    report.artifact(str(subject.keywords_path))
+    report.artifact(str(out_path))
     report.count(learned_terms=n_terms)
+    if not getattr(args, "install", False):
+        report.note("keywords.json",
+                    keywordsio.install_hint(space, subject.keywords_path,
+                                            f"classify --subject {subject.slug} --learn"),
+                    "info")
     # 사전이 바뀌면 옛 보정값은 더 이상 그 사전의 것이 아니다.
     report.note("calibration", "사전이 바뀌었으므로 임계값을 다시 재야 한다 — "
                                 "--calibrate 를 돌리기 전까지 자동확정은 옛 보정값을 쓴다", "warn")
@@ -1083,7 +1361,10 @@ def _learn(args) -> int:
 
 # ---------------------------------------------------------------- --calibrate
 def _calibrate(args) -> int:
-    """사람 라벨로 자기 정확도를 재고 권장 임계값을 뽑아 calibration.json 에 쓴다."""
+    """라벨(manual·llm)로 자기 정확도를 재고 권장 임계값을 calibration.json 에 쓴다.
+
+    실패하면(잴 라벨이 없으면) 파일을 **쓰지 않는다** — 아래 마지막 블록 주석 참조.
+    """
     subject = load_subject(args.subject)
     space = Space(subject.slug, getattr(args, "workspace", None)).ensure()
     report = Report("classify_calibrate", subject.slug, space)
@@ -1101,9 +1382,7 @@ def _calibrate(args) -> int:
         return report.finish()
 
     only = _selection(getattr(args, "only", None))
-    book = subject.keyword_book()
-    for ident, why, severity in book.notes:
-        report.note(ident, why, severity)
+    book, book_path = _keyword_book(subject, space, report)
     trained_on = book.meta.get("learned_from") or {}
     corpus_texts = [_item_text(d) for d in items.values()]
 
@@ -1129,23 +1408,41 @@ def _calibrate(args) -> int:
         meta_by_rev = {rev: _load_standards_meta(rev)}
         unit_of = {code: _unit_label(meta_by_rev, rev, code) for code in candidates}
 
-        # 채점 정답은 사람 라벨만 받는다. llm 판정은 채점 기준이 될 수 없다.
-        gold, _sources_before_filter = _gold_labels(subject, items, rev, ("manual",))
+        # ── 채점 정답으로 무엇을 받을 것인가 ──────────────────────────────
+        # 예전에는 `manual` 만 받았다. 그 규칙은 원리적으로 순환을 끊는다:
+        # `--apply` 는 라벨을 `by=llm` 으로 쓰고, `by=manual` 을 만드는 코드는
+        # `gw map` 이 mapping.json 을 읽을 때뿐인데 mapping.json 은 4과목에만
+        # 있다. 즉 새 과목은 무엇을 해도 보정에 도달할 수 없었다 —
+        # README·SKILL.md 가 제시한 --apply → --learn → --calibrate 순환이
+        # 문서에만 있고 코드에는 없던 자리다.
+        #
+        # 그래서 llm 라벨도 받는다. 대신 **측정의 뜻을 흐리지 않는다.**
+        #   ① 학습에 쓴 문항은 계속 뺀다(`learned_from` 홀드아웃). 같은 문항으로
+        #      배우고 같은 문항으로 채점하는 것이 진짜 '자기 채점'이고, 그 구멍은
+        #      라벨 출처와 무관하게 막혀 있어야 한다.
+        #   ② 표본의 구성(manual/llm 몇 건)을 calibration.json 과 리포트에 그대로
+        #      싣는다. 숫자 옆에 출처가 없으면 읽는 쪽은 사람 검수 결과로 읽는다.
+        #   ③ 사람 라벨이 0건이면 `self_graded: true` 를 남기고 경고한다. 그 정확도는
+        #      '정답과의 일치율'이 아니라 'LLM 판정과의 일치율'이다 — 사전이 그 LLM
+        #      판정에서 학습됐다면, 같은 판단 습관을 되풀이하는 오류는 이 채점으로
+        #      절대 드러나지 않는다.
+        #   ④ 그래도 자동확정 자체는 연다. 여기서 막으면 새 과목은 여전히 막다른
+        #      골목이고, '측정했지만 못 믿는다'와 '측정조차 못 한다' 중 전자가 낫다.
+        #      다만 `classify` 가 자동확정할 때마다 ③의 경고를 다시 띄운다.
+        gold, label_source = _gold_labels(subject, items, rev, ("manual", "llm"))
         gold = {q: c for q, c in gold.items() if _selected(q, only)}
-        # 출처 집계는 --only 로 거른 뒤 다시 센다(--learn 쪽과 같은 이유).
-        counted = collections.Counter()
-        for qid in gold:
-            entry = (items[qid].get("classification") or {}).get(rev) or {}
-            counted["items(by=manual)" if entry.get("by") == "manual" else "mapping.json"] += 1
-        sources = dict(counted)
+        sources = _label_mix(label_source, gold)
         if not gold:
-            report.note(rev, f"{rev}: 사람 라벨이 하나도 없다 — mapping.json 을 주입하거나 "
-                             f"검수한 문항을 by=manual 로 남긴 뒤 다시 돌려라", "error")
+            report.note(rev, f"{rev}: 채점할 라벨이 하나도 없다 — 큐를 판정해 --apply 하거나 "
+                             f"gw map 으로 mapping.json 을 주입한 뒤 다시 돌려라", "error")
             continue
 
         used_in_training = set(trained_on.get(rev) or [])
         holdout = {q: c for q, c in gold.items() if q not in used_in_training}
         leaked = len(gold) - len(holdout)
+        scored_on = holdout if holdout else gold
+        n_human, n_llm = _human_share(label_source, scored_on)
+        self_graded = n_human == 0
 
         idf = _compute_idf(corpus_texts, {t for v in candidates.values() for t in v})
 
@@ -1198,7 +1495,7 @@ def _calibrate(args) -> int:
                 })
             return overall, curve
 
-        overall, curve = measure(holdout if holdout else gold)
+        overall, curve = measure(scored_on)
         all_overall, _all_curve = measure(gold)
 
         # --- 권장 임계값: 목표 정확도를 지키는 가장 낮은 값 ---
@@ -1227,7 +1524,7 @@ def _calibrate(args) -> int:
         if not holdout:
             auto_ok = False
             recommended = None
-            note = ("사람 라벨 전부가 학습에 쓰였다 — 채점할 표본이 남지 않았다. "
+            note = ("라벨 전부가 학습에 쓰였다 — 채점할 표본이 남지 않았다. "
                     "--learn 을 --only 로 회차 일부만 주고 다시 돌려라.")
         elif len(holdout) < CALIB_MIN_HOLDOUT:
             auto_ok = False
@@ -1240,6 +1537,13 @@ def _calibrate(args) -> int:
         payload["revisions"][rev] = {
             "gold_count": len(gold),
             "gold_sources": sources,
+            # ★ 이 숫자가 무엇과의 일치율인지 파일이 스스로 밝힌다.
+            #   gold_mix 는 **채점에 실제로 쓴 표본**(holdout)의 구성이다 —
+            #   gold_sources 는 --only 로 자르기 전 전체라 둘이 다를 수 있다.
+            "gold_mix": {"manual": n_human, "llm": n_llm},
+            "self_graded": bool(self_graded),
+            "measured_against": ("llm 판정(사람 검수 0건)" if self_graded
+                                 else ("사람 검수 라벨" if not n_llm else "사람 검수 + llm 판정 혼합")),
             # overall 이 어떤 표본에서 나온 숫자인지 파일이 스스로 밝힌다.
             "evaluated_on": "holdout" if holdout else "all_gold(학습 데이터 포함 — 신뢰 불가)",
             "holdout_count": len(holdout),
@@ -1258,6 +1562,8 @@ def _calibrate(args) -> int:
                 f"단원 정확도 {overall.get('unit_accuracy')} / top-3 {overall.get('top3_accuracy')} "
                 f"(채점 {overall.get('n')}건")
         head += f", 학습에 쓰인 {leaked}건 제외)" if leaked else ")"
+        # 정확도 바로 옆에 '무엇과의 일치율인가'를 붙인다. 떨어뜨려 놓으면 안 읽힌다.
+        head += f" · 채점 기준 라벨 manual {n_human}건 / llm {n_llm}건"
         if auto_ok:
             head += (f" · 권장 임계값 {recommended['threshold']} → 자동확정률 "
                      f"{recommended['auto_rate']}({recommended['auto']}건), 그 구간 실측 정확도 "
@@ -1266,14 +1572,40 @@ def _calibrate(args) -> int:
         else:
             head += " · 자동확정 불가"
         report.note(rev, head + (f" — {note}" if note else ""), sev)
+        if self_graded:
+            report.note(rev, f"{rev}: ⚠ 자기 채점이다 — 채점 기준이 전부 LLM 판정 라벨이고 "
+                             f"사전도 그 라벨에서 배웠다. 여기 적힌 정확도는 '정답과의 일치율'이 "
+                             f"아니라 'LLM 판정과의 일치율'이며, 같은 판단 습관에서 나온 오류는 "
+                             f"이 채점으로 드러나지 않는다. 자동확정된 문항을 표본으로 검수해 "
+                             f"by=manual 로 남긴 뒤 다시 --calibrate 하면 수치의 뜻이 강해진다",
+                        "warn")
         report.count(**{f"gold_{rev}": len(gold), f"holdout_{rev}": len(holdout)})
 
-    path = _calibration_path(subject)
-    if not args.dry_run:
+    # ── 실패한 실행은 저장소도 작업공간도 더럽히지 않는다 ────────────────
+    # 실측 사고: 라벨이 하나도 없는 과목에서 [FAIL] 로 끝난 --calibrate 가
+    # `revisions: {}` 짜리 calibration.json 을 남겼다. 그 껍데기는 (a) 저장소에
+    # 추적되지 않는 파일로 남아 git pull 을 막고, (b) 다음 실행에서 '보정된 과목'
+    # 처럼 보이는 파일이 되고, (c) `gw subjects` 의 준비도 표를 흐린다.
+    # 아무것도 못 잰 보정 결과는 결과가 아니다.
+    ok = (not report.has_error) and bool(payload["revisions"])
+    path = keywordsio.write_target(space, _calibration_repo_path(subject),
+                                   bool(getattr(args, "install", False)))
+    if ok and not args.dry_run:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    report.artifact(str(path))
-    report.extra["calibration_file"] = str(path)
+        report.artifact(str(path))
+        report.extra["calibration_file"] = str(path)
+    else:
+        report.note("calibration.json",
+                    f"보정에 실패해서 {path} 를 쓰지 않았다 — 빈 보정 파일이 남으면 "
+                    f"다음 실행이 '보정된 과목'으로 착각한다", "warn")
+
+    if ok and not getattr(args, "install", False):
+        report.note("calibration.json",
+                    keywordsio.install_hint(space, _calibration_repo_path(subject),
+                                            f"classify --subject {subject.slug} --calibrate"),
+                    "info")
+
     any_auto = any(r.get("auto_confirm") for r in payload["revisions"].values())
     report.next = (f"python scripts/gw.py classify --subject {subject.slug}" if any_auto else
                    f"python scripts/gw.py classify --subject {subject.slug}  "
@@ -1307,6 +1639,10 @@ def _apply(args) -> int:
 
     applied = errors = 0
     touched: set[tuple[str, str]] = set()
+    # 성취기준 메타·범위는 개정마다 한 번만 읽는다(결과 파일이 400줄이어도 파일은 두 번).
+    meta_cache: dict[str, dict] = {}
+    scope_cache: dict[str, object] = {}
+    derived_units = 0
 
     for row in results:
         qid = row.get("qid") if isinstance(row, dict) else None
@@ -1314,6 +1650,39 @@ def _apply(args) -> int:
         standard = row.get("standard") if isinstance(row, dict) else None
         if not qid or not rev or not standard:
             report.note(str(qid or "?"), "qid/revision/standard 중 누락됨", "error")
+            errors += 1
+            continue
+
+        rev = str(rev)
+        # 이 과목에 없는 개정으로 들어온 판정은 받지 않는다. korean-geography 는
+        # 2022 에 대응 과목이 없어(curriculum.2022 = null) 2022 라벨이 들어오면
+        # 갈 곳이 없는데, 예전에는 그대로 items 에 박혔다.
+        if not subject.curriculum.get(rev):
+            report.note(qid, f"revision {rev} 는 이 과목에 정의돼 있지 않다 "
+                             f"(subject.json 의 curriculum.{rev} 가 비어 있다)", "error")
+            errors += 1
+            continue
+        if rev not in meta_cache:
+            meta_cache[rev] = _load_standards_meta(rev)
+            scope_cache[rev] = subject.code_scope(rev)
+
+        # ── 없는 성취기준 코드를 받아들이지 않는다 ────────────────────────
+        # 실측: `12한지99-99` 같은 실재하지 않는 코드가 errors=0 으로 통과해
+        # items 에 by=llm 으로 박혔다. 그 문항은 제작기에서 '(단원 미분류)' 로
+        # 빠지는데, 리포트는 성공이라 아무도 되짚지 않는다. '틀린 값을 채우느니
+        # 비워 둔다'(CONTRACT 0절 5항)의 정확한 반대 방향이라 막는다.
+        # 범위 판정은 subject.code_scope 한 곳에서만 한다 — 접두사 문자열 비교는
+        # 접두사가 겹치는 과목에서 남의 개정 코드를 통과시킨다(CONTRACT 3절).
+        scope = scope_cache[rev]
+        known = meta_cache[rev]
+        if known and standard not in known:
+            report.note(qid, f"성취기준 코드 {standard} 가 curriculum/standards/{rev}.json 에 "
+                             f"없다 — 오타이거나 개정이 다르다. 이 문항은 건드리지 않았다", "error")
+            errors += 1
+            continue
+        if standard not in scope:
+            report.note(qid, f"성취기준 코드 {standard} 는 이 과목의 {rev} 개정 범위 밖이다 "
+                             f"(다른 과목·다른 개정 코드). 이 문항은 건드리지 않았다", "error")
             errors += 1
             continue
 
@@ -1329,12 +1698,30 @@ def _apply(args) -> int:
             errors += 1
             continue
 
-        item.setdefault("classification", {})[rev] = {
+        # ── unit 을 생략하면 코드에서 유도한다 ────────────────────────────
+        # 실측: unit 없이 --apply 하면 제작기 사이드바가 통째로 '(단원 미분류)' 가
+        # 되고 그 문자열이 PDF 파일명에까지 들어간다. 코드만 알면 단원은
+        # curriculum/standards 에서 결정되는 값이라, 사람에게 다시 물을 이유가 없다.
+        # 라벨 형식(`(3) 한반도의 지질`)도 여기서 맞춰야 build 가 같은 단원을 두
+        # 칸으로 가르지 않는다(_unit_text 주석 참조).
+        unit = row.get("unit")
+        if not unit:
+            unit = _unit_label(meta_cache, rev, standard)
+            if unit:
+                derived_units += 1
+
+        entry = {
             "standard": standard,
-            "unit": row.get("unit"),
-            "confidence": row.get("confidence"),
+            "unit": unit,
+            # ★ confidence 는 '보정으로 실측한 정확도의 95% 하한' 자리다(CONTRACT 4절).
+            #   LLM 이 스스로 매긴 숫자를 그 칸에 넣으면, 이 모듈이 고발한 "틀린 답에
+            #   붙은 0.96" 을 판정 단계에서 되풀이하게 된다. 받되 ext 로 내린다.
+            "confidence": None,
             "by": "llm",
         }
+        if isinstance(row.get("confidence"), (int, float)) and not isinstance(row.get("confidence"), bool):
+            entry["ext"] = {"llm_confidence": row["confidence"]}
+        item.setdefault("classification", {})[rev] = entry
         if row.get("notes"):
             item.setdefault("notes", []).append(f"classify(llm): {row['notes']}")
 
@@ -1358,9 +1745,17 @@ def _apply(args) -> int:
         except Exception as exc:
             report.note("queue", f"classify_queue.json 갱신 실패(수동 확인 필요): {exc}", "warn")
 
-    report.count(applied=applied, errors=errors)
-    report.next = (f"python scripts/gw.py map --subject {subject.slug}" if applied and not errors
-                   else None)
+    report.count(applied=applied, errors=errors, units_derived=derived_units)
+    if errors:
+        # 거부된 행이 있으면 그 문항은 큐에 그대로 남아 있다. 다음 행동은
+        # '고쳐서 다시 --apply' 이지 map 이 아니다.
+        report.next = (f"거부된 {errors}건의 성취기준 코드를 고쳐 다시 "
+                       f"python scripts/gw.py classify --subject {subject.slug} "
+                       f"--apply {result_path}")
+    else:
+        report.next = (f"python scripts/gw.py classify --subject {subject.slug} --learn "
+                       f"→ --calibrate 로 사전과 임계값을 이 과목에 맞게 갱신한다"
+                       if applied else None)
     return report.finish(ok=(errors == 0))
 
 
@@ -1377,9 +1772,7 @@ def _export_xlsx(args) -> int:
         return report.finish()
 
     revisions = list(DEFAULT_REVISIONS) if args.revision == "both" else [args.revision]
-    book = subject.keyword_book()
-    for ident, why, severity in book.notes:
-        report.note(ident, why, severity)
+    book, _book_path = _keyword_book(subject, space, report)
 
     # ── 개정 × 코드가 열이 된다 ────────────────────────────────────────────
     # 예전에는 코드만이 열이었다. 그러면 두 개정이 같은 코드를 쓰는 과목(윤리와 사상
@@ -1484,9 +1877,7 @@ def _import_xlsx(args) -> int:
     wb = load_workbook(in_path, data_only=True)
     ws = wb["키워드_성취기준"] if "키워드_성취기준" in wb.sheetnames else wb.worksheets[0]
 
-    book = subject.keyword_book()
-    for ident, why, severity in book.notes:
-        report.note(ident, why, severity)
+    book, _book_path = _keyword_book(subject, space, report)
 
     # ── 판형을 **모양으로** 알아본다 (스키마 이름을 믿지 않는 것과 같은 이유) ──
     # 새 판형: 1행 개정 / 2행 코드 / 3행 단원 / 4행부터 키워드
@@ -1541,12 +1932,20 @@ def _import_xlsx(args) -> int:
                        f"--export-xlsx 로 새로 내보내 쓰는 편이 안전하다" if guessed else ""),
                     "warn" if guessed else "info")
 
-    keywordsio.save(subject.keywords_path, book, dry_run=bool(args.dry_run))
+    out_path = keywordsio.write_target(space, subject.keywords_path,
+                                       bool(getattr(args, "install", False)))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    keywordsio.save(out_path, book, dry_run=bool(args.dry_run))
 
     report.count(codes_updated=codes_seen,
                  codes_total=sum(len(book.revision(r)) for r in book.known_revisions()),
                  learned_kept=kept_learned)
-    report.artifact(str(subject.keywords_path))
+    report.artifact(str(out_path))
+    if not getattr(args, "install", False):
+        report.note("keywords.json",
+                    keywordsio.install_hint(space, subject.keywords_path,
+                                            f"classify --subject {subject.slug} --import-xlsx ..."),
+                    "info")
     report.next = f"python scripts/gw.py classify --subject {subject.slug}"
     return report.finish()
 
@@ -1561,7 +1960,8 @@ def register(parser) -> None:
     parser.add_argument("--learn", action="store_true",
                          help="라벨된 문항(by=manual/llm)에서 변별 용어를 배워 keywords.json 에 병합한다")
     parser.add_argument("--calibrate", action="store_true",
-                         help="사람 라벨로 자기 정확도를 재고 권장 임계값을 calibration.json 에 쓴다")
+                         help="라벨(by=manual/llm)로 자기 정확도를 재고 권장 임계값을 "
+                              "calibration.json 에 쓴다. 표본이 llm 뿐이면 '자기 채점'으로 표시한다")
     parser.add_argument("--export-xlsx", metavar="PATH", help="keywords.json 을 엑셀로 내보내기")
     parser.add_argument("--import-xlsx", metavar="PATH", help="엑셀을 keywords.json 으로 되돌리기")
     parser.add_argument("--dry-run", action="store_true", help="파일을 쓰지 않고 리포트만 미리 본다")
@@ -1572,6 +1972,10 @@ def register(parser) -> None:
                               "--calibrate 에서는 채점 대상을 제한한다 (학습/평가 분리에 쓴다)")
     parser.add_argument("--quiet", action="store_true", help="stdout 요약도 생략한다")
     parser.add_argument("--workspace", help="작업 공간 경로 직접 지정 (기본 workspace/<slug>)")
+    parser.add_argument("--install", action="store_true",
+                         help="산출물(keywords.json·calibration.json)을 작업공간이 아니라 "
+                              "subjects/<slug>/ 에 쓴다. 기본은 작업공간이다 — 저장소에 "
+                              "파일이 새로 생기면 git pull 이 막힌다(docs 참조)")
 
 
 def run(args) -> int:
